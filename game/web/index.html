@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>《我》竖切 Demo</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="phone-shell" aria-label="《我》竖切 Demo">
+      <section class="stage" id="stage">
+        <div class="sky"></div>
+        <div class="school-building">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="track"></div>
+        <div class="chalk-line"></div>
+        <div class="desk-islands">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="character" id="character"></div>
+      </section>
+
+      <section class="story-panel" aria-live="polite">
+        <p class="chapter-kicker">第二章</p>
+        <h1 id="scene-title">绕完这一圈</h1>
+        <p id="scene-copy"></p>
+      </section>
+
+      <section class="controls">
+        <div class="primary-actions">
+          <button id="loop-button" type="button">绕一圈</button>
+          <button id="true-fourth-loop-button" type="button">真正的第四圈</button>
+        </div>
+        <div class="scene-tabs" id="scene-tabs"></div>
+      </section>
+
+      <section class="interaction-panel">
+        <div class="interaction-output" id="interaction-output"></div>
+        <div class="interaction-grid" id="interactions"></div>
+      </section>
+
+      <section class="collection-strip">
+        <span>铁皮盒</span>
+        <div id="collection-book"></div>
+        <button id="reset-button" type="button" aria-label="重新开始">重来</button>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
