@@ -18,4 +18,4 @@ After completing any project phase, update `docs/development-plan.md` before end
 
 ## Current Next Step
 
-The current next step is Stage 1 in `docs/development-plan.md`: create the first chapter game-script sample at `docs/game-script-chapter-01.md`.
+The current next step is Stage 3 in `docs/development-plan.md`: build a low-fidelity greybox interaction prototype from the completed five chapter game scripts, starting with the highest-risk interactions listed in `docs/game-script-index.md`.
