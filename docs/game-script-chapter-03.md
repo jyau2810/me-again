@@ -288,14 +288,16 @@
 
 | 交互 ID | 输入 | 触发条件 | 反馈 | 状态变化 |
 | --- | --- | --- | --- | --- |
-| `tap_new_book` | 点击新漫画 | 任意 | 文本：`新书的纸很平。` | `echoObjectsVisited += new_book` |
-| `tap_old_bookmark_echo` | 点击书签 | 任意 | 文本：`旧书签夹在新书里，刚刚好。` | `echoObjectsVisited += bookmark` |
-| `tap_pencil_echo` | 点击铅笔 | 任意 | 文本：`铅笔还可以画歪一点。` | `echoObjectsVisited += pencil` |
-| `tap_receipt_echo` | 点击书店小票 | 任意 | 文本：`不是最该买的书，是看着顺眼的那本。` | `echoObjectsVisited += receipt` |
+| `tap_new_book` | 点击新漫画 | `new_book` 未记录 | 文本：`新书的纸很平。` | `echoObjectsVisited += new_book` |
+| `tap_old_bookmark_echo` | 点击书签 | `bookmark` 未记录 | 文本：`旧书签夹在新书里，刚刚好。` | `echoObjectsVisited += bookmark` |
+| `tap_pencil_echo` | 点击铅笔 | `pencil` 未记录 | 文本：`铅笔还可以画歪一点。` | `echoObjectsVisited += pencil` |
+| `tap_receipt_echo` | 点击书店小票 | `receipt` 未记录 | 文本：`不是最该买的书，是看着顺眼的那本。` | `echoObjectsVisited += receipt` |
 
 **结束条件**
 
 复访任意 2 个物件后，结尾短句出现；点击短句后章节结束。
+
+重复点击同一物件只重复文本反馈，不重复累计 `echoObjectsVisited`。
 
 **结尾短句**
 

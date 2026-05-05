@@ -292,14 +292,16 @@
 
 | 交互 ID | 输入 | 触发条件 | 反馈 | 状态变化 |
 | --- | --- | --- | --- | --- |
-| `tap_window_echo` | 点击车窗 | 任意 | 文本：`车窗把灯光揉成一条河，你坐在河边。` | `echoObjectsVisited += window` |
-| `tap_red_light_echo` | 点击红灯 | 任意 | 文本：`红灯亮着，像有人在远处举起小旗。` | `echoObjectsVisited += red_light` |
-| `tap_tree_echo` | 点击窗外树 | 任意 | 文本：`树影跟着车走了一小段。` | `echoObjectsVisited += tree` |
-| `tap_phone_echo` | 点击手机 | 任意 | 文本：`手机还在手里，但你没有马上低头。` | `echoObjectsVisited += phone` |
+| `tap_window_echo` | 点击车窗 | `window` 未记录 | 文本：`车窗把灯光揉成一条河，你坐在河边。` | `echoObjectsVisited += window` |
+| `tap_red_light_echo` | 点击红灯 | `red_light` 未记录 | 文本：`红灯亮着，像有人在远处举起小旗。` | `echoObjectsVisited += red_light` |
+| `tap_tree_echo` | 点击窗外树 | `tree` 未记录 | 文本：`树影跟着车走了一小段。` | `echoObjectsVisited += tree` |
+| `tap_phone_echo` | 点击手机 | `phone` 未记录 | 文本：`手机还在手里，但你没有马上低头。` | `echoObjectsVisited += phone` |
 
 **结束条件**
 
 复访任意 3 个物件后，章节结束。进入章节完成页或返回章节选择。
+
+重复点击同一物件只重复文本反馈，不重复累计 `echoObjectsVisited`。
 
 **结尾短句**
 

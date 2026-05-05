@@ -37,8 +37,11 @@
 | `forestSteps` | `0` | 每次拨枝、前进、举手 +1，最高 3 | 触发入界 |
 | `memoryObjectsRead` | 空数组 | 调查前章物件加入 | 解锁化石场景 |
 | `fossilCluesRead` | 空数组 | 调查化石、旧科普书、泥土加入 | 解锁化石盒收集 |
+| `fossilCollected` | `false` | 收集化石盒后为 `true` | 控制化石盒点击优先级 |
 | `handCoopActions` | 空数组 | 完成合作动作加入 | 解锁晨光出口 |
 | `echoObjectsVisited` | 空数组 | 回声段点击物件加入 | 判断章节结束 |
+| `tableArranged` | `false` | 完成桌面整理后为 `true` | 限制发送消息前置条件 |
+| `messageSent` | `false` | 发送朋友消息后为 `true` | 解锁最终结尾确认 |
 | `collectedItems` | 继承 | 收集道具时加入道具 ID | 收集册 |
 | `chapterUnlocks` | 继承 | 章节完成后标记最终章完成 | 章节选择 |
 | `visitedEchoes` | 继承 | 章节完成后加入 `c05_morning_echo` | 全局回声记录 |
@@ -185,11 +188,18 @@
 
 | 交互 ID | 输入 | 触发条件 | 反馈 | 状态变化 |
 | --- | --- | --- | --- | --- |
-| `tap_fossil_box` | 点击透明盒 | 未读 | 文本：`不像真的，但它在这里。` 盒子轻轻反光 | `fossilCluesRead += box` |
+| `tap_fossil_box` | 点击透明盒 | `box` 未读 | 文本：`不像真的，但它在这里。` 盒子轻轻反光 | `fossilCluesRead += box` |
 | `tap_book_why` | 点击旧科普书页 | 未读 | 文本：`图很好看，所以想要一个。` 书页上图案亮一下 | `fossilCluesRead += book` |
 | `tap_old_mud` | 点击盒边干土 | 未读 | 文本：`等了很久，泥土没有变魔法。` 土屑落下一点 | `fossilCluesRead += mud` |
-| `collect_impossible_fossil` | 点击化石盒 | 已读 3 条线索，未收集 | 获得隐藏道具：不可能的化石 | `collectedItems += impossible_fossil` |
+| `collect_impossible_fossil` | 点击化石盒 | 已读 3 条线索，未收集 | 获得隐藏道具：不可能的化石 | `collectedItems += impossible_fossil`，`fossilCollected = true` |
 | `enter_finger_stage` | 点击墙上手影 | 已收集化石 | 两个手影开始互相推挤 | 进入 `c05_s05_finger_stage` |
+
+**交互优先级规则**
+
+点击透明盒时按以下顺序判定：
+1. 未读 `box` 线索：触发 `tap_fossil_box`。
+2. 已读满 3 条线索且未收集：触发 `collect_impossible_fossil`。
+3. 已收集后再次点击：仅播放已收集文本反馈，不重复收集。
 
 **隐藏道具**
 
@@ -261,7 +271,7 @@
 
 **画面构图**
 
-现实房间晨光。桌上放着新买的笔、半截粉笔、旧书签、透明塑料尺、玻璃弹珠和化石盒。手机在一旁，窗外有普通树影。主角还是成年人，但站姿和表情比第一章松一些。
+现实房间晨光。桌上固定放着新买的笔与化石盒；半截粉笔、旧书签、透明塑料尺、玻璃弹珠仅在已收集时显示。手机在一旁，窗外有普通树影。主角还是成年人，但站姿和表情比第一章松一些。
 
 **玩家目标**
 
@@ -271,16 +281,19 @@
 
 | 交互 ID | 输入 | 触发条件 | 反馈 | 状态变化 |
 | --- | --- | --- | --- | --- |
-| `tap_new_pen` | 点击新买的笔 | 任意 | 文本：`这支笔是自己选的。` | `echoObjectsVisited += pen` |
-| `tap_fossil_echo` | 点击化石盒 | 任意 | 文本：`不是真的化石，但是真的很想要过。` | `echoObjectsVisited += fossil` |
+| `tap_new_pen` | 点击新买的笔 | `pen` 未记录 | 文本：`这支笔是自己选的。` | `echoObjectsVisited += pen` |
+| `tap_fossil_echo` | 点击化石盒 | `fossil` 未记录 | 文本：`不是真的化石，但是真的很想要过。` | `echoObjectsVisited += fossil` |
 | `tap_marble_echo` | 点击玻璃弹珠 | 已收集玻璃弹珠 | 文本：`灰色里也能折出一点颜色。` | `echoObjectsVisited += marble` |
-| `tap_window_morning` | 点击窗户 | 任意 | 文本：`外面只是早晨，但好像还可以出去看看。` | `echoObjectsVisited += window` |
-| `arrange_table_items` | 轻拖任意收集物到桌面一排 | 已复访至少 2 个物件 | 桌面物件摆齐，不需要完美对齐 | `echoObjectsVisited += arranged_items` |
-| `send_friend_message` | 点击手机消息 | 已复访至少 3 个物件 | 文本：`最近怎么样？` 手机发送气泡停在画面上 | 章节结束 |
+| `tap_window_morning` | 点击窗户 | `window` 未记录 | 文本：`外面只是早晨，但好像还可以出去看看。` | `echoObjectsVisited += window` |
+| `arrange_table_items` | 轻拖任意收集物到桌面一排 | 已复访至少 2 个物件，未整理 | 桌面物件摆齐，不需要完美对齐 | `echoObjectsVisited += arranged_items`，`tableArranged = true` |
+| `send_friend_message` | 点击手机消息 | 已复访至少 3 个物件且 `tableArranged = true` | 文本：`最近怎么样？` 手机发送气泡停在画面上，结尾短句出现 | `messageSent = true` |
+| `confirm_ending_line` | 点击结尾短句 | 已完成 `send_friend_message` | 结束最终回声段 | 章节结束 |
 
 **结束条件**
 
 复访任意 3 个物件，整理一次桌面，并发送朋友消息后，结尾短句出现；点击短句后游戏结束或返回章节选择。
+
+重复点击同一物件只重复文本反馈，不重复累计 `echoObjectsVisited`。
 
 **结尾短句**
 
@@ -305,7 +318,8 @@
 
 - 晨光房间背景。
 - 成年主角自然站姿或坐姿。
-- 新买的笔、粉笔、旧书签、透明尺、玻璃弹珠、化石盒、手机、窗户可点击层。
+- 新买的笔、化石盒、手机、窗户固定可点击层。
+- 半截粉笔、旧书签、透明尺、玻璃弹珠为条件显示（仅在 `collectedItems` 已包含对应道具时出现）。
 - 最终桌面收集展示 UI。
 
 ## 5. 文本脚本汇总

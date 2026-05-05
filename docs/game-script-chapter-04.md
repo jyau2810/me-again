@@ -265,14 +265,17 @@
 
 | 交互 ID | 输入 | 触发条件 | 反馈 | 状态变化 |
 | --- | --- | --- | --- | --- |
-| `tap_phone_mute` | 点击手机 | 任意 | 文本：`消息还在，但可以晚一点。` 手机翻面，提示音停止 | `echoObjectsVisited += phone` |
-| `tap_lamp_dim` | 点击台灯 | 任意 | 文本：`光线低一点，房间没有坏掉。` 光线变软 | `echoObjectsVisited += lamp` |
-| `tap_plastic_ruler_echo` | 点击透明尺 | 任意 | 文本：`尺子透明得像一小截安静。` | `echoObjectsVisited += plastic_ruler` |
-| `sit_quietly` | 长按椅子 3 秒 | 已复访至少 2 个物件 | 主角安静坐下，画面停留 2 秒 | 章节结束 |
+| `tap_phone_mute` | 点击手机 | `phone` 未记录 | 文本：`消息还在，但可以晚一点。` 手机翻面，提示音停止 | `echoObjectsVisited += phone` |
+| `tap_lamp_dim` | 点击台灯 | `lamp` 未记录 | 文本：`光线低一点，房间没有坏掉。` 光线变软 | `echoObjectsVisited += lamp` |
+| `tap_plastic_ruler_echo` | 点击透明尺 | `plastic_ruler` 未记录 | 文本：`尺子透明得像一小截安静。` | `echoObjectsVisited += plastic_ruler` |
+| `sit_quietly` | 长按椅子 3 秒 | 已复访至少 2 个物件 | 主角安静坐下，画面停留 2 秒，结尾短句出现 | `chapterProgress = echo`（等待短句确认） |
+| `confirm_echo_line` | 点击结尾短句 | 已完成 `sit_quietly` | 结束当前回声段 | 章节结束 |
 
 **结束条件**
 
 复访任意 2 个物件并完成长按坐下后，结尾短句出现；点击短句后章节结束。
+
+重复点击同一物件只重复文本反馈，不重复累计 `echoObjectsVisited`。
 
 **结尾短句**
 
