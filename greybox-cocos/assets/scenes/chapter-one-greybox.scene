@@ -1,0 +1,7 @@
+{
+  "__type__": "cc.SceneAsset",
+  "_name": "chapter-one-greybox",
+  "_objFlags": 0,
+  "_native": "",
+  "description": "Low-fidelity Cocos Creator 3.8 greybox scene placeholder for Chapter 1. Bind ChapterOneGreybox.ts to a Canvas with labels and reusable interaction buttons."
+}

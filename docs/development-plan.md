@@ -118,6 +118,26 @@
 - 每章关键交互的体验记录。
 - 需要删减、重排或加强的脚本问题清单。
 
+### 首轮灰盒启动记录
+
+启动日期：2026-05-11  
+实际产物：
+
+- `greybox-cocos/`：Cocos Creator 3.8.x 灰盒原型工程骨架。
+- `greybox-cocos/assets/scripts/greyboxState.js`：第一章状态机、场景数据、交互数据和章节占位顺序。
+- `greybox-cocos/assets/scripts/ChapterOneGreybox.ts`：Cocos 低保真 UI 绑定组件。
+- `greybox-cocos/tests/`：Node 状态机测试与 Cocos 工程静态检查。
+
+本轮覆盖范围：
+
+- 第一章《灰色早晨》从现实段、三次观察车窗、车灯阵营判断、后座堡垒、安全路线、信号灯节奏到现实回声的完整低保真状态流程。
+- 第二章、第四章、第三章、第五章仅按 `docs/game-script-index.md` 的灰盒验证顺序保留章节选择占位，尚未实现可玩交互。
+
+验证记录：
+
+- 已通过 `cd greybox-cocos && npm run verify` 覆盖第一章核心状态推进、错误/正确反馈、回声唯一计数和章节完成状态写入。
+- 已确认本机存在 Cocos Creator 3.8.8，并可启动命令行入口；Cocos Creator 手动打开工程运行尚未执行，需要后续在编辑器中补记录。
+
 ### 验收标准
 
 - 第一章能完整从现实段玩到回声段。
