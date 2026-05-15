@@ -125,8 +125,8 @@
 
 - `greybox-cocos/`：Cocos Creator 3.8.x 灰盒原型工程骨架。
 - `greybox-cocos/assets/scenes/chapter-one-greybox.scene`：第一章 Cocos 真实场景文件，挂载 `GreyboxCanvas` 与第一章控制组件。
-- `greybox-cocos/assets/scripts/greyboxState.js`：第一章状态机、场景数据、交互数据和章节占位顺序。
-- `greybox-cocos/assets/scripts/ChapterOneGreybox.ts`：Cocos 低保真 UI 绑定组件。
+- `greybox-cocos/assets/scripts/greyboxState.js`：第一章状态机、灰盒舞台数据、热点交互数据和章节占位顺序。
+- `greybox-cocos/assets/scripts/ChapterOneGreybox.ts`：Cocos 低保真舞台渲染、热点按钮绑定和进度反馈组件。
 - `greybox-cocos/settings/v2/packages/scene.json`：Creator 打开项目后的第一章默认当前场景设置。
 - `greybox-cocos/tests/`：Node 状态机测试与 Cocos 工程静态检查。
 
@@ -140,6 +140,7 @@
 - 已通过 `cd greybox-cocos && npm run verify` 覆盖第一章核心状态推进、错误/正确反馈、回声唯一计数和章节完成状态写入。
 - 2026-05-15：已用 Cocos Dashboard + Cocos Creator 3.8.8 手动打开 `greybox-cocos/`，确认 `chapter-one-greybox.scene` 可导入、层级中存在 `GreyboxCanvas` 与脚本组件，Safari 预览 `http://127.0.0.1:7456/` 可显示第一章灰盒 UI。
 - 2026-05-15：修复首轮 Cocos 场景占位 JSON 导致的导入失败问题，并补充 Creator `.meta`、项目 `settings/`、启动场景静态检查，避免新环境打开后落入空白 Untitled 场景。
+- 2026-05-15：根据 Cocos Creator 3.8.8 预览反馈，将第一章从列表式文字交互升级为可见灰盒舞台和亮框热点；每个场景都有低保真空间元素、当前目标、可点热点和进度提示，补充静态检查避免运行时 UI 再次偏出画布。
 
 ### 验收标准
 

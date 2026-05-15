@@ -27,6 +27,11 @@ test('Cocos component references shared state and chapter one script source', as
   assert.match(component, /performInteraction/);
   assert.match(component, /Component\.EventHandler/);
   assert.match(component, /customEventData = interaction\.id/);
+  assert.match(component, /Graphics/);
+  assert.match(component, /stageRoot/);
+  assert.match(component, /createHotspotButton/);
+  assert.doesNotMatch(component, /new Vec3\(-390/);
+  assert.match(component, /new Vec3\(0, 286, 0\)/);
   assert.match(readme, /docs\/game-script-chapter-01\.md/);
   assert.match(readme, /Cocos Creator 3\.8/);
 });

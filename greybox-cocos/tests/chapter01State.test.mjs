@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   CHAPTERS,
   CHAPTER_ONE,
+  SCENES,
   createInitialGreyboxState,
   getAvailableInteractions,
   performInteraction,
@@ -136,4 +137,21 @@ test('available interactions follow the active scene', () => {
     interactions.map((interaction) => interaction.id),
     ['tap_alarm', 'tap_cup', 'tap_shirt', 'tap_keys', 'tap_door_lock'],
   );
+});
+
+test('chapter one scenes expose visible greybox stage and hotspot data', () => {
+  assert.equal(SCENES.length, 6);
+
+  for (const scene of SCENES) {
+    assert.match(scene.goal, /\S/);
+    assert.ok(scene.stage.elements.length >= 3, `${scene.id} should render at least three stage elements`);
+
+    for (const interaction of scene.interactions) {
+      assert.equal(typeof interaction.hotspot.x, 'number', `${interaction.id} needs hotspot x`);
+      assert.equal(typeof interaction.hotspot.y, 'number', `${interaction.id} needs hotspot y`);
+      assert.equal(typeof interaction.hotspot.width, 'number', `${interaction.id} needs hotspot width`);
+      assert.equal(typeof interaction.hotspot.height, 'number', `${interaction.id} needs hotspot height`);
+      assert.match(interaction.hotspot.action, /点击|拖动|标记|节奏|观察|复访/);
+    }
+  }
 });
