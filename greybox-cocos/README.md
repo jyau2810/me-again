@@ -29,3 +29,7 @@ npm run verify
 ```
 
 Node 测试覆盖核心状态机；Cocos Creator 手动运行用于检查 UI 绑定与低保真交互表现。
+
+## Cocos Creator 运行
+
+用 Cocos Dashboard 打开本目录，Creator 3.8.x 会默认载入 `assets/scenes/chapter-one-greybox.scene`。如果看到空白 Untitled 场景，请在 Assets 面板双击 `scenes/chapter-one-greybox` 后再运行预览。

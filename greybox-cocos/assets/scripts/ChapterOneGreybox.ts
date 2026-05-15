@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, Label, Node } from 'cc';
+import { _decorator, Button, Color, Component, Label, Node, UITransform, Vec3 } from 'cc';
 import {
   CHAPTERS,
   createInitialGreyboxState,
@@ -31,6 +31,7 @@ export class ChapterOneGreybox extends Component {
   private state: GreyboxState = createInitialGreyboxState();
 
   start() {
+    this.ensureRuntimeUi();
     this.render('点击现实物件，开始第一章灰盒验证。');
   }
 
@@ -96,5 +97,61 @@ export class ChapterOneGreybox extends Component {
         }
       }
     });
+  }
+
+  private ensureRuntimeUi() {
+    if (!this.sceneTitle) {
+      this.sceneTitle = this.createLabel('SceneTitle', new Vec3(0, 240, 0), 28, new Color(235, 238, 226, 255), 660);
+    }
+    if (!this.sceneCopy) {
+      this.sceneCopy = this.createLabel('SceneCopy', new Vec3(0, 190, 0), 18, new Color(198, 205, 196, 255), 660, 64);
+    }
+    if (!this.feedback) {
+      this.feedback = this.createLabel('Feedback', new Vec3(0, 120, 0), 20, new Color(255, 232, 162, 255), 660, 72);
+    }
+    if (!this.chapterStatus) {
+      this.chapterStatus = this.createLabel('ChapterStatus', new Vec3(0, -230, 0), 14, new Color(160, 174, 172, 255), 660, 140);
+    }
+    if (!this.interactionRoot) {
+      this.interactionRoot = new Node('InteractionButtons');
+      this.node.addChild(this.interactionRoot);
+      this.interactionRoot.setPosition(new Vec3(-320, 50, 0));
+
+      for (let index = 0; index < 10; index += 1) {
+        const buttonNode = new Node(`InteractionButton${index + 1}`);
+        const row = Math.floor(index / 2);
+        const column = index % 2;
+        buttonNode.setPosition(new Vec3(column * 340, -row * 44, 0));
+        this.interactionRoot.addChild(buttonNode);
+
+        const transform = buttonNode.addComponent(UITransform);
+        transform.setContentSize(300, 36);
+
+        buttonNode.addComponent(Button);
+        const label = buttonNode.addComponent(Label);
+        label.string = '';
+        label.fontSize = 16;
+        label.lineHeight = 22;
+        label.color = new Color(228, 232, 220, 255);
+      }
+    }
+  }
+
+  private createLabel(name: string, position: Vec3, fontSize: number, color: Color, width = 720, height = 48): Label {
+    const node = new Node(name);
+    this.node.addChild(node);
+    node.setPosition(position);
+
+    const transform = node.addComponent(UITransform);
+    transform.setContentSize(width, height);
+
+    const label = node.addComponent(Label);
+    label.string = '';
+    label.fontSize = fontSize;
+    label.lineHeight = fontSize + 6;
+    label.color = color;
+    label.horizontalAlign = Label.HorizontalAlign.LEFT;
+    label.verticalAlign = Label.VerticalAlign.TOP;
+    return label;
   }
 }
