@@ -279,14 +279,16 @@
 
 | 交互 ID | 输入 | 触发条件 | 反馈 | 状态变化 |
 | --- | --- | --- | --- | --- |
-| `tap_chalk_echo` | 点击粉笔 | 任意 | 文本：`粉笔短短的，但好像还能画一点什么。` | `echoObjectsVisited += chalk` |
-| `tap_star_echo` | 点击贴纸星星 | 任意 | 文本：`星星贴在桌角，亮得很小。` | `echoObjectsVisited += star` |
-| `tap_desk_corner` | 点击桌角 | 任意 | 文本：`这里可以先留给以前的我。` | `echoObjectsVisited += desk_corner` |
-| `tap_bag_echo` | 点击通勤包 | 任意 | 文本：`包还在那里，但今天没有急着收好。` | `echoObjectsVisited += bag` |
+| `tap_chalk_echo` | 点击粉笔 | `chalk` 未记录 | 文本：`粉笔短短的，但好像还能画一点什么。` | `echoObjectsVisited += chalk` |
+| `tap_star_echo` | 点击贴纸星星 | `star` 未记录 | 文本：`星星贴在桌角，亮得很小。` | `echoObjectsVisited += star` |
+| `tap_desk_corner` | 点击桌角 | `desk_corner` 未记录 | 文本：`这里可以先留给以前的我。` | `echoObjectsVisited += desk_corner` |
+| `tap_bag_echo` | 点击通勤包 | `bag` 未记录 | 文本：`包还在那里，但今天没有急着收好。` | `echoObjectsVisited += bag` |
 
 **结束条件**
 
 复访任意 2 个物件后，结尾短句出现；点击短句后章节结束。
+
+重复点击同一物件只重复文本反馈，不重复累计 `echoObjectsVisited`。
 
 **结尾短句**
 

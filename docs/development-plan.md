@@ -8,7 +8,7 @@
 
 ## 进度总览
 
-当前五章 Godot 制作工程已经完成内容、交互、资源与本地开发整合，进入外部试玩阶段。旧 Web/Cocos 粗糙原型只保留在 `legacy-web-cocos-prototype/` 作为历史技术参考，不再决定产品结构、技术路线或验收标准。
+当前五章 Godot 制作工程已经完成内容、交互、资源与本地开发整合，进入外部试玩阶段。`greybox-cocos/` 与 `legacy-web-cocos-prototype/` 只保留为历史技术参考，不再决定产品结构、技术路线或验收标准。
 
 | 阶段 | 状态 | 主要产物 | 完成标准 |
 | --- | --- | --- | --- |
@@ -50,6 +50,32 @@
 - `../game/scripts/interactions/`：17 类交互契约、场景内热区、拖放、描线、轨迹、长按和多点触控。
 - `../game/scripts/interactions/interaction_scene_layouts.gd`：按场景与语义目标记录完整背景比例坐标、命中尺寸、显示模式和层级。
 - `../game/scenes/app/main.tscn` 与 `../game/scripts/ui/main_app.gd`：五章流程和可视验证入口。
+
+### 历史 Cocos 灰盒记录
+
+启动日期：2026-05-11  
+实际产物：
+
+- `../greybox-cocos/`：Cocos Creator 3.8.x 第一章灰盒原型工程骨架。
+- `../greybox-cocos/assets/scenes/chapter-one-greybox.scene`：第一章 Cocos 真实场景文件，挂载 `GreyboxCanvas` 与第一章控制组件。
+- `../greybox-cocos/assets/scripts/greyboxState.js`：第一章状态机、灰盒舞台数据、热点交互数据和章节占位顺序。
+- `../greybox-cocos/assets/scripts/ChapterOneGreybox.ts`：Cocos 低保真舞台渲染、热点按钮绑定和进度反馈组件。
+- `../greybox-cocos/settings/v2/packages/scene.json`：Creator 打开项目后的第一章默认当前场景设置。
+- `../greybox-cocos/tests/`：Node 状态机测试与 Cocos 工程静态检查。
+
+本轮覆盖范围：
+
+- 第一章《灰色早晨》从现实段、三次观察车窗、车灯阵营判断、后座堡垒、安全路线、信号灯节奏到现实回声的完整低保真状态流程。
+- 第二章、第四章、第三章、第五章仅按 `docs/game-script-index.md` 的灰盒验证顺序保留章节选择占位，尚未实现可玩交互。
+
+验证记录：
+
+- 已通过 `cd greybox-cocos && npm run verify` 覆盖第一章核心状态推进、错误/正确反馈、回声唯一计数和章节完成状态写入。
+- 2026-05-15：已用 Cocos Dashboard + Cocos Creator 3.8.8 手动打开 `greybox-cocos/`，确认 `chapter-one-greybox.scene` 可导入、层级中存在 `GreyboxCanvas` 与脚本组件，Safari 预览 `http://127.0.0.1:7456/` 可显示第一章灰盒 UI。
+- 2026-05-15：修复首轮 Cocos 场景占位 JSON 导致的导入失败问题，并补充 Creator `.meta`、项目 `settings/`、启动场景静态检查，避免新环境打开后落入空白 Untitled 场景。
+- 2026-05-15：根据 Cocos Creator 3.8.8 预览反馈，将第一章从列表式文字交互升级为可见灰盒舞台和亮框热点；每个场景都有低保真空间元素、当前目标、可点热点和进度提示，补充静态检查避免运行时 UI 再次偏出画布。
+
+2026-07-17 技术路线切换为 Godot 后，该工程停止继续开发，仅用于追溯第一章状态机和热点验证。更早的 Web/Cocos 实验保留在 `../legacy-web-cocos-prototype/`。
 
 ### 完成结果
 
@@ -121,7 +147,7 @@
 
 ### 范围变化
 
-- 引擎路线从旧计划中的 Cocos/Web 单章版本改为 Godot 五章制作工程；旧工程只保留为 legacy 参考。
+- 引擎路线从旧计划中的 Cocos/Web 单章版本改为 Godot 五章制作工程；`greybox-cocos/` 与 `legacy-web-cocos-prototype/` 只保留为历史参考。
 - 验收范围从“至少一个完整章节”提升为“5 章 30 幕连续可玩”。
 - 操作反馈从 App 式按钮和问题面板改为场景原位交互、图文观察卡和完成回忆卡。
 - 运行时反馈统一改为物件、声音和光线的具体变化，不再使用“再看一会”“慢慢试”等界面指导语。
