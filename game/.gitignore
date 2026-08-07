@@ -1,7 +1,11 @@
+.godot/
+*.tmp
+*.translation
+export/
+build/
 library/
 local/
 temp/
-build/
 profiles/
 *.log
 node_modules/
