@@ -14,6 +14,39 @@
 - 根据实机视觉验收，标题图、第一章和第二章已二次生成：公交座椅统一朝车头、窗外车辆与公交同向并共享消失点，跑道改为标准连续椭圆。
 - 物件图集的浅色底由运行时色键 Shader 去除；场景中已有的车窗、跑道、黑板等结构不重复覆盖图片，只设置透明命中区。
 
+## 2026-08-07 Stage 3 方向评审稿
+
+生成方式继续使用 Codex 内置 `image_gen` / imagegen 技能，不使用 CLI fallback。方向稿只用于 `c01_s02_commute_window` 的视觉语言评审，运行时不引用 `style-studies/`。
+
+| 工程文件 | 状态 | 生成源文件 | 结论 |
+| --- | --- | --- | --- |
+| `game/assets/art/style-studies/c01_s02/direction_a_v001_rejected.png` | `rejected` | `exec-dc3d8525-4839-459d-8a31-0cea4187f042.png` | 成年主角被错误生成成女性 |
+| `game/assets/art/style-studies/c01_s02/direction_b_v001_rejected.png` | `rejected` | `exec-30d4032b-7cbb-46d6-8591-6af7c74c9fc3.png` | 成年主角被错误生成成女性 |
+| `game/assets/art/style-studies/c01_s02/direction_c_v001_rejected.png` | `rejected` | `exec-2a4e52da-95d9-4621-874e-fd1c8098dd87.png` | 成年主角被错误生成成女性 |
+| `game/assets/art/style-studies/c01_s02/direction_a_v002.png` | `candidate` | `exec-cbe510af-320d-4825-a0b0-bf5019e2297d.png` | 身份与叙事对象检查通过，等待方向选择 |
+| `game/assets/art/style-studies/c01_s02/direction_b_v002.png` | `candidate` | `exec-369a83f5-7a2d-49a9-b436-02ed6ad90c65.png` | 身份与叙事对象检查通过，等待方向选择 |
+| `game/assets/art/style-studies/c01_s02/direction_c_v002.png` | `candidate` | `exec-af4e3473-1b93-405d-ac0c-776fcf1db316.png` | 身份与叙事对象检查通过，等待方向选择 |
+
+v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
+
+```text
+Use case: illustration-story
+Asset type: portrait 9:16 visual-direction study for an original 2D narrative game
+Primary request: a restrained rainy-night commute scene in which an emotionally tired adult briefly rediscovers his childhood way of seeing ordinary traffic lights as expressions
+Scene/backdrop: inside a contemporary city bus or hired car, seen from the rear passenger area; a large rain-streaked side window dominates the upper and right side; a wet ordinary city road and street lamps outside; one nearby unbranded focus vehicle has two clearly visible headlights and an unreadable plate, with no literal cartoon face
+Subject: exactly one ordinary East Asian adult man in his mid-thirties, clearly male, average build, short slightly untidy black hair, plain gray-blue collared work shirt and charcoal trousers; seated in the lower-left, body aligned with travel, phone held low near his lap, head turned up toward the window. In the glass is exactly one subtle reflection of the same person as an eight-year-old East Asian boy with matching hair direction and facial structure, looking curiously toward the vehicle lights
+Composition/framing: fixed portrait 9:16 composition, adult lower-left, phone near hands, window as the main play field, focus vehicle and its headlights/plate readable on the right, child reflection inside the glass rather than standing outdoors; preserve clear regions for window, phone, headlights and plate interactions; no UI
+Lighting/mood: realistic cool blue-gray rain and dim vehicle interior, with only a restrained warm amber near the child reflection and headlights; lived-in, quiet, observant, gently uncanny but not magical spectacle
+Constraints: adult and child must both be male and the same identity at different ages; original character, vehicle and environment designs; no readable text or license number; no logos, trademarks, watermark or baked interface; do not imitate any named artist, animation studio, existing film, character, shot or signature design
+Avoid: women or girls, photorealism, glossy 3D, cyberpunk neon, anime franchise look, giant eyes, chibi proportions, literal face on the car, fantasy portal, particles, horror, sentimental glow, crowded composition
+```
+
+方向差异：
+
+- A：明亮手绘二维动画，柔和铅笔轮廓、透明水彩空间和克制哑光水粉重点，兼顾形体可读与生活细节。
+- B：轻盈水彩绘本，细松铅笔、更多留白、局部消失边缘、浅层叠色与最少不透明重点。
+- C：图形化赛璐珞与水粉，简化轮廓、明确手绘边、哑光色块、克制两级阴影与很少纹理。
+
 ## 资产清单
 
 | 工程文件 | 用途 | 生成源文件 |

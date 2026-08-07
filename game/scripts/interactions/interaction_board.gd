@@ -21,7 +21,7 @@ const DragTokenScript = preload("res://scripts/interactions/interaction_drag_tok
 const DropSlotScript = preload("res://scripts/interactions/interaction_drop_slot.gd")
 const GestureSurfaceScript = preload("res://scripts/interactions/interaction_gesture_surface.gd")
 const HotspotScript = preload("res://scripts/interactions/interaction_hotspot.gd")
-const SceneLayouts = preload("res://scripts/interactions/interaction_scene_layouts.gd")
+const SceneLayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
 
 const COLOR_PANEL := Color(0.0, 0.0, 0.0, 0.0)
 const COLOR_WORKSPACE := Color(0.0, 0.0, 0.0, 0.0)
@@ -581,12 +581,17 @@ func _place_scene_node(
 	fallback_size: Vector2
 ) -> void:
 	var scene_id := String(_scene.get("id", ""))
-	var placement: Dictionary = SceneLayouts.target(scene_id, semantic_id)
-	var anchor: Vector2 = placement.get("p", fallback_anchor)
-	var hit_size: Vector2 = placement.get("s", fallback_size)
+	var placement: Dictionary = SceneLayoutStore.target(scene_id, semantic_id)
+	var anchor: Vector2 = placement.get("anchor", fallback_anchor)
+	var hit_size: Vector2 = placement.get("hit_size", fallback_size)
 	if node.has_method("set_scene_presentation"):
-		node.set_scene_presentation(String(placement.get("mode", "prop")))
-	node.z_index = int(placement.get("z", 1))
+		node.set_scene_presentation(String(placement.get("mode", "sprite")))
+	if node.has_method("set_scene_visual"):
+		node.set_scene_visual(
+			String(placement.get("asset_path", "")),
+			placement.get("visual_size", hit_size)
+		)
+	node.z_index = int(placement.get("z_index", 1))
 	field.add_child(node)
 	node.set_anchor(SIDE_LEFT, anchor.x)
 	node.set_anchor(SIDE_RIGHT, anchor.x)

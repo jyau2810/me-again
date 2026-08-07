@@ -15,6 +15,8 @@ var display_label := ""
 var prop_texture: Texture2D
 var _prop_view: TextureRect
 var _pulse := 1.0
+var _presentation_mode := "sprite"
+var _uses_external_asset := false
 var locked := false:
 	set(value):
 		locked = value
@@ -70,7 +72,28 @@ func _play_touch_feedback() -> void:
 	, 0.0, 1.0, 0.2)
 
 
+func set_scene_presentation(mode: String) -> void:
+	_presentation_mode = mode
+	if _prop_view != null:
+		_prop_view.visible = mode != "region"
+	queue_redraw()
+
+
+func set_scene_visual(asset_path: String, visual_size: Vector2) -> void:
+	if not asset_path.is_empty() and ResourceLoader.exists(asset_path):
+		var loaded := load(asset_path) as Texture2D
+		if loaded != null:
+			prop_texture = loaded
+			_uses_external_asset = true
+			_install_prop_view()
+	_apply_visual_size(visual_size)
+
+
 func _install_prop_view() -> void:
+	if _prop_view != null:
+		remove_child(_prop_view)
+		_prop_view.queue_free()
+		_prop_view = null
 	if prop_texture == null:
 		return
 	_prop_view = TextureRect.new()
@@ -79,9 +102,26 @@ func _install_prop_view() -> void:
 	_prop_view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_prop_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_prop_view.show_behind_parent = true
-	_prop_view.material = PropAtlas.key_material()
+	_prop_view.material = null if _uses_external_asset else PropAtlas.key_material()
 	add_child(_prop_view)
 	_prop_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_prop_view.visible = _presentation_mode != "region"
+
+
+func _apply_visual_size(visual_size: Vector2) -> void:
+	if _prop_view == null:
+		return
+	if visual_size.x <= 0.0 or visual_size.y <= 0.0:
+		_prop_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		return
+	_prop_view.set_anchor(SIDE_LEFT, 0.5)
+	_prop_view.set_anchor(SIDE_RIGHT, 0.5)
+	_prop_view.set_anchor(SIDE_TOP, 0.5)
+	_prop_view.set_anchor(SIDE_BOTTOM, 0.5)
+	_prop_view.offset_left = -visual_size.x * 0.5
+	_prop_view.offset_right = visual_size.x * 0.5
+	_prop_view.offset_top = -visual_size.y * 0.5
+	_prop_view.offset_bottom = visual_size.y * 0.5
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:

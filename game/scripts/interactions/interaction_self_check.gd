@@ -12,6 +12,7 @@ const BoardScript = preload("res://scripts/interactions/interaction_board.gd")
 const TokenScript = preload("res://scripts/interactions/interaction_drag_token.gd")
 const SlotScript = preload("res://scripts/interactions/interaction_drop_slot.gd")
 const SurfaceScript = preload("res://scripts/interactions/interaction_gesture_surface.gd")
+const LayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
 
 var _assertions := 0
 var _failures: Array[String] = []
@@ -22,6 +23,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	_test_scene_layout_store()
 	_test_all_catalog_contracts_complete()
 	_test_gentle_retry_rules()
 	await _test_board_renders_every_scene()
@@ -39,6 +41,34 @@ func _run() -> void:
 	for failure in _failures:
 		printerr("  - %s" % failure)
 	quit(1)
+
+
+func _test_scene_layout_store() -> void:
+	var sample_path := LayoutStore.layout_path("c01_s02_commute_window")
+	_expect(FileAccess.file_exists(sample_path), "sample scene layout JSON exists")
+	var sample := LayoutStore.load_scene("c01_s02_commute_window")
+	_expect(not sample.is_empty(), "sample scene layout JSON parses")
+	_expect(sample.get("scene_id") == "c01_s02_commute_window", "sample scene ID matches its file")
+	_expect(sample.get("targets", {}).size() == 4, "sample scene exposes four calibrated targets")
+
+	var phone := LayoutStore.target("c01_s02_commute_window", "phone")
+	_expect(not phone.is_empty(), "runtime resolves a target from JSON")
+	_expect(phone.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.78, 0.68)), "JSON anchor becomes scene-space Vector2")
+	_expect(phone.get("hit_size", Vector2.ZERO) == Vector2(220.0, 230.0), "JSON hit size is preserved")
+	_expect(phone.get("visual_size", Vector2.ZERO) == Vector2(180.0, 210.0), "visual size remains independent from hit size")
+	_expect(phone.get("mode") == "sprite", "JSON sprite presentation is normalized")
+
+	var fallback := LayoutStore.target("c01_s01_room_morning", "alarm")
+	_expect(not fallback.is_empty(), "unmigrated scene falls back to the historical layout")
+	_expect(fallback.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.13, 0.67)), "fallback keeps the historical anchor")
+	_expect(fallback.get("mode") == "sprite", "legacy prop mode normalizes to sprite")
+	_expect(LayoutStore.target("missing_scene", "missing_target").is_empty(), "unknown target resolves to an empty placement")
+
+	_expect(LayoutStore.decode_scene("{broken", "c01_s02_commute_window").is_empty(), "malformed layout JSON is rejected")
+	var minimal := LayoutStore.decode_scene('{"scene_id":"sample","targets":{}}', "sample")
+	_expect(not minimal.is_empty(), "valid minimal layout JSON is accepted")
+	_expect(LayoutStore.decode_scene('{"scene_id":"other","targets":{}}', "sample").is_empty(), "mismatched scene ID is rejected")
+	_expect(LayoutStore.normalize_target({"anchor": [0.5, 0.5]}).is_empty(), "target without a hit size is rejected")
 
 
 func _test_all_catalog_contracts_complete() -> void:

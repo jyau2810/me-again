@@ -1,8 +1,8 @@
 # 《我》Godot 制作架构
 
-版本：v1.1
+版本：v1.2
 
-日期：2026-07-17
+日期：2026-08-07
 
 引擎锁定：Godot `4.7.1.stable.official.a13da4feb`
 
@@ -56,12 +56,14 @@ AudioDirector（Music / Ambience / SFX）贯穿场景阶段
 交互不采用 App 式表单或一排操作按钮。运行时遵循以下层级：
 
 1. 背景和透明物件图集共同构成场景。
-2. `interaction_scene_layouts.gd` 按幕记录目标在完整背景中的归一化中心点、命中尺寸、显示模式和层级；玩家直接点物、拖动物件或沿场景路径操作。
+2. 已迁移场景由 `data/scene_layouts/<scene_id>.json` 记录归一化中心点、视觉尺寸、命中尺寸、显示模式、层级、资产路径和锁定状态；未迁移目标回退到 `interaction_scene_layouts.gd`。
 3. 普通观察弹出图文观察卡，展示物件局部图和一句克制反馈。
 4. 一幕完成时弹出图文回忆卡，用画面和短文本完成情绪收束。
 5. 提示优先通过物件轻动、光影、声音和环境文案给出，最后才使用轻量视觉强调。
 
 交互层覆盖近乎完整画布，保持透明；底部叙事是鼠标穿透的渐变字幕层，不会切断校门、桌沿、手机或化石台的命中。全局导航按钮只存在于标题、章节选择、收集册、制作信息和必要的暂停/返回位置；它们不代替场景动作。
+
+`interaction_scene_layout_store.gd` 是正式运行时与校准工具的共同数据边界。运行时每个目标先读取 JSON 并规范化为 Godot `Vector2`；文件缺失、目标尚未迁移或 JSON 目标无效时，再逐目标读取历史布局。`scene_layout_calibrator.tscn` 可直接拖动目标，分别调整视觉矩形和命中矩形，并保存/重新载入同一份 JSON，不需要修改 GDScript 常量。
 
 ## 5. 内容与资源映射
 
@@ -73,7 +75,7 @@ AudioDirector（Music / Ambience / SFX）贯穿场景阶段
 | 柜子里的呼吸 | `chapter_04.png` | 柜门开合、声音摆放、空间比较、长按呼吸 |
 | 密林之后 | `chapter_05.png` | 树影探索、旧意象、化石遇见、双指合作 |
 
-现实回声复用 `reality_room.png`，标题使用 `title_key_art.png`，合计 7 张竖屏背景/主视觉。`assets/art/props/` 中 4 张透明图集为场景热点提供日常、动作、纸片、柜子/森林物件。30 条 CC0 音频分为音乐、环境声和交互音效；逐文件来源见 `audio-licenses.md`。
+现实回声复用 `reality_room.png`，标题使用 `title_key_art.png`，合计 7 张竖屏背景/主视觉。`assets/art/props/` 中 4 张旧图集为场景热点提供历史技术占位；这些资源不再视为逐幕精细化的产品验收结果。新资产按单幕拆为背景、人物、独立物件、状态图和光效，经过方向、构图、单项、合成与落位确认后才接入运行时。30 条 CC0 音频继续沿用，逐文件来源见 `audio-licenses.md`。
 
 ## 6. 存档与试玩指标
 
@@ -102,7 +104,7 @@ HOME=/tmp/me-again-godot-home /Applications/Godot.app/Contents/MacOS/Godot \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-结果：158 条断言、17 类交互契约通过。
+结果：175 条断言、17 类交互契约通过；其中新增 JSON 解析、样板布局、视觉/命中尺寸分离和旧布局回退检查。
 
 ## 8. 发布边界
 

@@ -15,8 +15,9 @@ var _content_label: Label
 var _pulse := 1.0
 var _prop_texture: Texture2D
 var _prop_view: TextureRect
-var _presentation_mode := "prop"
+var _presentation_mode := "sprite"
 var _region_active := false
+var _uses_external_asset := false
 
 
 func setup(id: String, title: String, accepts: Array[String] = []) -> void:
@@ -51,6 +52,16 @@ func set_scene_presentation(mode: String) -> void:
 	if _content_label != null:
 		_content_label.visible = mode != "region"
 	queue_redraw()
+
+
+func set_scene_visual(asset_path: String, visual_size: Vector2) -> void:
+	if not asset_path.is_empty() and ResourceLoader.exists(asset_path):
+		var loaded := load(asset_path) as Texture2D
+		if loaded != null:
+			_prop_texture = loaded
+			_uses_external_asset = true
+			_install_prop_view()
+	_apply_visual_size(visual_size)
 
 
 func _ready() -> void:
@@ -150,6 +161,10 @@ func _play_drop_feedback() -> void:
 
 
 func _install_prop_view() -> void:
+	if _prop_view != null:
+		remove_child(_prop_view)
+		_prop_view.queue_free()
+		_prop_view = null
 	if _prop_texture == null:
 		return
 	_prop_view = TextureRect.new()
@@ -158,9 +173,26 @@ func _install_prop_view() -> void:
 	_prop_view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_prop_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_prop_view.show_behind_parent = true
-	_prop_view.material = PropAtlas.key_material()
+	_prop_view.material = null if _uses_external_asset else PropAtlas.key_material()
 	add_child(_prop_view)
 	_prop_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_prop_view.visible = _presentation_mode != "region"
+
+
+func _apply_visual_size(visual_size: Vector2) -> void:
+	if _prop_view == null:
+		return
+	if visual_size.x <= 0.0 or visual_size.y <= 0.0:
+		_prop_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		return
+	_prop_view.set_anchor(SIDE_LEFT, 0.5)
+	_prop_view.set_anchor(SIDE_RIGHT, 0.5)
+	_prop_view.set_anchor(SIDE_TOP, 0.5)
+	_prop_view.set_anchor(SIDE_BOTTOM, 0.5)
+	_prop_view.offset_left = -visual_size.x * 0.5
+	_prop_view.offset_right = visual_size.x * 0.5
+	_prop_view.offset_top = -visual_size.y * 0.5
+	_prop_view.offset_bottom = visual_size.y * 0.5
 
 
 func _refresh_labels() -> void:

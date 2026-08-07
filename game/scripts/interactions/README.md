@@ -28,6 +28,20 @@ Public integration boundary:
 - `collectible_requested(item_id)` omits items already passed to `configure`.
 - `sfx_requested(kind)` asks the audio layer for a semantic sound, not a file.
 
+Scene placement is resolved by `interaction_scene_layout_store.gd`. It first
+loads `res://data/scene_layouts/<scene_id>.json` and normalizes `anchor`,
+`visual_size`, `hit_size`, `z_index`, `mode`, `asset_path` and `locked`.
+Missing files or targets fall back one target at a time to the historical
+`interaction_scene_layouts.gd` table, so scenes can migrate independently.
+Runtime sprites can use an external transparent asset and a visual rectangle
+that is smaller or larger than the forgiving hit rectangle.
+
+To calibrate the sample scene, open and run
+`res://scenes/tools/scene_layout_calibrator.tscn` in Godot. Select a target on
+the canvas or in the inspector, drag its center, edit visual/hit size, layer,
+mode, asset path or drag lock, then save. The tool and runtime read the same
+repository JSON; Ctrl+S saves and Reload discards unsaved changes.
+
 The board uses native Godot drag payloads for classification, sound slots,
 storyboard ordering and bookmark placement. Route, slow laps and forgiving
 tracing use `interaction_gesture_surface.gd`. Chapter 5 accepts actual
@@ -48,4 +62,6 @@ HOME=/tmp/me-again-godot-home \
 The test configures all 30 scenes, completes all 17 renderer contracts, checks
 non-punitive retry behavior, instantiates every board layout, validates native
 drop payloads, draws a trace with mouse events, and performs the Chapter 5 touch
-sequence with screen-touch events.
+sequence with screen-touch events. It also validates canonical layout JSON,
+independent visual/hit sizes and legacy fallback behavior. The expected result
+is 175 assertions across 17 contracts.
