@@ -1,6 +1,6 @@
 # `c01_s02_commute_window` 视觉参考摘要
 
-版本：v0.7
+版本：v0.9
 
 日期：2026-08-10
 
@@ -14,6 +14,10 @@
 - `reference_type`：用户标注的当前候选问题截图
 - `reference_purpose`：锁定儿童倒影的玻璃裁切边界、服装、手中物件和表情修正
 - `source_marker`：`user_attachment:codex-clipboard-7c2af3fd-9102-42e8-80dc-39c5daffd338.png`
+- `reference_id`：`candidate_c01_s02_bg_layout_01`
+- `reference_type`：待确认的无人物背景构图灰稿
+- `reference_purpose`：确认公交与道路结构，以及成年人物/手机、焦点车车灯、焦点车车牌三个后续叠加预留区
+- `source_marker`：`../game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png`
 
 ## observed_signals
 
@@ -57,7 +61,8 @@
 
 ## pending_confirmations
 
-- `direction_selected_v009.png` 的五岁手绘儿童与更弱倒影修正版等待最终确认；确认前不进入正式分层资产生产。
+- `direction_selected_v009.png` 已确认，不再回到人物方向评审。
+- 当前只等待确认 `bg_c01_s02_bus_night_layout_v001.png` 的公交结构、双向道路、右侧同向远离车辆，以及成年人物/手机、焦点车车灯、焦点车车牌三个叠加预留区。
 
 ## confirmation_rounds
 
@@ -68,6 +73,7 @@
 - 第 5 轮：2026-08-10，用户指出 v006 的儿童表情僵硬，读成尬笑而不是开心，同时要求倒影更淡、更像玻璃反射。
 - 第 6 轮：2026-08-10，用户指出 v007 的表情仍然僵硬且倒影仍偏清晰；取消主动笑容动作，改为嘴唇微张、眉眼自然亮起，并进一步降低倒影强度。
 - 第 7 轮：2026-08-10，用户指出 v008 预览仍偏写实，并要求儿童年龄下调到约五岁；儿童造型改为更概括的手绘二维动画比例，不采用写实缩小成人脸。
+- 第 8 轮：2026-08-10，用户接受 v009 作为当前检查点并要求继续；v009 锁定为后续背景灰稿、人物与倒影资产的视觉基准。
 
 ## merge_guidance
 

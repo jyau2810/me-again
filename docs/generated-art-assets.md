@@ -31,7 +31,8 @@
 | `game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `rejected` | `exec-5d273d17-00bb-44c8-ad25-0a6541bb1a65.png` | 身体方向正确，但倒影越过玻璃，且儿童服装、手机和表情不符合要求 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v006.png` | `rejected` | `exec-7dfde9dc-e260-4d25-950d-0595a338a835.png` | 边界、服装和空手正确，但表情读成尬笑，倒影过于清晰实体化 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `rejected` | `exec-f3644651-dd8d-4c75-a5a7-289c3ffacaf8.png` | 表情仍显僵硬，倒影仍偏清晰 |
-| `game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `candidate` | `exec-f65a2305-a270-4bf0-b37d-97ff63fc1e06.png` | 改为约五岁概括手绘造型、无笑容自然关注，并维持约实体人物四分之一的弱反射 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `approved` | `exec-f65a2305-a270-4bf0-b37d-97ff63fc1e06.png` | 用户接受为背景灰稿、人物与倒影资产的视觉和合成关系基准；不是运行时资产 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png` | `candidate` | `exec-5cf76c7b-9935-4b6e-b42d-8b59b98e1f9a.png` | 无人物、无手机、无近处焦点车的背景构图灰稿，等待公交结构、道路方向与叠加预留区确认 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -156,6 +157,26 @@ Preserve exactly: child torso faces the bus/image front; only head turns left to
 Required invariants: preserve the adult exactly, including identity, pose, expression, clothing, hands and smartphone. Preserve crop, camera, bus structure, seats, rails, sill, seals, wet glass, rain, city, road, lane markings, every vehicle position and direction, black oncoming focus car, right receding red car, lighting, palette, and the rest of the painting.
 
 Avoid: photorealistic child, realistic aged-down adult face, skin pores, photographic rendering, mature seven-to-ten-year-old proportions, stiff expression, any smile or upward mouth corners, pursed lips, perfect symmetry, direct camera gaze; oversized anime eyes, chibi, mascot, doll, baby caricature; reflection too visible or solid; child outside glass; phone or prop; any changes to adult, traffic, bus, crop, perspective, road or lighting; logos, readable plate, text, UI, watermark. Do not imitate any named artist, studio, film, character, shot, or signature design.
+```
+
+### 无人物背景构图灰稿
+
+`bg_c01_s02_bus_night_layout_v001.png` 使用内置 `image_gen` 编辑模式生成，输入图为已确认的 `direction_selected_v009.png`。这是构图 Gate 候选，不是正式背景；工程文件为 941 × 1672 RGB PNG，SHA-256 为 `4128feebfb3ac24a18d0e3139b83342fd580cbad7cbb1c3bc18955a2c339c0db`。本轮使用的完整结构化提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: portrait 9:16 low-fidelity background composition layout for c01_s02_commute_window
+Input image: edit target and locked visual-composition reference. Preserve its camera, crop, bus-window proportions, road perspective, traffic-direction logic, and hand-painted 2D visual language.
+
+Primary request: create a background-only composition draft for later layered production. Remove the adult commuter, the child reflection, the smartphone, and the entire nearby black oncoming focus car. Reconstruct the bus seat, interior panels, wet window, rainy street, and road surface naturally behind the removed elements. The result must contain only the non-interactive environment and distant traffic.
+
+Composition requirements: keep the empty seated-adult placement in the lower-left available for a later character overlay; keep a clean hand-and-phone overlay area near the lower-middle; keep a large unobstructed opposing-lane area in the middle-right for a later independent focus-car sprite, including readable future headlight and plate zones. Preserve the large glass pane and its hard frame boundaries for a later clipped child-reflection layer. Preserve the right-side car showing its rear and traveling away in the bus direction, plus distant traffic that supports a clearly readable two-way road.
+
+Draft treatment: render this as a deliberate blue-gray value-and-layout study, not a polished production background. Use simplified matte gouache shapes, restrained graphite edges, broad value groups, and only small muted amber notes on rails, street lamps, and distant vehicle lights. Keep enough rain and wet-road reflection to judge depth, but avoid finished micro-detail.
+
+Required invariants: portrait crop and fixed camera; bus frame, seats, yellow rails, window sill and road share credible perspective; right-side red car remains rear-facing and receding; distant opposing and same-direction traffic remain consistent; no readable text, plate number, logo, trademark, watermark, or UI.
+
+Avoid: any adult, child, face, human silhouette, child reflection, smartphone, hand-held prop, nearby black focus vehicle, baked headlight face, baked plate interaction, character shadow, empty glowing silhouette, photorealism, glossy 3D, cyberpunk neon, fantasy portal, dramatic magic, finished-production polish, or changes that collapse the two-way traffic logic.
 ```
 
 ## 资产清单

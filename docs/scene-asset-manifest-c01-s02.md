@@ -52,12 +52,20 @@
 | 选定方向身体同向修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `rejected` | 身体方向正确，但倒影越过玻璃，且儿童服装、手机和表情不符合要求 |
 | 选定方向玻璃裁切修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v006.png` | `rejected` | 边界、服装和空手正确，但表情读成尬笑，倒影过于清晰实体化 |
 | 选定方向弱反射修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `rejected` | 表情仍显僵硬，倒影仍偏清晰 |
-| 五岁儿童弱反射修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `candidate` | 改为约五岁概括手绘造型，以嘴唇微张和自然关注表达轻快感，并进一步弱化倒影 |
+| 五岁儿童弱反射修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `approved` | 已锁定为背景灰稿、人物与倒影资产的视觉和合成关系基准；不是运行时资产 |
 | A/B/C v002 | `../game/assets/art/style-studies/c01_s02/` | `rejected` | 用户确认其道路或车辆方向存在问题，不再进入后续方向选择 |
 
 视觉参考的采纳范围和不变量见 [视觉参考摘要](./visual-reference-brief-c01-s02.md)。
 
 ### 场景背景
+
+#### `bg_c01_s02_bus_night_layout_v001.png`
+
+- 状态：`candidate`
+- 用途：无人物、无手机、无近处焦点车辆的背景构图灰稿，仅用于确认空间和后续叠加预留区，不作为正式运行时背景。
+- 当前结果：保留空座、车厢结构、完整玻璃、湿路、双向远车和右侧同向远离车辆；画面中部偏右留出焦点黑车空间，左下与下方中部留出成年人物和手机空间。
+- 校准结论：Godot 实帧中 `window`、`phone`、`headlight`、`plate` 均落在对应玻璃或预留区，构图 Gate 暂不调整初始坐标；正式人物、手机和焦点车合成后再次人工校正。
+- 待确认：公交结构与道路透视；右侧车辆车尾方向；成年人物/手机、焦点车车灯、焦点车车牌三个叠加预留区。
 
 #### `bg_c01_s02_bus_night_base_v001.png`
 
@@ -174,8 +182,8 @@
 
 ## 7. 当前验收顺序
 
-1. 确认 `direction_selected_v009.png` 同时保留选定构图、车辆方向、人物身份、“身体同向、头部反向”的关系、严格玻璃裁切、五岁手绘造型、无笑容自然神情和弱反射质感。
-2. 以已锁定参考确认无人物背景构图灰稿和焦点车辆独立空间。
+1. 已确认 `direction_selected_v009.png` 同时保留选定构图、车辆方向、人物身份、“身体同向、头部反向”的关系、严格玻璃裁切、五岁手绘造型、无笑容自然神情和弱反射质感。
+2. 确认 `bg_c01_s02_bus_night_layout_v001.png` 的公交结构、双向道路、右侧同向远离车辆，以及成年人物/手机、焦点车车灯、焦点车车牌三个叠加预留区。
 3. 依次确认成年主角、儿童倒影、手机和焦点车辆。
 4. 确认车灯、车牌与反光状态图。
 5. 完成静态和四状态合成预览。

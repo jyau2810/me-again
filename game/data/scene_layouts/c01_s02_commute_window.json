@@ -2,7 +2,7 @@
 	"version": 1,
 	"scene_id": "c01_s02_commute_window",
 	"canvas_size": [720, 1280],
-	"reference_background_path": "res://assets/art/style-studies/c01_s02/direction_selected_v009.png",
+	"reference_background_path": "res://assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png",
 	"targets": {
 		"window": {
 			"anchor": [0.62, 0.39],
@@ -41,5 +41,5 @@
 			"locked": false
 		}
 	},
-	"notes": "Initial calibration against the user-selected composition reference, updated to the five-year-old soft-reflection child v009 candidate on 2026-08-10. The crop and traffic composition are unchanged; all positions remain unapproved until production assets are composited."
+	"notes": "Composition-gate calibration against bg_c01_s02_bus_night_layout_v001.png on 2026-08-10. Godot rendered-frame review kept the existing window, adult-and-phone, focus-car headlight, and focus-car plate positions unchanged. They remain provisional until the background layout is approved and production layers are composited."
 }
