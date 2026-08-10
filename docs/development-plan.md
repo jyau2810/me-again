@@ -66,6 +66,8 @@
 - `../game/data/scene_layouts/c01_s02_commute_window.json`：可由工具保存并被运行时读取的布局数据。
 - `../game/assets/art/style-studies/c01_s02/`：三种原创视觉方向评审稿。
 - `../game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png`：无人物、无手机、无近处焦点车的背景构图灰稿候选。
+- `../game/assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`：已确认的首个正式无人物背景。
+- `../game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png`：与正式背景同画布的透明前景遮挡层候选。
 
 ### 2026-08-07 当前检查点
 
@@ -97,7 +99,11 @@
 - 已生成 `bg_c01_s02_bus_night_base_v001_candidate.png`：在 v003 固定构图上补足正式手绘材质、雨滴、湿路、远景和冷暖光色，并将右侧同向车辆修正为低饱和暗红车尾；候选仍位于 `style-studies/`，确认前不进入 `production/`。
 - 校准工具已切换到正式背景候选并完成 Godot 正常渲染实帧复查：`headlight`/`plate` 位于空置对向车道，`phone` 位于座椅右上方，`window` 覆盖主要玻璃，雨滴和反光未遮掉预留区，本轮保留既有坐标。校准器统一将参考图压暗到 74%，暗部最终判断以原始候选图和后续合成为准。
 - 正式背景候选检查点回归通过：状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 175 条断言、17 类契约；主场景与校准器 headless smoke test 均正常。
-- Stage 3 继续保持“进行中”；正式背景候选未确认前不生成人物或交互物件，也不批量扩展其他场景。
+- 用户确认 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` 更好；对应候选晋级为 `production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`，校准器改用 production 路径。
+- 新增前景遮挡分层决策：空座前方水平扶手、底部弧形扶手和最前排座椅上缘必须以同画布透明层绘制在人物之上，不能硬裁进可移动人物资产。
+- 已生成 `fg_c01_s02_bus_rail_occluder_v001_candidate.png`：941 × 1672 RGBA，保留两段扶手与底部座椅上缘，透明覆盖和同坐标合成检查通过，等待视觉确认后再晋级 production。
+- production 背景与遮挡候选均已由 Godot 4.7.1 正常导入；540 × 960 校准器实帧确认 production 背景非空且画幅正确，`window`、`phone`、`headlight`、`plate` 四个热点未漂移。当前回归继续通过：状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 175 条断言、17 类契约；主场景与校准器 smoke test 正常。
+- Stage 3 继续保持“进行中”；前景遮挡层未确认前不生成人物或交互物件，也不批量扩展其他场景。
 
 ### 验收标准
 
@@ -296,7 +302,7 @@
 
 ## 当前下一步
 
-执行 Stage 3：确认 `bg_c01_s02_bus_night_base_v001_candidate.png` 的正式完成度、冷暖与暗部可读性、雨滴密度、座椅/扶手材质、右侧暗红车方向和三个叠加预留区。确认后将其晋级到 `production/c01_s02_commute_window/background/`；正式背景未确认前，不生成人物和交互物件，单幕未验收前不扩展到其余场景。
+执行 Stage 3：确认 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 是否只保留需要盖住人物的两段前景扶手和最前排座椅上缘，透明边缘、同画布位置和人物可移动区是否成立。确认后晋级到 `production/c01_s02_commute_window/foreground/` 并接入校准器；此前不开始成年人物，单幕未验收前不扩展到其余场景。
 
 ### 方向重置记录
 
@@ -315,3 +321,5 @@
 - 2026-08-10：用户指出 v001 抹除了成年人物的固定座椅；v001 标记为拒绝，v002 在原坐处恢复座椅并进入构图确认。
 - 2026-08-10：用户指出 v002 的扶手杆阻塞座椅；v002 标记为拒绝，v003 移除穿过座椅的扶手下段并进入构图确认。
 - 2026-08-10：用户确认 v003 可以采用；构图灰稿 Gate 关闭，首个正式完成度无人物背景候选开始评审。
+- 2026-08-10：用户确认 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` 为更好的正式背景；对应候选晋级 production，背景完成度 Gate 关闭。
+- 2026-08-10：发现固定前景扶手和最前排座椅会遮挡可移动人物；新增独立透明前景遮挡层 Gate，候选 v001 已生成并等待确认。

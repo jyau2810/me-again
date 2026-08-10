@@ -69,6 +69,7 @@
 - `integrated`：已接入 Godot 与交互状态。
 - `rejected`：不再使用，保留拒绝原因但不进入运行时目录。
 - `reference_only`：仅有明确的局部参考用途，不是可接入运行时的完整资产。
+- `approved_reference`：候选已获确认并保留为生成/评审来源；运行时使用其 production 副本。
 
 任何资产不得从 `candidate` 直接跳到 `integrated`。
 
@@ -88,6 +89,7 @@ game/assets/art/
   production/
     c01_s02_commute_window/
       background/
+      foreground/
       characters/
       props/
       effects/
@@ -101,12 +103,15 @@ game/data/scene_layouts/
 ## 5. 命名与版本
 
 - 背景：`bg_<scene>_<state>_vNNN.png`
+- 前景遮挡：`fg_<scene>_<object>_occluder_vNNN.png`
 - 人物：`char_<identity>_<pose>_<state>_vNNN.png`
 - 物件：`prop_<object>_<state>_vNNN.png`
 - 光效：`fx_<scene>_<effect>_<state>_vNNN.png`
 - 合成预览：`preview_<scene>_<state>_vNNN.png`
 
 新候选使用递增版本号，不覆盖已确认文件。替换运行时资产时，先更新清单状态与引用，再删除已明确废弃且可从 Git 恢复的旧候选。
+
+会盖住可移动人物或物件的固定环境结构必须拆成与背景同画布、同坐标的透明前景遮挡层。遮挡层在人物、手机和局部效果之后绘制；不把固定护栏或座椅边缘硬裁进人物 PNG，以保留人工落位校正能力。
 
 ## 6. 布局数据职责
 

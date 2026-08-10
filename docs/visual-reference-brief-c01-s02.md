@@ -1,6 +1,6 @@
 # `c01_s02_commute_window` 视觉参考摘要
 
-版本：v1.2
+版本：v1.3
 
 日期：2026-08-10
 
@@ -31,9 +31,17 @@
 - `reference_purpose`：确认扶手终止位置、无阻塞乘坐空间和既有叠加预留区
 - `source_marker`：`../game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v003.png`
 - `reference_id`：`candidate_c01_s02_bg_base_01`
-- `reference_type`：待确认的正式完成度背景候选
-- `reference_purpose`：确认背景材质、雨夜光色、暗部可读性、右侧暗红车和分层边界
+- `reference_type`：已确认正式背景的生成与评审来源
+- `reference_purpose`：锁定背景材质、雨夜光色、暗部可读性、右侧暗红车和分层边界
 - `source_marker`：`../game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_base_v001_candidate.png`
+- `reference_id`：`approved_c01_s02_bg_base_01`
+- `reference_type`：已确认的正式运行时背景
+- `reference_purpose`：作为后续全部人物、物件、效果和遮挡层的同画布合成基底
+- `source_marker`：`../game/assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`
+- `reference_id`：`candidate_c01_s02_fg_occluder_01`
+- `reference_type`：待确认的透明前景遮挡层
+- `reference_purpose`：确认空座前方扶手、底部弧形扶手和最前排座椅上缘的独立遮挡范围
+- `source_marker`：`../game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png`
 
 ## observed_signals
 
@@ -51,6 +59,7 @@
 - `obs_lighting`：冷蓝雨夜为主，路灯、车灯、手机和倒影附近使用少量琥珀暖光。
 - `obs_seat_support`：成年主角坐在左下固定公交座椅上；移除人物和手机时必须保留座椅靠背、坐垫、支撑及其与黄杆、护栏的遮挡关系。
 - `obs_rail_clearance`：扶手只能位于座椅边界、上沿或人物可避让的位置，不得穿过靠背、坐垫、骨盆接触面或腿部空间。
+- `obs_foreground_occlusion`：空座前方水平扶手、底部弧形扶手和最前排座椅上缘必须绘制在人物与手机之上，但不能硬裁进人物资产，否则人工移动后遮挡关系会失效。
 
 ## usable_signals
 
@@ -67,6 +76,7 @@
 - 锁定冷雨夜与局部暖光关系，不改成霓虹、赛博或大面积魔法光效。
 - 锁定左下座椅为背景固定结构，人物骨盆与坐垫接触、背部由靠背承接；人物、手机可以独立移除，座椅不能随人物一起被抹除。
 - 锁定扶手与座椅的物理净空：上方扶手可保留，任何下段竖杆必须在座椅外侧、于上沿终止，或完全隐藏在座椅后方。
+- 锁定前景遮挡层与正式背景共用全画布坐标，只保留需要盖住人物的固定结构；人物、手机和遮挡层分别保留为可替换资产。
 
 ## invalid_or_ignored_signals
 
@@ -85,7 +95,8 @@
 
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
 - `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
-- 当前只等待确认 `bg_c01_s02_bus_night_base_v001_candidate.png` 的正式完成度、冷暖与暗部可读性、雨滴密度、座椅和扶手材质、右侧暗红车方向及三个叠加预留区。
+- `bg_c01_s02_bus_night_base_v001_candidate.png` 已确认并晋级 production 正式背景，不再回到背景完成度评审。
+- 当前只等待确认 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 的两段扶手、底部前排座椅上缘、透明边缘和人物可移动区；确认前不开始成年人物资产。
 
 ## confirmation_rounds
 
@@ -100,6 +111,7 @@
 - 第 9 轮：2026-08-10，用户指出背景灰稿 v001 在移除成年人物时错误抹除了其固定座椅；v002 在标注区域恢复座椅靠背、坐垫和支撑，等待确认。
 - 第 10 轮：2026-08-10，用户指出 v002 的扶手杆明显卡住座位；v003 移除穿过座椅的扶手下段与落地底座，恢复无阻塞乘坐空间，等待确认。
 - 第 11 轮：2026-08-10，用户确认 v003 可以采用；构图灰稿锁定，进入正式无人物背景候选评审。
+- 第 12 轮：2026-08-10，用户确认 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` 更好；该图对应的仓库候选晋级为正式 production 背景，下一道 Gate 改为前景遮挡层。
 
 ## merge_guidance
 
@@ -113,5 +125,6 @@
 - 合并到倒影效果：将儿童图层控制在约实体人物四分之一的视觉强度，继续降低不透明度、饱和度、锐度和局部对比，让大部分边缘消失；只保留足以辨认身份和朝向的信息。
 - 合并到儿童造型：按约五岁设计圆润面颊、短下颌、小鼻口和窄肩颈，以概括线条与简化明暗融入手绘二维动画画面；保留同一人的身份锚点，但不做写实年龄缩放。
 - 合并到资产生产：正式背景不含人物、手机、焦点车辆和倒影；这些内容继续按资产清单独立生产。
+- 合并到前景遮挡：只隔离空座前方水平扶手、底部弧形扶手和最前排座椅上缘，保持与正式背景相同画布和坐标，并绘制在人物、手机及局部效果之上。
 - 合并到背景生产：公交固定座椅、扶手、窗框和人物承载面属于环境背景；移除独立人物或手机时不得破坏这些固定结构。
 - 合并到结构验收：扶手、护栏和座椅必须满足可信遮挡与乘坐净空；不能依靠之后的人物图层掩盖穿模或阻塞问题。

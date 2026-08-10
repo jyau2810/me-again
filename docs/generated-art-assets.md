@@ -35,7 +35,8 @@
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png` | `rejected` | `exec-5cf76c7b-9935-4b6e-b42d-8b59b98e1f9a.png` | 移除成年人物时错误抹除了其固定座椅，人物叠加后将缺少可信承载面 |
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v002.png` | `rejected` | `exec-bdc29e4e-4661-477a-a64b-cb9ef00d87bf.png` | 恢复了座椅，但竖向黄扶手穿过靠背、坐垫并落地，明显阻塞乘坐空间 |
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v003.png` | `approved` | `exec-afe87548-a0b7-4988-9339-da3211c42fdd.png` | 用户确认扶手与座椅关系成立；锁定为正式背景生产的构图基准 |
-| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_base_v001_candidate.png` | `candidate` | `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` | 首个正式完成度无人物背景候选；右侧同向车已修正为低饱和暗红车尾，等待确认 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_base_v001_candidate.png` | `approved_reference` | `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` | 用户确认该图为正式背景；保留为生成与评审来源，运行时改用 production 副本 |
+| `game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png` | `candidate` | `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png` | 从正式背景同画布隔离两段前景黄扶手与最前排座椅上缘，等待分层确认 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -212,9 +213,9 @@ Style/medium: match the existing blue-gray value-and-layout study with simplifie
 Avoid: moving the seat; deleting the upper pole or horizontal rails; adding another pole; any rail crossing the backrest or cushion; any person, child reflection, phone, focus car, text, logo, UI, changed road or traffic direction, photorealism, glossy 3D, or production polish.
 ```
 
-### 正式背景候选
+### 正式背景确认与晋级
 
-`bg_c01_s02_bus_night_base_v001_candidate.png` 使用内置 `image_gen` 编辑模式分两步生成：先以已确认 v003 为编辑目标、v009 为完成度参考，将明度灰稿提升为正式手绘背景；再只把右侧同向车辆车身从灰蓝修正为低饱和暗红。首次完成度源 `exec-6b0a7aaf-a98e-48ce-81a1-bfe88d70583c.png` 未入库，最终源为 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png`。源图 941 × 1671，入库前仅将高度归一化为 941 × 1672；最终 RGB PNG 的 SHA-256 为 `a144d543c382c31be06dd696ab17f0b52f742f0ad979d0ee628e12fa68666594`。
+`bg_c01_s02_bus_night_base_v001_candidate.png` 使用内置 `image_gen` 编辑模式分两步生成：先以已确认 v003 为编辑目标、v009 为完成度参考，将明度灰稿提升为正式手绘背景；再只把右侧同向车辆车身从灰蓝修正为低饱和暗红。首次完成度源 `exec-6b0a7aaf-a98e-48ce-81a1-bfe88d70583c.png` 未入库，最终源为 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png`。源图 941 × 1671，入库前仅将高度归一化为 941 × 1672；最终 RGB PNG 的 SHA-256 为 `a144d543c382c31be06dd696ab17f0b52f742f0ad979d0ee628e12fa68666594`。用户于 2026-08-10 确认最终源图，候选状态晋级为 `approved_reference`；同哈希文件已复制为 `game/assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`，其状态为 `approved`，后续运行时和校准器只引用 production 路径。
 
 完成度提示词核心约束：
 
@@ -238,6 +239,24 @@ Use case: precise-object-edit
 Primary request: change only the rear-facing far-right car body to muted low-saturation deep red / weathered burgundy, plus its narrow corresponding wet-road reflection. Keep its tail lamps, shape, scale, position, perspective, road contact and receding direction unchanged.
 Preserve: exact crop, bus, seat and rail clearances, window, rain, road, every other vehicle and light, open overlay areas, lighting and palette.
 Avoid: bright red or orange, changing the car to a front view, moving it, adding vehicles, broad repainting, or changing any traffic direction.
+```
+
+### 前景扶手与座椅遮挡层候选
+
+`fg_c01_s02_bus_rail_occluder_v001_candidate.png` 使用内置 `image_gen` 编辑模式生成，输入图为已确认正式背景；生成源为 `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png`。内置工具输出 941 × 1672 RGB 色键图，使用 imagegen 技能自带 `remove_chroma_key.py` 转为同画布 RGBA PNG；透明像素为 1,421,722 / 1,573,352，可见覆盖率约 9.64%，透明边缘像素 3,127，最终 SHA-256 为 `6285d5cea4ec3c913cfb9549acd4098d719ba7ae9b05af5f40df9bb047b70f30`。强不透明像素与正式背景同坐标区域的 RGB 平均绝对误差为 5.31 / 255，合成复查未见位置漂移；确认前仍位于 `style-studies/`，不接入运行时。
+
+最终提示词：
+
+```text
+Use case: background-extraction
+Asset type: full-canvas foreground occlusion layer candidate for the Godot scene c01_s02_commute_window
+Input images: Image 1 is the edit target and approved production background. Preserve its exact portrait crop and full-canvas coordinate system.
+Primary request: isolate only the fixed bus structures that must render in front of the later seated adult character: (1) the lower-left horizontal worn-yellow safety rail that crosses directly in front of the empty character seat, including its rounded right bend; (2) the large worn-yellow curved rail across the lower foreground from lower center to the right edge; and (3) only the visible upper rim/backrest portion of the nearest dark blue-gray foreground seat beneath that lower rail. Remove every other image element.
+Scene/backdrop: perfectly flat solid #00ff00 chroma-key background for local background removal.
+Style/medium: exact extraction from the existing original hand-painted 2D background; preserve existing graphite contours, matte gouache texture, lighting, wear, color and edge softness. Do not redesign or repaint.
+Composition/framing: exact original full-frame 9:16 alignment. Every retained pixel group must remain at its original position, scale, perspective and silhouette so it can overlay Image 1 without manual registration.
+Constraints: the chroma-key background must be one uniform #00ff00 with no shadows, gradients, texture, reflections or lighting variation. Retain no vertical poles, window frames, glass, road, scenery, vehicles, rear seats, the empty character seat itself, people, phones, reflections, text, logos, watermark or UI. Do not use #00ff00 within retained objects.
+Avoid: moving, enlarging, completing or inventing rails; including the empty seat behind the future character; broad repainting; halos; transparent-looking green contamination; any change to geometry or crop.
 ```
 
 ## 资产清单

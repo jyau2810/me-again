@@ -2,7 +2,7 @@
 	"version": 1,
 	"scene_id": "c01_s02_commute_window",
 	"canvas_size": [720, 1280],
-	"reference_background_path": "res://assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_base_v001_candidate.png",
+	"reference_background_path": "res://assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png",
 	"targets": {
 		"window": {
 			"anchor": [0.62, 0.39],
@@ -41,5 +41,5 @@
 			"locked": false
 		}
 	},
-	"notes": "Background-finish-gate calibration against bg_c01_s02_bus_night_base_v001_candidate.png on 2026-08-10. Godot rendered-frame review kept all target positions unchanged: headlight/plate remain in the open opposing lane, phone remains above the seat's right side, and window covers the main glass. Positions remain provisional until production character and prop layers are composited."
+	"notes": "Approved-production-background calibration against bg_c01_s02_bus_night_base_v001.png on 2026-08-10. The production file is byte-identical to the approved style-study source. Headlight/plate remain in the open opposing lane, phone remains above the seat's right side, and window covers the main glass. Positions remain provisional until foreground, character and prop layers are composited."
 }
