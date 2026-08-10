@@ -27,7 +27,8 @@
 | `game/assets/art/style-studies/c01_s02/direction_b_v002.png` | `rejected` | `exec-369a83f5-7a2d-49a9-b436-02ed6ad90c65.png` | 道路或车辆方向未通过用户确认 |
 | `game/assets/art/style-studies/c01_s02/direction_c_v002.png` | `rejected` | `exec-af4e3473-1b93-405d-ac0c-776fcf1db316.png` | 道路或车辆方向未通过用户确认 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v003.png` | `rejected` | `exec-12c60570-942a-4ec8-9db7-d608a3fe53b7.png` | 人物身份已纠正，但儿童朝向、眼线和动作未形成成年人的镜像 |
-| `game/assets/art/style-studies/c01_s02/direction_selected_v004.png` | `candidate` | `exec-0f31d34d-baa1-457a-83f1-a0961edff756.png` | 锁定交通构图，儿童改为相向视线、对应头肩坐姿和持机动作的八岁镜像版本 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v004.png` | `rejected` | `exec-0f31d34d-baa1-457a-83f1-a0961edff756.png` | 头部已相向，但错误地把儿童整个身体转成左侧面 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `candidate` | `exec-5d273d17-00bb-44c8-ad25-0a6541bb1a65.png` | 两人身体均朝车前方（画面正面），儿童只把头转向左侧看回成年人 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -73,6 +74,20 @@ Make one precise local correction to this image. Do not alter, redraw, restyle, 
 The child already faces the correct direction and holds a mirrored phone, but he is vertically too low. Move and redraw ONLY the child reflection so it reads as the adult at age eight occupying the same mirrored seated position. Align the child's TOP OF HEAD and EYE LINE horizontally with the adult's top of head and eye line across the window, within only a small natural difference. Align the child's chin, shoulder slope, elbow bend, forearm direction, hands, and smartphone gesture to the corresponding mirrored vertical landmarks of the adult, using shorter child limb lengths and child proportions without lowering the whole figure. The adult faces right; the child must remain a left-facing mirrored profile looking directly back at the adult. Mirror the adult's exact head turn, gaze direction, seated torso angle, shoulder line, arm arrangement, and phone orientation. Maintain recognizable shared facial structure, reflected hair direction, same quiet expression, and child-version of the same shirt. Keep the child translucent and fused into the wet glass, with street and rain visible through him. He must not look like a solid child sitting or standing outside.
 
 This is a constrained retouch, not a new composition. No other object may drift. No logos, readable plates, text, UI, or watermark.
+```
+
+### 儿童身体朝向纠正
+
+`direction_selected_v005.png` 使用内置 `image_gen` 编辑模式生成，输入图为 v004。最终提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected portrait 9:16 visual-direction and composition reference for c01_s02_commute_window
+Input image: edit target; change only the translucent child reflection in the bus window.
+Primary request: Correct the child's BODY ORIENTATION. The adult and the child are both seated facing the front of the bus, which reads as facing the FRONT OF THE IMAGE / toward the viewer. The adult keeps his front-facing torso and turns only his head to the right toward the window. The child reflection must likewise have a front-facing seated torso, chest, pelvis, and shoulders, while turning only his head to the left to look back at the adult. Do not rotate the child's whole body left into profile.
+Child pose details: show both shoulders and the front plane of the chest, with a near-horizontal shoulder line matching the adult's front-facing seated posture; hips and knees oriented toward the bus front / image front; elbows relaxed close to the body; hands holding the phone low over the lap in the child-scale equivalent of the adult's action. The child head remains a left-facing three-quarter/profile turn with eye contact toward the adult. Preserve recognizable shared facial structure, reflected hair direction, quiet expression, and child-version of the same shirt. Use believable eight-year-old proportions. Keep the child translucent and integrated into rain-streaked glass, never a solid person outside.
+Required invariants: preserve every pixel-level composition outside the child reflection: portrait crop, camera, adult identity, adult front-facing torso, adult right-turned head, adult pose, hands and phone, bus structure, seats, yellow rails, wet window, rain, city, road geometry, lane markings, every vehicle position and direction, black focus car facing the bus in the opposing lane, red car traveling away in the bus direction, lighting, palette, and hand-painted rendering.
+Avoid: child torso facing left or in side profile; child standing outside; changing the adult; moving or altering any vehicle; changing crop, perspective, road, bus, lighting, logos, readable plate, text, UI, or watermark.
 ```
 
 ## 资产清单
