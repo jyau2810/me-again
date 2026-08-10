@@ -1,6 +1,6 @@
 # `c01_s02_commute_window` 视觉参考摘要
 
-版本：v1.1
+版本：v1.2
 
 日期：2026-08-10
 
@@ -30,6 +30,10 @@
 - `reference_type`：待确认的扶手遮挡纠正背景灰稿
 - `reference_purpose`：确认扶手终止位置、无阻塞乘坐空间和既有叠加预留区
 - `source_marker`：`../game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v003.png`
+- `reference_id`：`candidate_c01_s02_bg_base_01`
+- `reference_type`：待确认的正式完成度背景候选
+- `reference_purpose`：确认背景材质、雨夜光色、暗部可读性、右侧暗红车和分层边界
+- `source_marker`：`../game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_base_v001_candidate.png`
 
 ## observed_signals
 
@@ -80,7 +84,8 @@
 ## pending_confirmations
 
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
-- 当前只等待确认 `bg_c01_s02_bus_night_layout_v003.png` 的扶手终止位置、左下固定座椅、公交结构、双向道路、右侧同向远离车辆，以及三个叠加预留区。
+- `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
+- 当前只等待确认 `bg_c01_s02_bus_night_base_v001_candidate.png` 的正式完成度、冷暖与暗部可读性、雨滴密度、座椅和扶手材质、右侧暗红车方向及三个叠加预留区。
 
 ## confirmation_rounds
 
@@ -94,6 +99,7 @@
 - 第 8 轮：2026-08-10，用户接受 v009 作为当前检查点并要求继续；v009 锁定为后续背景灰稿、人物与倒影资产的视觉基准。
 - 第 9 轮：2026-08-10，用户指出背景灰稿 v001 在移除成年人物时错误抹除了其固定座椅；v002 在标注区域恢复座椅靠背、坐垫和支撑，等待确认。
 - 第 10 轮：2026-08-10，用户指出 v002 的扶手杆明显卡住座位；v003 移除穿过座椅的扶手下段与落地底座，恢复无阻塞乘坐空间，等待确认。
+- 第 11 轮：2026-08-10，用户确认 v003 可以采用；构图灰稿锁定，进入正式无人物背景候选评审。
 
 ## merge_guidance
 

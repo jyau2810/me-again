@@ -34,7 +34,8 @@
 | `game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `approved` | `exec-f65a2305-a270-4bf0-b37d-97ff63fc1e06.png` | 用户接受为背景灰稿、人物与倒影资产的视觉和合成关系基准；不是运行时资产 |
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png` | `rejected` | `exec-5cf76c7b-9935-4b6e-b42d-8b59b98e1f9a.png` | 移除成年人物时错误抹除了其固定座椅，人物叠加后将缺少可信承载面 |
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v002.png` | `rejected` | `exec-bdc29e4e-4661-477a-a64b-cb9ef00d87bf.png` | 恢复了座椅，但竖向黄扶手穿过靠背、坐垫并落地，明显阻塞乘坐空间 |
-| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v003.png` | `candidate` | `exec-afe87548-a0b7-4988-9339-da3211c42fdd.png` | 移除阻塞座椅的扶手下段和落地底座，保留上方扶手结构，等待确认 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v003.png` | `approved` | `exec-afe87548-a0b7-4988-9339-da3211c42fdd.png` | 用户确认扶手与座椅关系成立；锁定为正式背景生产的构图基准 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_base_v001_candidate.png` | `candidate` | `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` | 首个正式完成度无人物背景候选；右侧同向车已修正为低饱和暗红车尾，等待确认 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -209,6 +210,34 @@ Change only: the lower vertical pole segment from the seat's upper guard-rail co
 Required invariants: keep the seat position, size, direction and perspective; preserve the upper pole, all other rails, adjacent seats, bus panels, window, sill, rain, road, traffic, right-side receding car, lighting, palette, focus-car empty area, and later overlay spaces. No broad repainting.
 Style/medium: match the existing blue-gray value-and-layout study with simplified matte gouache, restrained graphite edges, broad value groups, and muted yellow metal.
 Avoid: moving the seat; deleting the upper pole or horizontal rails; adding another pole; any rail crossing the backrest or cushion; any person, child reflection, phone, focus car, text, logo, UI, changed road or traffic direction, photorealism, glossy 3D, or production polish.
+```
+
+### 正式背景候选
+
+`bg_c01_s02_bus_night_base_v001_candidate.png` 使用内置 `image_gen` 编辑模式分两步生成：先以已确认 v003 为编辑目标、v009 为完成度参考，将明度灰稿提升为正式手绘背景；再只把右侧同向车辆车身从灰蓝修正为低饱和暗红。首次完成度源 `exec-6b0a7aaf-a98e-48ce-81a1-bfe88d70583c.png` 未入库，最终源为 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png`。源图 941 × 1671，入库前仅将高度归一化为 941 × 1672；最终 RGB PNG 的 SHA-256 为 `a144d543c382c31be06dd696ab17f0b52f742f0ad979d0ee628e12fa68666594`。
+
+完成度提示词核心约束：
+
+```text
+Use case: style-transfer
+Asset type: production environment background for c01_s02_commute_window
+Input images: Image 1 is the approved v003 composition layout; Image 2 provides only the deeper hand-painted finish, graphite/gouache language, cool rainy-night color depth, material separation, and restrained practical amber lights.
+Primary request: turn v003 from a blue-gray layout study into a polished background-only painting while preserving the approved composition and layering contract.
+Production finish: refine dark woven bus seats, matte metal, rubber seals, worn yellow rails, layered rain glass, ordinary wet road, trees, lamps, distant vehicles and puddle reflections. Keep the lower-left seat continuous and unobstructed. Keep the glass usable for a later clipped child reflection, the middle-right opposing lane clear for a separate focus car, and the lower areas clear for separate adult and phone layers.
+Style/medium: original hand-painted 2D animation background, gentle graphite contours, matte gouache and transparent watercolor, simplified observed forms, restrained value modeling, tactile but not noisy; no imitation of any named artist, studio, film, shot, character, or signature design.
+Lighting/mood: quiet ordinary rainy-night commute, cool navy and blue-gray with limited warm ochre rails and soft practical amber; readable shadow detail, no sentimental glow or magic.
+Required invariants: preserve the 941 × 1672 crop, fixed camera, every bus structure, seat and rail clearance, window frame and sill, road geometry, lane directions, right receding car, distant traffic, trees, lamps and all future overlay spaces.
+Must remain absent: adult, any person or silhouette, child reflection, smartphone, nearby focus car, baked interaction state, readable text, logo, watermark or UI.
+Avoid: rail through seat, missing seat, changed geometry, moved traffic, photorealism, glossy 3D, cyberpunk neon, extreme darkness, excessive saturation, dense micro-detail, magic, or baked interactive objects.
+```
+
+右侧车辆颜色纠正提示词核心约束：
+
+```text
+Use case: precise-object-edit
+Primary request: change only the rear-facing far-right car body to muted low-saturation deep red / weathered burgundy, plus its narrow corresponding wet-road reflection. Keep its tail lamps, shape, scale, position, perspective, road contact and receding direction unchanged.
+Preserve: exact crop, bus, seat and rail clearances, window, rain, road, every other vehicle and light, open overlay areas, lighting and palette.
+Avoid: bright red or orange, changing the car to a front view, moving it, adding vehicles, broad repainting, or changing any traffic direction.
 ```
 
 ## 资产清单

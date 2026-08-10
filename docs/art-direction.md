@@ -88,7 +88,7 @@ flowchart LR
 
 已确认人物与合成关系参考：`../game/assets/art/style-studies/c01_s02/direction_selected_v009.png`
 
-状态：`approved` 视觉与构图基准；进入无人物背景构图灰稿评审。
+状态：`approved` 视觉与构图基准；背景构图 v003 已确认，进入正式无人物背景候选评审。
 
 - 线条：轮廓最明确，形体经过简化。
 - 色彩：哑光水粉色块与少量赛璐珞阴影，纹理最克制。
