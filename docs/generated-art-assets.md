@@ -26,7 +26,8 @@
 | `game/assets/art/style-studies/c01_s02/direction_a_v002.png` | `rejected` | `exec-cbe510af-320d-4825-a0b0-bf5019e2297d.png` | 道路或车辆方向未通过用户确认 |
 | `game/assets/art/style-studies/c01_s02/direction_b_v002.png` | `rejected` | `exec-369a83f5-7a2d-49a9-b436-02ed6ad90c65.png` | 道路或车辆方向未通过用户确认 |
 | `game/assets/art/style-studies/c01_s02/direction_c_v002.png` | `rejected` | `exec-af4e3473-1b93-405d-ac0c-776fcf1db316.png` | 道路或车辆方向未通过用户确认 |
-| `game/assets/art/style-studies/c01_s02/direction_selected_v003.png` | `candidate` | `exec-12c60570-942a-4ec8-9db7-d608a3fe53b7.png` | 保留选定构图与车辆方向，纠正人物身份并清理品牌 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v003.png` | `rejected` | `exec-12c60570-942a-4ec8-9db7-d608a3fe53b7.png` | 人物身份已纠正，但儿童朝向、眼线和动作未形成成年人的镜像 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v004.png` | `candidate` | `exec-0f31d34d-baa1-457a-83f1-a0961edff756.png` | 锁定交通构图，儿童改为相向视线、对应头肩坐姿和持机动作的八岁镜像版本 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -60,6 +61,18 @@ Required invariants: preserve the exact crop, camera, bus interior, seats, yello
 Small cleanup: replace recognizable manufacturer branding with a neutral grille detail and keep the plate blank and unreadable.
 Constraints: exactly one foreground adult man and one boy reflection of the same identity; no new people, readable text, logo, trademark, watermark or UI.
 Avoid: changing composition, road geometry, traffic directions, vehicle count or placement, bus structure, phone placement, lighting, crop, perspective or background.
+```
+
+### 儿童镜像关系纠正
+
+`direction_selected_v004.png` 使用内置 `image_gen` 编辑模式生成。首次局部编辑建立相向朝向和对应持机动作，第二次局部编辑进一步约束眼线、头肩和动作高度；工程内保留的是第二次编辑结果。最终一次提示词如下：
+
+```text
+Make one precise local correction to this image. Do not alter, redraw, restyle, crop, move, or relight anything except the translucent child reflection in the window. Preserve the adult pixel composition, his face, pose, hands and phone; preserve the bus, rain, street, black oncoming car, red receding car, all traffic directions, perspective, palette, and lighting exactly.
+
+The child already faces the correct direction and holds a mirrored phone, but he is vertically too low. Move and redraw ONLY the child reflection so it reads as the adult at age eight occupying the same mirrored seated position. Align the child's TOP OF HEAD and EYE LINE horizontally with the adult's top of head and eye line across the window, within only a small natural difference. Align the child's chin, shoulder slope, elbow bend, forearm direction, hands, and smartphone gesture to the corresponding mirrored vertical landmarks of the adult, using shorter child limb lengths and child proportions without lowering the whole figure. The adult faces right; the child must remain a left-facing mirrored profile looking directly back at the adult. Mirror the adult's exact head turn, gaze direction, seated torso angle, shoulder line, arm arrangement, and phone orientation. Maintain recognizable shared facial structure, reflected hair direction, same quiet expression, and child-version of the same shirt. Keep the child translucent and fused into the wet glass, with street and rain visible through him. He must not look like a solid child sitting or standing outside.
+
+This is a constrained retouch, not a new composition. No other object may drift. No logos, readable plates, text, UI, or watermark.
 ```
 
 ## 资产清单
