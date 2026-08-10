@@ -30,7 +30,8 @@
 | `game/assets/art/style-studies/c01_s02/direction_selected_v004.png` | `rejected` | `exec-0f31d34d-baa1-457a-83f1-a0961edff756.png` | 头部已相向，但错误地把儿童整个身体转成左侧面 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `rejected` | `exec-5d273d17-00bb-44c8-ad25-0a6541bb1a65.png` | 身体方向正确，但倒影越过玻璃，且儿童服装、手机和表情不符合要求 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v006.png` | `rejected` | `exec-7dfde9dc-e260-4d25-950d-0595a338a835.png` | 边界、服装和空手正确，但表情读成尬笑，倒影过于清晰实体化 |
-| `game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `candidate` | `exec-f3644651-dd8d-4c75-a5a7-289c3ffacaf8.png` | 使用松弛眉眼表达轻快感，降低倒影不透明度、饱和度、锐度和局部对比 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `rejected` | `exec-f3644651-dd8d-4c75-a5a7-289c3ffacaf8.png` | 表情仍显僵硬，倒影仍偏清晰 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `candidate` | `exec-f65a2305-a270-4bf0-b37d-97ff63fc1e06.png` | 改为约五岁概括手绘造型、无笑容自然关注，并维持约实体人物四分之一的弱反射 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -131,6 +132,30 @@ Preserve exactly: the child's correct front-facing torso toward the bus front/im
 Required invariants: preserve the adult exactly, including identity, pose, expression, clothing, hands and smartphone. Preserve portrait crop, camera, bus structure, seats, yellow rails, metal sill, black seals, wet glass, rain, city, road geometry, lane markings, all vehicle positions and directions, black focus car facing the bus in the opposing lane, right red car traveling away in the bus direction, lighting, palette, and hand-painted rendering.
 
 Avoid: stiff or awkward smile, pursed mouth, symmetric smile curve, broad grin, exaggerated anime joy, blank sadness, direct camera gaze; reflection too clear, opaque, sharp, saturated, high-contrast, or solid; child pixels outside glass; phone or prop; adult-style shirt; any changes to adult, traffic, bus, crop, perspective, road, lighting; logos, readable plate, text, UI, or watermark.
+```
+
+v008 使用 `exec-5c48cd36-039e-49f6-a302-b9098422a039.png` 生成，只作为本轮中间预览；因用户指出造型偏写实、年龄偏大，未复制进工程。
+
+### 五岁儿童概括手绘造型纠正
+
+`direction_selected_v009.png` 使用内置 `image_gen` 编辑模式生成，输入图为未入库的 v008 中间预览。最终提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected portrait 9:16 visual-direction and composition reference for c01_s02_commute_window
+Input image: edit target. Change ONLY the very faint child reflection inside the bus window.
+
+Age and visual-language correction: redesign the child as approximately FIVE years old, not eight and not a realistic miniature adult. Use a softly simplified original hand-painted 2D animation character treatment that matches the painted scene: gently simplified contours, fewer anatomical micro-details, broader watercolor/gouache shapes, restrained two-step shading, soft rounded forms, and minimal realistic skin texture. Give him believable five-year-old proportions: rounder cheeks, shorter lower face and chin, smaller nose and mouth, slightly larger forehead, narrower shoulders, shorter neck, smaller torso, and child-sized crewneck sweatshirt. Keep the eyes naturally sized and human, not enlarged. Preserve recognizable family resemblance to the adult through hair direction, brow shape, face width, and attentive gaze, but do not make him look like a digitally aged-down adult portrait.
+
+Expression: no deliberate smile. Use a candid five-year-old look of quiet delight and curious recognition: lips relaxed and slightly parted with neutral corners, eyes softly bright and focused left toward the adult, brows relaxed and subtly asymmetric, face caught mid-attention rather than posing. It should feel lively because of attention and openness, not because of a smile.
+
+Reflection: preserve or slightly reduce the already faint reflection strength. Keep the child at only about one-fifth to one-quarter of the real adult's visual strength. Rain, streetlights, tree shapes, headlight glow, and wet-glass streaks must show clearly through face, hair, sweatshirt, and torso. Let most outer edges dissolve irregularly into the glass. He should be noticed after looking twice.
+
+Preserve exactly: child torso faces the bus/image front; only head turns left toward the adult; current placement within the glass; muted moss-green unbranded crewneck sweatshirt; empty hands and no prop; strict glass clipping. No child pixels or haze may cross the black rubber frame or diagonal lower glass edge onto the metal sill, trim, interior panel, or yellow rail.
+
+Required invariants: preserve the adult exactly, including identity, pose, expression, clothing, hands and smartphone. Preserve crop, camera, bus structure, seats, rails, sill, seals, wet glass, rain, city, road, lane markings, every vehicle position and direction, black oncoming focus car, right receding red car, lighting, palette, and the rest of the painting.
+
+Avoid: photorealistic child, realistic aged-down adult face, skin pores, photographic rendering, mature seven-to-ten-year-old proportions, stiff expression, any smile or upward mouth corners, pursed lips, perfect symmetry, direct camera gaze; oversized anime eyes, chibi, mascot, doll, baby caricature; reflection too visible or solid; child outside glass; phone or prop; any changes to adult, traffic, bus, crop, perspective, road or lighting; logos, readable plate, text, UI, watermark. Do not imitate any named artist, studio, film, character, shot, or signature design.
 ```
 
 ## 资产清单
