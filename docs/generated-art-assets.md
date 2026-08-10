@@ -33,7 +33,8 @@
 | `game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `rejected` | `exec-f3644651-dd8d-4c75-a5a7-289c3ffacaf8.png` | 表情仍显僵硬，倒影仍偏清晰 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `approved` | `exec-f65a2305-a270-4bf0-b37d-97ff63fc1e06.png` | 用户接受为背景灰稿、人物与倒影资产的视觉和合成关系基准；不是运行时资产 |
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png` | `rejected` | `exec-5cf76c7b-9935-4b6e-b42d-8b59b98e1f9a.png` | 移除成年人物时错误抹除了其固定座椅，人物叠加后将缺少可信承载面 |
-| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v002.png` | `candidate` | `exec-bdc29e4e-4661-477a-a64b-cb9ef00d87bf.png` | 在左下恢复朝车前方的空座靠背、坐垫与支撑，其余构图关系保持不变，等待确认 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v002.png` | `rejected` | `exec-bdc29e4e-4661-477a-a64b-cb9ef00d87bf.png` | 恢复了座椅，但竖向黄扶手穿过靠背、坐垫并落地，明显阻塞乘坐空间 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v003.png` | `candidate` | `exec-afe87548-a0b7-4988-9339-da3211c42fdd.png` | 移除阻塞座椅的扶手下段和落地底座，保留上方扶手结构，等待确认 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -193,6 +194,21 @@ Style/medium: match the v001 blue-gray value-and-layout study, simplified matte 
 Change only: the missing seat and the minimum adjacent panel/floor pixels needed to connect it naturally. Preserve the 941 × 1672 portrait crop and all other composition.
 Required invariants: keep the window, frame, sill, rain, wet road, lane markings, distant traffic, right-side rear-facing receding car, trees, lamps, every existing rail/pole, background seats, lighting, palette, focus-car empty road area, and later overlay spaces unchanged. Keep the adult and phone overlay area usable above the restored seat.
 Avoid: any person, face, body, silhouette, child reflection, smartphone, nearby black focus car, red annotation box, text, logo, watermark, UI, added vehicle, moved rail, changed window geometry, changed traffic direction, broad repainting, photorealism, glossy 3D, or polished production detail.
+```
+
+### 背景灰稿扶手遮挡纠正
+
+`bg_c01_s02_bus_night_layout_v003.png` 使用内置 `image_gen` 编辑模式生成，输入图为 v002。生成源为 `exec-afe87548-a0b7-4988-9339-da3211c42fdd.png`；工程文件为 941 × 1672 RGB PNG，SHA-256 为 `6b08ae7abb1c073ecfa9abd5b0f714395e77ac7cc81166209d56af179b35c73a`。最终提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected portrait 9:16 low-fidelity background composition layout for c01_s02_commute_window
+Input image: the current seat-restored background-only bus layout v002.
+Primary request: fix one physically impossible occlusion. The vertical yellow handrail continues across the restored backrest and cushion, blocking the passenger space. Preserve the pole from the ceiling to the upper guard-rail connection, then terminate it cleanly or hide its continuation fully behind the seat. No yellow pole may appear over the backrest, cushion, or leg space. Remove its visible floor foot and restore continuous upholstery, seat edge, and floor behind it.
+Change only: the lower vertical pole segment from the seat's upper guard-rail connection downward, its floor foot, and the minimum hidden seat/floor pixels needed to close the gap.
+Required invariants: keep the seat position, size, direction and perspective; preserve the upper pole, all other rails, adjacent seats, bus panels, window, sill, rain, road, traffic, right-side receding car, lighting, palette, focus-car empty area, and later overlay spaces. No broad repainting.
+Style/medium: match the existing blue-gray value-and-layout study with simplified matte gouache, restrained graphite edges, broad value groups, and muted yellow metal.
+Avoid: moving the seat; deleting the upper pole or horizontal rails; adding another pole; any rail crossing the backrest or cushion; any person, child reflection, phone, focus car, text, logo, UI, changed road or traffic direction, photorealism, glossy 3D, or production polish.
 ```
 
 ## 资产清单
