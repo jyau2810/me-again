@@ -53,9 +53,9 @@ func _test_scene_layout_store() -> void:
 
 	var phone := LayoutStore.target("c01_s02_commute_window", "phone")
 	_expect(not phone.is_empty(), "runtime resolves a target from JSON")
-	_expect(phone.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.78, 0.68)), "JSON anchor becomes scene-space Vector2")
-	_expect(phone.get("hit_size", Vector2.ZERO) == Vector2(220.0, 230.0), "JSON hit size is preserved")
-	_expect(phone.get("visual_size", Vector2.ZERO) == Vector2(180.0, 210.0), "visual size remains independent from hit size")
+	_expect(phone.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.535, 0.764)), "JSON anchor becomes scene-space Vector2")
+	_expect(phone.get("hit_size", Vector2.ZERO) == Vector2(180.0, 180.0), "JSON hit size is preserved")
+	_expect(phone.get("visual_size", Vector2.ZERO) == Vector2(105.0, 140.0), "visual size remains independent from hit size")
 	_expect(phone.get("mode") == "sprite", "JSON sprite presentation is normalized")
 
 	var fallback := LayoutStore.target("c01_s01_room_morning", "alarm")

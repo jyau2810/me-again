@@ -100,7 +100,7 @@
 | --- | --- | --- |
 | 历史竖屏背景/主视觉 | 7 张：`../game/assets/art/title_key_art.png`、`../game/assets/art/backgrounds/` | 继续作为技术占位与视觉对照，不算逐幕精细化正式资产 |
 | 历史交互物件图集 | 4 张：`../game/assets/art/props/` | 继续支撑未迁移场景，不算独立透明物件验收结果 |
-| Stage 3 视觉方向 | `../game/assets/art/style-studies/c01_s02/` | v001 三张 rejected，v002 三张 candidate，等待方向选择 |
+| Stage 3 视觉方向 | `../game/assets/art/style-studies/c01_s02/` | 用户已选定 C v001 的构图与车辆方向；v003 为人物身份纠正版候选 |
 | 音频 | 30 条 CC0：`../game/assets/audio/` | 音乐、环境声、观察与交互反馈 |
 | 字体 | `../game/assets/fonts/` | Noto Sans CJK SC，随工程打包 |
 

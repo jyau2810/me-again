@@ -22,10 +22,11 @@
 | --- | --- | --- | --- |
 | `game/assets/art/style-studies/c01_s02/direction_a_v001_rejected.png` | `rejected` | `exec-dc3d8525-4839-459d-8a31-0cea4187f042.png` | 成年主角被错误生成成女性 |
 | `game/assets/art/style-studies/c01_s02/direction_b_v001_rejected.png` | `rejected` | `exec-30d4032b-7cbb-46d6-8591-6af7c74c9fc3.png` | 成年主角被错误生成成女性 |
-| `game/assets/art/style-studies/c01_s02/direction_c_v001_rejected.png` | `rejected` | `exec-2a4e52da-95d9-4621-874e-fd1c8098dd87.png` | 成年主角被错误生成成女性 |
-| `game/assets/art/style-studies/c01_s02/direction_a_v002.png` | `candidate` | `exec-cbe510af-320d-4825-a0b0-bf5019e2297d.png` | 身份与叙事对象检查通过，等待方向选择 |
-| `game/assets/art/style-studies/c01_s02/direction_b_v002.png` | `candidate` | `exec-369a83f5-7a2d-49a9-b436-02ed6ad90c65.png` | 身份与叙事对象检查通过，等待方向选择 |
-| `game/assets/art/style-studies/c01_s02/direction_c_v002.png` | `candidate` | `exec-af4e3473-1b93-405d-ac0c-776fcf1db316.png` | 身份与叙事对象检查通过，等待方向选择 |
+| `game/assets/art/style-studies/c01_s02/direction_c_v001_composition_reference.png` | `reference_only` | `exec-2a4e52da-95d9-4621-874e-fd1c8098dd87.png` | 用户确认构图与车辆方向；女性身份不采纳 |
+| `game/assets/art/style-studies/c01_s02/direction_a_v002.png` | `rejected` | `exec-cbe510af-320d-4825-a0b0-bf5019e2297d.png` | 道路或车辆方向未通过用户确认 |
+| `game/assets/art/style-studies/c01_s02/direction_b_v002.png` | `rejected` | `exec-369a83f5-7a2d-49a9-b436-02ed6ad90c65.png` | 道路或车辆方向未通过用户确认 |
+| `game/assets/art/style-studies/c01_s02/direction_c_v002.png` | `rejected` | `exec-af4e3473-1b93-405d-ac0c-776fcf1db316.png` | 道路或车辆方向未通过用户确认 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v003.png` | `candidate` | `exec-12c60570-942a-4ec8-9db7-d608a3fe53b7.png` | 保留选定构图与车辆方向，纠正人物身份并清理品牌 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -46,6 +47,20 @@ Avoid: women or girls, photorealism, glossy 3D, cyberpunk neon, anime franchise 
 - A：明亮手绘二维动画，柔和铅笔轮廓、透明水彩空间和克制哑光水粉重点，兼顾形体可读与生活细节。
 - B：轻盈水彩绘本，细松铅笔、更多留白、局部消失边缘、浅层叠色与最少不透明重点。
 - C：图形化赛璐珞与水粉，简化轮廓、明确手绘边、哑光色块、克制两级阴影与很少纹理。
+
+### 用户选定构图的人物身份纠正
+
+`direction_selected_v003.png` 使用内置 `image_gen` 编辑模式生成，输入图为用户确认的 `direction_c_v001_composition_reference.png`。最终提示词的核心不变量如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected portrait 9:16 visual-direction and composition reference for c01_s02_commute_window
+Primary request: change only the two foreground human identities and neutralize vehicle branding. Replace the seated adult woman with an ordinary East Asian adult man in his mid-thirties, and replace the girl reflected in the window with the same person's eight-year-old boy version. Keep positions, poses, gaze, scale, hand placement and the phone unchanged.
+Required invariants: preserve the exact crop, camera, bus interior, seats, yellow rails, window, rain, city, wet road, lane structure, every vehicle's position, orientation and travel direction, focal black car, right-side red car, headlights, reflections, lighting, palette and rendering style. The focal black car remains in the opposing lane facing the bus; the red car remains traveling away in the bus direction.
+Small cleanup: replace recognizable manufacturer branding with a neutral grille detail and keep the plate blank and unreadable.
+Constraints: exactly one foreground adult man and one boy reflection of the same identity; no new people, readable text, logo, trademark, watermark or UI.
+Avoid: changing composition, road geometry, traffic directions, vehicle count or placement, bus structure, phone placement, lighting, crop, perspective or background.
+```
 
 ## 资产清单
 

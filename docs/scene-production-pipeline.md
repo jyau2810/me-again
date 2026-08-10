@@ -68,6 +68,7 @@
 - `composited`：已进入场景合成并通过整体检查。
 - `integrated`：已接入 Godot 与交互状态。
 - `rejected`：不再使用，保留拒绝原因但不进入运行时目录。
+- `reference_only`：仅有明确的局部参考用途，不是可接入运行时的完整资产。
 
 任何资产不得从 `candidate` 直接跳到 `integrated`。
 
@@ -81,8 +82,9 @@ game/assets/art/
       direction_a_v002.png
       direction_b_v001_rejected.png
       direction_b_v002.png
-      direction_c_v001_rejected.png
+      direction_c_v001_composition_reference.png
       direction_c_v002.png
+      direction_selected_v003.png
   production/
     c01_s02_commute_window/
       background/

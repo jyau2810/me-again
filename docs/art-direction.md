@@ -56,11 +56,13 @@ flowchart LR
 
 三个方向稿使用同一个 `c01_s02_commute_window` 构图，只改变视觉语言。
 
-当前评审状态：v001 三张均因成年主角被错误生成成女性而标记为 `rejected`，只保留失败原因，不进入方向选择。v002 已纠正为成年男性与同一身份的童年男孩倒影，三张均为 `candidate`，分辨率为 941 × 1672。
+当前评审状态：2026-08-10，用户选定原 C v001 的视觉语言、镜头和交通空间作为唯一参考，尤其确认焦点黑车迎面、右侧红车同向远离的车辆方向。该图人物身份错误，因此状态为 `reference_only`，不是正式资产。A/B/C v002 不再采用；基于选图最小范围纠正人物身份和品牌后的 `direction_selected_v003.png` 为当前 `candidate`。
 
 ### A. 明亮手绘动画
 
-候选文件：`../game/assets/art/style-studies/c01_s02/direction_a_v002.png`
+文件：`../game/assets/art/style-studies/c01_s02/direction_a_v002.png`
+
+状态：`rejected`，道路与车辆方向关系未通过本轮确认。
 
 - 线条：清楚、柔软、带少量铅笔起伏。
 - 色彩：透明水彩空间加克制水粉重点。
@@ -70,7 +72,9 @@ flowchart LR
 
 ### B. 轻盈水彩绘本
 
-候选文件：`../game/assets/art/style-studies/c01_s02/direction_b_v002.png`
+文件：`../game/assets/art/style-studies/c01_s02/direction_b_v002.png`
+
+状态：`rejected`，道路与车辆方向关系未通过本轮确认。
 
 - 线条：更细、更松，允许局部边缘消失在水彩里。
 - 色彩：浅雨蓝、灰绿、暖白和低饱和桃色，留白更多。
@@ -80,7 +84,11 @@ flowchart LR
 
 ### C. 图形化赛璐珞与水粉
 
-候选文件：`../game/assets/art/style-studies/c01_s02/direction_c_v002.png`
+构图参考：`../game/assets/art/style-studies/c01_s02/direction_c_v001_composition_reference.png`
+
+人物纠正版候选：`../game/assets/art/style-studies/c01_s02/direction_selected_v003.png`
+
+状态：视觉语言与构图方向已选定；v003 等待确认后进入分层构图灰稿。
 
 - 线条：轮廓最明确，形体经过简化。
 - 色彩：哑光水粉色块与少量赛璐珞阴影，纹理最克制。

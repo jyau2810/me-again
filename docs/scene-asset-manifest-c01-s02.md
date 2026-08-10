@@ -46,11 +46,11 @@
 
 | 方向 | 文件 | 状态 | 当前结论 |
 | --- | --- | --- | --- |
-| A. 明亮手绘动画 | `../game/assets/art/style-studies/c01_s02/direction_a_v002.png` | `candidate` | 环境厚度与电影光线最好，正式采用时需适度抬高中间调 |
-| B. 轻盈水彩绘本 | `../game/assets/art/style-studies/c01_s02/direction_b_v002.png` | `candidate` | 呼吸感最好，正式采用时需加强车辆与交互物轮廓 |
-| C. 图形化赛璐珞与水粉 | `../game/assets/art/style-studies/c01_s02/direction_c_v002.png` | `candidate` | 交互可读性最好，正式采用时需避免阴影过黑、形体过硬 |
+| 用户选定构图 | `../game/assets/art/style-studies/c01_s02/direction_c_v001_composition_reference.png` | `reference_only` | 锁定公交镜头、双向车流、焦点黑车迎面与右侧红车同向远离；人物身份不采纳 |
+| 选定方向纠正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v003.png` | `candidate` | 保留选定构图与车辆方向，人物纠正为成年男性与童年男孩，品牌和车牌中性化 |
+| A/B/C v002 | `../game/assets/art/style-studies/c01_s02/` | `rejected` | 用户确认其道路或车辆方向存在问题，不再进入后续方向选择 |
 
-v001 三张方向稿均为 `rejected`：成年主角身份与母本不符，被错误生成成女性。拒绝稿保留在同目录用于追溯，不作为视觉参考输入。
+视觉参考的采纳范围和不变量见 [视觉参考摘要](./visual-reference-brief-c01-s02.md)。
 
 ### 场景背景
 
@@ -169,8 +169,8 @@ v001 三张方向稿均为 `rejected`：成年主角身份与母本不符，被�
 
 ## 7. 当前验收顺序
 
-1. 从三张方向稿中选择视觉方向。
-2. 确认背景构图灰稿和焦点车辆空间。
+1. 确认 `direction_selected_v003.png` 正确保留选定构图、车辆方向和人物身份。
+2. 以已锁定参考确认无人物背景构图灰稿和焦点车辆独立空间。
 3. 依次确认成年主角、儿童倒影、手机和焦点车辆。
 4. 确认车灯、车牌与反光状态图。
 5. 完成静态和四状态合成预览。

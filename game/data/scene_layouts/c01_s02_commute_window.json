@@ -2,44 +2,44 @@
 	"version": 1,
 	"scene_id": "c01_s02_commute_window",
 	"canvas_size": [720, 1280],
-	"reference_background_path": "res://assets/art/backgrounds/chapter_01.png",
+	"reference_background_path": "res://assets/art/style-studies/c01_s02/direction_selected_v003.png",
 	"targets": {
 		"window": {
-			"anchor": [0.66, 0.39],
+			"anchor": [0.62, 0.39],
 			"visual_size": [0, 0],
-			"hit_size": [430, 650],
+			"hit_size": [470, 680],
 			"z_index": 0,
 			"mode": "region",
 			"asset_path": "",
 			"locked": false
 		},
 		"phone": {
-			"anchor": [0.78, 0.68],
-			"visual_size": [180, 210],
-			"hit_size": [220, 230],
+			"anchor": [0.535, 0.764],
+			"visual_size": [105, 140],
+			"hit_size": [180, 180],
 			"z_index": 4,
 			"mode": "sprite",
 			"asset_path": "",
 			"locked": false
 		},
 		"headlight": {
-			"anchor": [0.62, 0.48],
+			"anchor": [0.71, 0.44],
 			"visual_size": [0, 0],
-			"hit_size": [150, 120],
+			"hit_size": [220, 120],
 			"z_index": 3,
 			"mode": "region",
 			"asset_path": "",
 			"locked": false
 		},
 		"plate": {
-			"anchor": [0.84, 0.56],
+			"anchor": [0.716, 0.484],
 			"visual_size": [0, 0],
-			"hit_size": [150, 120],
+			"hit_size": [120, 80],
 			"z_index": 3,
 			"mode": "region",
 			"asset_path": "",
 			"locked": false
 		}
 	},
-	"notes": "Initial migration from the historical layout. All positions remain unapproved until production assets are composited."
+	"notes": "Initial calibration against the user-selected composition reference on 2026-08-10. All positions remain unapproved until production assets are composited."
 }
