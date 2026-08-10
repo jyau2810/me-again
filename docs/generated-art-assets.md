@@ -32,7 +32,8 @@
 | `game/assets/art/style-studies/c01_s02/direction_selected_v006.png` | `rejected` | `exec-7dfde9dc-e260-4d25-950d-0595a338a835.png` | 边界、服装和空手正确，但表情读成尬笑，倒影过于清晰实体化 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `rejected` | `exec-f3644651-dd8d-4c75-a5a7-289c3ffacaf8.png` | 表情仍显僵硬，倒影仍偏清晰 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v009.png` | `approved` | `exec-f65a2305-a270-4bf0-b37d-97ff63fc1e06.png` | 用户接受为背景灰稿、人物与倒影资产的视觉和合成关系基准；不是运行时资产 |
-| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png` | `candidate` | `exec-5cf76c7b-9935-4b6e-b42d-8b59b98e1f9a.png` | 无人物、无手机、无近处焦点车的背景构图灰稿，等待公交结构、道路方向与叠加预留区确认 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png` | `rejected` | `exec-5cf76c7b-9935-4b6e-b42d-8b59b98e1f9a.png` | 移除成年人物时错误抹除了其固定座椅，人物叠加后将缺少可信承载面 |
+| `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v002.png` | `candidate` | `exec-bdc29e4e-4661-477a-a64b-cb9ef00d87bf.png` | 在左下恢复朝车前方的空座靠背、坐垫与支撑，其余构图关系保持不变，等待确认 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -161,7 +162,7 @@ Avoid: photorealistic child, realistic aged-down adult face, skin pores, photogr
 
 ### 无人物背景构图灰稿
 
-`bg_c01_s02_bus_night_layout_v001.png` 使用内置 `image_gen` 编辑模式生成，输入图为已确认的 `direction_selected_v009.png`。这是构图 Gate 候选，不是正式背景；工程文件为 941 × 1672 RGB PNG，SHA-256 为 `4128feebfb3ac24a18d0e3139b83342fd580cbad7cbb1c3bc18955a2c339c0db`。本轮使用的完整结构化提示词如下：
+`bg_c01_s02_bus_night_layout_v001.png` 使用内置 `image_gen` 编辑模式生成，输入图为已确认的 `direction_selected_v009.png`。用户复查后指出左下成年人物原坐处缺少固定座椅，因此 v001 标记为 `rejected`；工程文件为 941 × 1672 RGB PNG，SHA-256 为 `4128feebfb3ac24a18d0e3139b83342fd580cbad7cbb1c3bc18955a2c339c0db`。本轮使用的完整结构化提示词如下：
 
 ```text
 Use case: precise-object-edit
@@ -177,6 +178,21 @@ Draft treatment: render this as a deliberate blue-gray value-and-layout study, n
 Required invariants: portrait crop and fixed camera; bus frame, seats, yellow rails, window sill and road share credible perspective; right-side red car remains rear-facing and receding; distant opposing and same-direction traffic remain consistent; no readable text, plate number, logo, trademark, watermark, or UI.
 
 Avoid: any adult, child, face, human silhouette, child reflection, smartphone, hand-held prop, nearby black focus vehicle, baked headlight face, baked plate interaction, character shadow, empty glowing silhouette, photorealism, glossy 3D, cyberpunk neon, fantasy portal, dramatic magic, finished-production polish, or changes that collapse the two-way traffic logic.
+```
+
+### 背景灰稿座椅恢复
+
+`bg_c01_s02_bus_night_layout_v002.png` 使用内置 `image_gen` 编辑模式生成，Image 1 为 v001 编辑目标，Image 2 为用户红框标注，Image 3 为 v009 人物坐姿与座椅占位参考。生成源为 `exec-bdc29e4e-4661-477a-a64b-cb9ef00d87bf.png`；源图 941 × 1671，入库前仅将高度归一化为统一画布 941 × 1672，最终 RGB PNG 的 SHA-256 为 `abbaba6e8ece7d14dc3ec02dd4eaf52f4e70428a434e3d5457b3fb125cc04aa0`。最终提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected portrait 9:16 low-fidelity background composition layout for c01_s02_commute_window
+Input images: Image 1 is the edit target; Image 2 marks the lower-left missing-seat area; Image 3 provides only the former adult seating footprint and occlusion reference.
+Primary request: make one tightly localized correction. Restore a clearly readable empty city-bus passenger seat in the lower-left where the adult was seated. The seat faces the bus/image front and matches neighboring-seat perspective. Show a dark blue-gray upholstered backrest, seat cushion, restrained seams, and necessary lower support so the later seated-character layer has a credible contact surface. Keep the vertical yellow pole and foreground guard rail in front with correct occlusion.
+Style/medium: match the v001 blue-gray value-and-layout study, simplified matte gouache shapes, restrained graphite edges, broad value groups, muted yellow rails, and no finished micro-detail.
+Change only: the missing seat and the minimum adjacent panel/floor pixels needed to connect it naturally. Preserve the 941 × 1672 portrait crop and all other composition.
+Required invariants: keep the window, frame, sill, rain, wet road, lane markings, distant traffic, right-side rear-facing receding car, trees, lamps, every existing rail/pole, background seats, lighting, palette, focus-car empty road area, and later overlay spaces unchanged. Keep the adult and phone overlay area usable above the restored seat.
+Avoid: any person, face, body, silhouette, child reflection, smartphone, nearby black focus car, red annotation box, text, logo, watermark, UI, added vehicle, moved rail, changed window geometry, changed traffic direction, broad repainting, photorealism, glossy 3D, or polished production detail.
 ```
 
 ## 资产清单
