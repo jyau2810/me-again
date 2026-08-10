@@ -49,7 +49,9 @@
 | 用户选定构图 | `../game/assets/art/style-studies/c01_s02/direction_c_v001_composition_reference.png` | `reference_only` | 锁定公交镜头、双向车流、焦点黑车迎面与右侧红车同向远离；人物身份不采纳 |
 | 选定方向人物初修版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v003.png` | `rejected` | 人物身份已纠正，但儿童朝向、眼线和动作未形成成年人镜像 |
 | 选定方向镜像初修版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v004.png` | `rejected` | 头部已相向，但错误地把儿童整个身体转成左侧面 |
-| 选定方向身体同向修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `candidate` | 两人身体均朝车前方（画面正面），只让儿童头部反向看回成年人 |
+| 选定方向身体同向修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `rejected` | 身体方向正确，但倒影越过玻璃，且儿童服装、手机和表情不符合要求 |
+| 选定方向玻璃裁切修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v006.png` | `rejected` | 边界、服装和空手正确，但表情读成尬笑，倒影过于清晰实体化 |
+| 选定方向弱反射修正版 | `../game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `candidate` | 使用松弛眉眼和自然关注表达轻快感，并降低倒影清晰度、饱和度与对比 |
 | A/B/C v002 | `../game/assets/art/style-studies/c01_s02/` | `rejected` | 用户确认其道路或车辆方向存在问题，不再进入后续方向选择 |
 
 视觉参考的采纳范围和不变量见 [视觉参考摘要](./visual-reference-brief-c01-s02.md)。
@@ -82,9 +84,9 @@
 #### `char_child_reflection_curious_v001.png`
 
 - 状态：`planned`
-- 内容：同一人物的儿童版本，身体轻靠近车窗，视线指向焦点车辆。
-- 要求：输出正常不透明的透明 PNG；两人的骨盆、躯干、胸口与双肩均朝车前方（画面正面），儿童只把头转向左侧看回成年人；手臂与持机动作保持同类正面坐姿并按儿童比例调整；半透明、混合模式和颜色由 Godot 控制。
-- 禁止：夸张幼态比例、吉祥物化、固定光晕和电影角色相似造型。
+- 内容：同一人物的儿童版本，身体朝车前方，头部转向左侧看回成年人；穿儿童日常圆领上衣，空手，以松弛眉眼和自然关注表达轻快感。
+- 要求：输出正常不透明的透明 PNG；两人的骨盆、躯干、胸口与双肩均朝车前方（画面正面），仅按儿童比例调整；运行时降低不透明度、饱和度与局部对比，柔化边缘并让雨滴和街景穿透，最终合成必须以玻璃内轮廓为硬遮罩。
+- 禁止：任何倒影像素越过玻璃覆盖窗框或金属窗台；手机或其他手持物；成人化衬衫；疲惫严肃神情；抿嘴尬笑、标准嘴角上扬或面对镜头式微笑；倒影过于清晰实体化；夸张幼态比例、吉祥物化、固定光晕和电影角色相似造型。
 
 ### 交互物件
 
@@ -171,7 +173,7 @@
 
 ## 7. 当前验收顺序
 
-1. 确认 `direction_selected_v005.png` 同时保留选定构图、车辆方向、人物身份，以及“身体同向、头部反向”的镜像关系。
+1. 确认 `direction_selected_v007.png` 同时保留选定构图、车辆方向、人物身份、“身体同向、头部反向”的关系、严格玻璃裁切、自然神情和弱反射质感。
 2. 以已锁定参考确认无人物背景构图灰稿和焦点车辆独立空间。
 3. 依次确认成年主角、儿童倒影、手机和焦点车辆。
 4. 确认车灯、车牌与反光状态图。

@@ -28,7 +28,9 @@
 | `game/assets/art/style-studies/c01_s02/direction_c_v002.png` | `rejected` | `exec-af4e3473-1b93-405d-ac0c-776fcf1db316.png` | 道路或车辆方向未通过用户确认 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v003.png` | `rejected` | `exec-12c60570-942a-4ec8-9db7-d608a3fe53b7.png` | 人物身份已纠正，但儿童朝向、眼线和动作未形成成年人的镜像 |
 | `game/assets/art/style-studies/c01_s02/direction_selected_v004.png` | `rejected` | `exec-0f31d34d-baa1-457a-83f1-a0961edff756.png` | 头部已相向，但错误地把儿童整个身体转成左侧面 |
-| `game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `candidate` | `exec-5d273d17-00bb-44c8-ad25-0a6541bb1a65.png` | 两人身体均朝车前方（画面正面），儿童只把头转向左侧看回成年人 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v005.png` | `rejected` | `exec-5d273d17-00bb-44c8-ad25-0a6541bb1a65.png` | 身体方向正确，但倒影越过玻璃，且儿童服装、手机和表情不符合要求 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v006.png` | `rejected` | `exec-7dfde9dc-e260-4d25-950d-0595a338a835.png` | 边界、服装和空手正确，但表情读成尬笑，倒影过于清晰实体化 |
+| `game/assets/art/style-studies/c01_s02/direction_selected_v007.png` | `candidate` | `exec-f3644651-dd8d-4c75-a5a7-289c3ffacaf8.png` | 使用松弛眉眼表达轻快感，降低倒影不透明度、饱和度、锐度和局部对比 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -88,6 +90,47 @@ Primary request: Correct the child's BODY ORIENTATION. The adult and the child a
 Child pose details: show both shoulders and the front plane of the chest, with a near-horizontal shoulder line matching the adult's front-facing seated posture; hips and knees oriented toward the bus front / image front; elbows relaxed close to the body; hands holding the phone low over the lap in the child-scale equivalent of the adult's action. The child head remains a left-facing three-quarter/profile turn with eye contact toward the adult. Preserve recognizable shared facial structure, reflected hair direction, quiet expression, and child-version of the same shirt. Use believable eight-year-old proportions. Keep the child translucent and integrated into rain-streaked glass, never a solid person outside.
 Required invariants: preserve every pixel-level composition outside the child reflection: portrait crop, camera, adult identity, adult front-facing torso, adult right-turned head, adult pose, hands and phone, bus structure, seats, yellow rails, wet window, rain, city, road geometry, lane markings, every vehicle position and direction, black focus car facing the bus in the opposing lane, red car traveling away in the bus direction, lighting, palette, and hand-painted rendering.
 Avoid: child torso facing left or in side profile; child standing outside; changing the adult; moving or altering any vehicle; changing crop, perspective, road, bus, lighting, logos, readable plate, text, UI, or watermark.
+```
+
+### 儿童倒影边界与性格纠正
+
+`direction_selected_v006.png` 使用内置 `image_gen` 编辑模式生成，输入图为 v005。最终提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected portrait 9:16 visual-direction and composition reference for c01_s02_commute_window
+Input image: edit target. Change ONLY the translucent eight-year-old child reflection in the bus window and erase any child pixels that currently spill outside the glass.
+
+Primary request:
+1. Treat the transparent window glass as a strict clipping mask. The child reflection may appear ONLY inside the large glass pane, bounded by the black rubber window frame and especially by the diagonal lower inner glass edge. Completely erase the child's arms, hands, phone, clothing, or reflection from the silver/blue metal window sill, black trim, lower interior panel, yellow rail, and every other solid bus surface. The original bus materials below and outside the glass must be restored cleanly with no ghost, haze, silhouette, or reflected child pixels. The child torso may end naturally at the diagonal glass edge as if physically occluded by the window frame.
+2. Keep the child's already-correct orientation: pelvis, chest, torso, and both shoulders face the front of the bus / front of the image, while ONLY his head turns left to look at the adult. Do not rotate the whole child left.
+3. Replace the adult-like collared shirt with age-appropriate, unbranded children's clothing: a simple muted moss-green crewneck sweatshirt with a soft knit texture and modest warm ochre collar detail, practical and playful rather than fashionable. Do not copy the adult's work shirt.
+4. Remove the child's smartphone completely. His hands are empty and relaxed below the glass edge, therefore naturally hidden/occluded; do not invent another prop.
+5. Make the child's expression more cheerful and alive: bright curious eyes, relaxed brows, and a small natural closed-mouth smile, warm and happy without exaggerated anime eyes, a broad grin, or cartoonish excitement. Keep him recognizably the same person as the adult at age eight, with related facial structure and reflected hair direction.
+
+Required invariants: preserve the adult exactly, including identity, front-facing seated body, right-turned head, hands, smartphone, clothes, position, scale and expression. Preserve the portrait crop, camera, bus structure, seats, yellow rails, metal sill, black window seals, wet glass, rain, city, road geometry, lane markings, every vehicle position and travel direction, black focus car facing the bus in the opposing lane, right red car traveling away in the bus direction, lighting, palette, and hand-painted rendering. Preserve the child's current position, scale, front-facing body direction and left-turned head except for the requested clothing, empty hands, expression and strict glass clipping.
+
+Avoid: any child reflection outside the glass; any child pixels over metal or trim; phone or other object in child's hands; adult-style work shirt; sad, tired, blank, stern, exaggerated, or cartoon expression; changing adult, traffic, crop, perspective, road, bus, lighting; logos, readable plate, text, UI, or watermark.
+```
+
+### 儿童自然神情与弱反射纠正
+
+`direction_selected_v007.png` 使用内置 `image_gen` 编辑模式生成，输入图为 v006。最终提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected portrait 9:16 visual-direction and composition reference for c01_s02_commute_window
+Input image: edit target. Change ONLY the translucent eight-year-old child reflection inside the bus window.
+
+Primary request:
+1. Replace the child's stiff posed smile with a natural, unselfconscious feeling of quiet happiness and curiosity. The emotion should come mostly from relaxed bright eyes, softened lower eyelids, gently lifted cheeks, relaxed brows, and an attentive look toward the adult, as if he has just noticed someone familiar and is quietly delighted. Keep the mouth relaxed and natural, slightly parted or almost neutral with only a faint asymmetric warmth. Do NOT create a symmetric upturned closed-mouth smile, pursed lips, a forced grin, a camera-facing smile, or an exaggerated cheerful expression. The face should feel candid and alive, not posed.
+2. Make the entire child reflection noticeably fainter and less solid than in the input. Reduce its perceived opacity, saturation, edge sharpness, and local contrast so the rainy street, headlights, raindrops, and glass reflections remain clearly visible through the child's face, hair, and sweatshirt. Use soft partially disappearing edges and uneven reflected-light visibility. The child must still be recognizable, but should read immediately as a subtle wet-glass reflection, not a person behind the glass. Aim for roughly one-third to two-fifths of the visual strength of the real adult.
+
+Preserve exactly: the child's correct front-facing torso toward the bus front/image front, left-turned head looking at the adult, same position and scale, age-appropriate muted moss-green crewneck sweatshirt, empty hands with no phone or prop, and strict clipping inside the transparent glass. No child pixel, haze, or silhouette may cross the black rubber seal or diagonal lower glass edge onto the metal sill, trim, interior panel, or yellow rail.
+
+Required invariants: preserve the adult exactly, including identity, pose, expression, clothing, hands and smartphone. Preserve portrait crop, camera, bus structure, seats, yellow rails, metal sill, black seals, wet glass, rain, city, road geometry, lane markings, all vehicle positions and directions, black focus car facing the bus in the opposing lane, right red car traveling away in the bus direction, lighting, palette, and hand-painted rendering.
+
+Avoid: stiff or awkward smile, pursed mouth, symmetric smile curve, broad grin, exaggerated anime joy, blank sadness, direct camera gaze; reflection too clear, opaque, sharp, saturated, high-contrast, or solid; child pixels outside glass; phone or prop; adult-style shirt; any changes to adult, traffic, bus, crop, perspective, road, lighting; logos, readable plate, text, UI, or watermark.
 ```
 
 ## 资产清单
