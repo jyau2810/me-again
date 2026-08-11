@@ -39,6 +39,8 @@
 | `game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png` | `reference_only` | `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png` | 保留为全画布对齐与提取母版；不作为可摆放运行时物件 |
 | `game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_seat_armrest_occluder_v001.png` | `approved` | 上述母版无损裁切 | 左侧座位扶手紧边界运行时资产，可独立校正 |
 | `game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png` | `approved` | 上述母版无损裁切 | 底部弧形扶手与前排座椅上缘紧边界运行时资产，可独立校正 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png` | `candidate` | `exec-26d4b9d0-f804-447c-80c8-86731062e0bf.png` | 成年主角低头坐姿独立候选；等待单项确认，不接入 production |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v001.png` | `review_only` | 本地确定性合成 | 正式背景、成人候选和两个已确认结构层的评审预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -269,6 +271,24 @@ Avoid: moving, enlarging, completing or inventing rails; including the empty sea
 | `fg_c01_s02_front_seat_occluder_v001.png` | `[248, 1346, 693, 326]` | 693 × 326 | `c5d6003c44e7c9d084ed56b4f12bf38066bd76d540bcc6632b297e9dd2e39e8e` |
 
 两张裁切图按 `source_rect` 贴回 941 × 1672 母版后，Alpha 差异为空，可见 RGBA 像素差异为 0。初始锚点和显示尺寸由母版坐标换算写入场景布局 JSON，后续允许在 Godot 校准器中分别人工调整。
+
+### 成年主角低头坐姿候选
+
+`char_adult_commuter_seated_down_v001_candidate.png` 使用内置 `image_gen` 生成，输入参考为已确认的 `direction_selected_v009.png` 与正式背景 `bg_c01_s02_bus_night_base_v001.png`；生成源为 `exec-26d4b9d0-f804-447c-80c8-86731062e0bf.png`。源图为 1086 × 1448 RGB PNG，SHA-256 为 `015af744733720f1509db4459f068971ae2964942d4f4eedcef749c952e9ad6b`。
+
+源图使用纯绿色背景生成，随后通过 imagegen 技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill` 去色键；自动采样键色为 `#04fa03`，全画布得到 898,376 个全透明像素和 5,723 个半透明边缘像素。人物 Alpha 包围盒为 `[180, 95, 914, 1448]`，以 16 px 透明安全边紧边界裁切为 766 × 1385 RGBA PNG；成品四边非透明像素为 0，SHA-256 为 `2a17e96084534f0bafc412d961f6ede69672d9c406f655197cd3934294ca53e2`。
+
+评审预览 `preview_c01_s02_adult_down_v001.png` 使用正式背景原生 941 × 1672 画布，将人物候选缩放并放在 `rect = [-28, 612, 575, 1040]`。首次合成发现左侧水平扶手以 `z_index = 7` 绘制会横穿人物面部；保留其用户确认的坐标和尺寸，只将该层改为人物后方的 `z_index = 2`。底部弧形扶手与前排座椅继续以 `z_index = 7` 遮挡人物腿部。修正后预览 SHA-256 为 `0b50906b8c91fd82cd1fe0876766338cc77ad44ec80b6d57fd61aa761a08287d`。
+
+提示词核心约束：
+
+```text
+Use case: isolated-character-asset generation for a layered Godot scene.
+Generate exactly one ordinary East Asian man around age 35, average build, seated upright with a mild after-work slouch. His pelvis, torso, chest and shoulders face straight toward the front of the bus, read as facing the picture/viewer. His head is naturally bowed toward the future phone position near his lap; this is low-head State 0, not a window-looking pose.
+Include the complete hair, torso, forearms, hands, lap and enough upper legs for a believable seated pose. Leave a clean rectangular negative space between relaxed hands for a separate phone asset; do not draw the phone, seat, rail, bus, window, reflection, prop or UI.
+Style: original hand-painted 2D animation character, gentle graphite contour, matte gouache and restrained simplified cel shading, observed everyday anatomy, cool blue-gray ambient light and limited warm ochre edge light; stylized rather than photorealistic, not chibi, mascot-like, glossy 3D or franchise anime.
+Backdrop: uniform solid #00ff00 chroma key with clean margin around the figure. No shadow, gradient, texture, halo, text, logo or watermark.
+```
 
 ## 资产清单
 

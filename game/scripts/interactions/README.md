@@ -67,4 +67,4 @@ non-punitive retry behavior, instantiates every board layout, validates native
 drop payloads, draws a trace with mouse events, and performs the Chapter 5 touch
 sequence with screen-touch events. It also validates canonical layout JSON,
 independent visual/hit sizes, cropped visual layers and legacy fallback behavior.
-The expected result is 182 assertions across 17 contracts.
+The expected result is 186 assertions across 17 contracts.

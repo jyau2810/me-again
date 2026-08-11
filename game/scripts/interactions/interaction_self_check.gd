@@ -64,6 +64,11 @@ func _test_scene_layout_store() -> void:
 	_expect(armrest.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.1775, 0.5105)), "visual layer anchor becomes scene-space Vector2")
 	_expect(armrest.get("visual_size", Vector2.ZERO) == Vector2(256.0, 77.0), "cropped visual layer keeps its authored display size")
 	_expect(armrest.get("source_rect", []) == [0, 803, 334, 101], "visual layer retains extraction coordinates for reproducible placement")
+	_expect(armrest.get("z_index") == 2, "seat armrest renders behind the seated adult")
+	_expect(armrest.get("locked") == true, "confirmed seat armrest placement is locked")
+	var front_seat := LayoutStore.layer("c01_s02_commute_window", "front_seat_occluder")
+	_expect(front_seat.get("z_index") == 7, "front seat remains above the seated adult")
+	_expect(front_seat.get("locked") == true, "confirmed front seat placement is locked")
 	_expect(LayoutStore.layer("c01_s02_commute_window", "missing_layer").is_empty(), "unknown visual layer resolves empty")
 
 	var fallback := LayoutStore.target("c01_s01_room_morning", "alarm")
