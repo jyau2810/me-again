@@ -53,9 +53,11 @@
 | `game/assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png` | `approved` | 上述候选逐字节复制 | 已接入运行时并保留人工校正能力的手机生产资产 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_down_v001.png` | `approved_review` | 本地确定性合成 | 已确认手机与低头人物、正式背景和结构层的评审预览 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_look_up_v001.png` | `approved_review` | 本地确定性合成 | 已确认手机与抬头人物的兼容性评审预览 |
-| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_focus_base_v001_candidate.png` | `candidate` | `exec-762cbc04-e661-4cca-b411-e6d299e752e7.png` | 近正面迎向公交的普通无品牌深色家用车；等待单项确认 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_v001.png` | `review_only` | 本地确定性合成 | 车辆候选与正式背景、双向车流和初始落位的评审预览 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_look_up_v001.png` | `review_only` | 本地确定性合成 | 车辆候选与已确认人物、手机和结构层的完整关系预览 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_focus_base_v001_candidate.png` | `rejected` | `exec-762cbc04-e661-4cca-b411-e6d299e752e7.png` | 角度与车道纵轴不符，车轮悬浮且覆盖雨纹，保留作反例 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_v001.png` | `rejected_review` | 本地确定性合成 | v001 背景落位反例 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_look_up_v001.png` | `rejected_review` | 本地确定性合成 | v001 完整关系反例 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v002.png` | `candidate_review` | `exec-fed6b3dd-247d-4140-8d46-095ce07fb159.png` | 当前场景内角度、车道、接地、湿反射和玻璃雨层基准；确认前不拆分 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v002.png` | `candidate_review` | 本地确定性合成 | v002 与已确认人物、手机和结构层的完整关系预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -379,7 +381,7 @@ Match the original hand-painted 2D graphite-and-gouache prop language. Use a uni
 
 最终源通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --edge-contract 1 --despill` 去色键；自动采样键色为 `#0eea1a`。清除 Alpha 小于 32 的边缘噪点与残余低 Alpha 色键像素后，按可见包围盒四周增加 16 px 安全边，得到 946 × 696 RGBA 候选。成品 Alpha 包围盒为 `[16, 16, 930, 680]`，四角与四边均为全透明，可见像素中无绿色主导残留，SHA-256 为 `5b90265a45efb6b90b48b0cf2c3fbf9412c4e71fdd5652d96c9c0f1df1167ac4`。
 
-背景评审预览将车辆绘制在正式背景原生画布 `(469, 588, 400, 294)`，对应逻辑建议值 `anchor = (0.7110, 0.4396)`、`visual_size = 306 × 225`、`z_index = 1`。背景预览 `preview_c01_s02_vehicle_focus_base_v001.png` SHA-256 为 `d5101d256ab2f62dd909d735f4d7dc3e4cfc064f71f1b6fb9bfbc0d7dfc6acc0`；完整关系预览 `preview_c01_s02_vehicle_focus_base_look_up_v001.png` SHA-256 为 `18e4854d944716cc3da570eb500d113ab01282c97f434af49a764cf802692a3b`。候选确认前不进入 production，不写入布局 JSON，也不提前生成车灯、车牌或玻璃效果层。
+背景评审预览将车辆绘制在正式背景原生画布 `(469, 588, 400, 294)`，对应逻辑建议值 `anchor = (0.7110, 0.4396)`、`visual_size = 306 × 225`、`z_index = 1`。背景预览 `preview_c01_s02_vehicle_focus_base_v001.png` SHA-256 为 `d5101d256ab2f62dd909d735f4d7dc3e4cfc064f71f1b6fb9bfbc0d7dfc6acc0`；完整关系预览 `preview_c01_s02_vehicle_focus_base_look_up_v001.png` SHA-256 为 `18e4854d944716cc3da570eb500d113ab01282c97f434af49a764cf802692a3b`。用户随后指出车辆纵轴和可见车身侧面均与道路不符，且存在悬浮、缺少湿路反射和覆盖雨纹的贴图感；候选与两张预览均改为 `rejected`，不进入 production 或布局 JSON。
 
 车辆提示词核心约束：
 
@@ -387,6 +389,22 @@ Match the original hand-painted 2D graphite-and-gouache prop language. Use a uni
 Generate exactly one ordinary contemporary unbranded dark graphite family car approaching the bus in the opposing lane, nearly head-on with only a restrained front three-quarter cue. Preserve two readable dim-neutral headlamp housings and one centered blank matte-gray plate recess for later independent overlays.
 Match the original hand-painted 2D graphite, matte-gouache and restrained cel-shaded game language on a uniform #00ff00 chroma-key background. No road, shadow, rain, occupants, readable text, logo, badge, watermark, glow, beam, cartoon face, recognizable real model, photorealism or glossy 3D.
 ```
+
+v002 改为先生成完整场景关系，再拆分运行时资产。第一次场景源 `exec-a08ce3a1-5590-4cbd-b395-0787e2fb8399.png` 建立正确车道角度、接地和玻璃层级，SHA-256 为 `938b0dfe6df89b45f168d073d47fd22e6cd10d90091acf6dfafe91e771453d10`，但格栅中央出现疑似真实厂牌标志，未入库。第二次只清除该标志，其他像素关系保持不变；最终源 `exec-fed6b3dd-247d-4140-8d46-095ce07fb159.png` 保存为 `preview_c01_s02_vehicle_focus_context_v002.png`，SHA-256 为 `f492b2adb281b7438e197459f71269f0f994feef427c80f1431358e370174634`。本地确定性叠加已确认人物、手机和结构层后得到 `preview_c01_s02_vehicle_focus_context_look_up_v002.png`，SHA-256 为 `7299b3ec42f120a5362f7ebff0d398f28acb39286317d1d103e8f1f773c97d1f`。
+
+v002 核心提示词约束：
+
+```text
+Use case: illustration-story
+Asset type: full-scene perspective and grounding review for a portrait 2D narrative game
+Primary request: replace the empty opposing-lane focus area with one ordinary unbranded dark graphite family car whose perspective is fully integrated into this exact rainy bus-window scene.
+Composition/framing: the opposing lane runs from distant upper-left to near lower-right; the car nose follows that axis and points slightly toward canvas lower-right. Show predominantly the image-left front fender, image-left flank and image-left mirror; the image-right flank and wheel must recede. Keep both wheels inside the opposing lane.
+Lighting/mood: match the existing cool blue-gray rainy night, restrained warm lamps and matte hand-painted 2D treatment.
+Constraints: believable tire contact, subtle undercar shadow, broken wet-road reflection along the road axis, and existing rain/glass texture visibly above and through the vehicle. Keep two lamp housings and one blank unreadable plate recess. Preserve the bus interior, seat, rails, distant traffic and image-right dark-red receding car.
+Avoid: symmetric head-on or product-shot view, dominant image-right body side, floating wheels, pasted sharp silhouette, dry road beneath the car, logo, badge, readable plate, real model, photorealism, glossy 3D or cartoon face.
+```
+
+当前只保存两张评审预览，没有生成 `prop_vehicle_focus_base_v002_candidate.png`，也没有写入 production 或布局 JSON。用户确认场景角度、车道、尺度、接地、湿反射和玻璃雨层后，才从该基准派生独立车身、路面阴影/湿反射和玻璃雨纹三层，并分别保留未锁定布局供人工校正；车灯、车牌状态和儿童倒影继续后置。
 
 ## 资产清单
 
