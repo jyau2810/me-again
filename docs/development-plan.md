@@ -70,8 +70,9 @@
 - `../game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png`：只用于坐标追溯的全画布透明提取母版。
 - `../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_seat_armrest_occluder_v001.png`：紧边界左侧座位扶手结构层，位于人物后方。
 - `../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png`：紧边界底部扶手与前排座椅遮挡层。
-- `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png`：紧边界成年主角低头坐姿候选，等待单项确认。
-- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v001.png`：正式背景、成年人物候选和已确认结构层的合成评审图。
+- `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png`：已拒绝的首张成年主角低头坐姿候选，保留作年龄与手势反例。
+- `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png`：更年轻、非对称单手持机的紧边界成年主角低头坐姿候选，等待单项确认。
+- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v002.png`：正式背景、v002 成年人物、临时手机校准占位和已确认结构层的合成评审图。
 
 ### 2026-08-07 当前检查点
 
@@ -115,8 +116,11 @@
 - 两张裁切图贴回母版后的 Alpha 与可见 RGBA 像素差异均为 0；Godot 4.7.1 导入和 540 × 960 校准器实帧通过，自动推导的初始位置与背景重合。当前回归通过：状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 182 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - 用户已确认两个结构层的独立落位；`seat_armrest_occluder` 与 `front_seat_occluder` 保持现有中心和显示尺寸并在布局 JSON 中锁定，结构拆分与落位 Gate 关闭。
 - 首次成年人物合成验证发现左侧水平扶手若与底部前排座椅同处人物上方，会横穿人物面部；保留用户确认的中心和显示尺寸，只将 `seat_armrest_occluder` 从 `z_index = 7` 调整为人物后方的 `z_index = 2`。`front_seat_occluder` 继续保持 `z_index = 7`，负责人物腿部前方遮挡。
-- 已生成首张成年主角低头坐姿独立候选：源图经技能自带色键工具转换为 Alpha，并按人物实际内容紧边界裁切为 766 × 1385；评审预览按 941 × 1672 背景原生坐标将人物放在 `[-28, 612, 575, 1040]`，当前只等待人物单项确认。
-- 成年人物候选检查点回归通过：Godot 4.7.1 正常导入候选和预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 186 条断言、17 类契约；主场景与校准器 smoke test 正常。
+- 首张成年主角低头坐姿独立候选已被用户拒绝：面部明暗和皱褶使年龄读作四十岁以上，双手对称捧空也不符合真实持机动作；v001 保留在 style-studies，不进入 production。
+- v002 将成年人物收回到约 32–35 岁，以画面右手单手握持透明手机槽、画面左手自然搭在大腿上的非对称动作替代捧空手势。源图经技能自带色键工具转换为 Alpha，并按人物实际内容紧边界裁切为 762 × 1376；评审落位为 `[-28, 612, 576, 1040]`。
+- v002 预览中的灰蓝手机只是在人物透明手机槽下方绘制的本地校准占位，不是正式手机资产；人物确认前仍不生成或接入 `prop_phone_commute_cold_v001.png`。
+- v002 检查点回归通过：Godot 4.7.1 正常导入候选和评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 186 条断言、17 类契约；主场景与校准器 smoke test 正常。
+- v001 检查点的技术回归曾通过，但随后因年龄与手势视觉问题被用户拒绝；技术通过不替代单项视觉确认。
 - Stage 3 继续保持“进行中”；当前进入成年主角低头坐姿单项候选，不提前生成人物抬头状态或其他交互物件，也不批量扩展其他场景。
 
 ### 验收标准
@@ -316,7 +320,7 @@
 
 ## 当前下一步
 
-执行 Stage 3：两个紧边界 production 结构层的中心、显示尺寸与人物可移动区已确认并锁定；人物合成后，左侧扶手层级校正到人物后方，底部前排座椅保持人物前方。当前只评审成年主角低头坐姿候选，确认后才晋级 production 并开始抬头状态。单幕未验收前不扩展到其余场景。
+执行 Stage 3：两个紧边界 production 结构层的中心、显示尺寸与人物可移动区已确认并锁定；人物合成后，左侧扶手层级校正到人物后方，底部前排座椅保持人物前方。当前只评审 `char_adult_commuter_seated_down_v002_candidate.png` 的年龄、低头姿态、单手持机手势和合成落位，确认后才晋级 production 并开始抬头状态。单幕未验收前不扩展到其余场景。
 
 ### 方向重置记录
 
@@ -339,3 +343,4 @@
 - 2026-08-10：发现固定前景扶手和最前排座椅会遮挡可移动人物；新增独立透明前景遮挡层 Gate，候选 v001 已生成并等待确认。
 - 2026-08-11：用户要求前景按内容实际尺寸拆分后摆放；全画布候选降为提取母版，两张紧边界 production 前景层接入 JSON `layers` 和校准器，等待独立落位确认。
 - 2026-08-11：用户确认两张前景层的现有落位；两层在布局 JSON 中锁定。首次人物合成验证保留两层坐标与尺寸，仅将左侧水平扶手改到人物后方，底部前排座椅仍为人物前方遮挡；Stage 3 进入成年主角低头坐姿单项候选。
+- 2026-08-11：用户拒绝成年主角低头候选 v001，指出人物显老且双手姿势不自然；v002 收回年龄感并改为单手握持透明手机槽、另一手自然搭腿，继续等待单项确认。

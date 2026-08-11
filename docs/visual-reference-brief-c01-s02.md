@@ -1,6 +1,6 @@
 # `c01_s02_commute_window` 视觉参考摘要
 
-版本：v1.5
+版本：v1.6
 
 日期：2026-08-11
 
@@ -50,10 +50,14 @@
 - `reference_type`：紧边界 production 前景层
 - `reference_purpose`：独立遮挡人物下方的底部弧形扶手与前排座椅上缘
 - `source_marker`：`../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png`
-- `reference_id`：`candidate_c01_s02_adult_down_01`
-- `reference_type`：待确认的紧边界成年主角低头坐姿候选
-- `reference_purpose`：确认成年人物的身体方向、低头动作、座椅承载、手部手机空间和前后遮挡关系
+- `reference_id`：`rejected_c01_s02_adult_down_01`
+- `reference_type`：已拒绝的紧边界成年主角低头坐姿候选
+- `reference_purpose`：年龄偏大和双手对称捧空的反例
 - `source_marker`：`../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png`
+- `reference_id`：`candidate_c01_s02_adult_down_02`
+- `reference_type`：待确认的紧边界成年主角低头坐姿候选
+- `reference_purpose`：确认约 32–35 岁的年龄感、低头动作、单手握持透明手机槽、另一手搭腿、座椅承载和前后遮挡关系
+- `source_marker`：`../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png`
 
 ## observed_signals
 
@@ -102,13 +106,14 @@
 - 七八岁以上的成熟儿童比例、写实缩小成人脸、写实皮肤细节、照片感，或大眼、Q 版、吉祥物化幼态，均不采纳。
 - 背景灰稿 v001 把成年人物原坐处恢复成平整侧板、缺少座椅承载面，不采纳。
 - 背景灰稿 v002 的竖向扶手穿过座椅靠背、坐垫并落地，阻塞乘坐空间，不采纳。
+- 成年人物面部皱褶、眼窝和明暗使年龄读作四十岁以上，或双手对称捧空、像托住无形物体，均不采纳。
 
 ## pending_confirmations
 
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
 - `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
 - `bg_c01_s02_bus_night_base_v001_candidate.png` 已确认并晋级 production 正式背景，不再回到背景完成度评审。
-- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层的独立落位已确认并锁定。当前待确认项为 `char_adult_commuter_seated_down_v001_candidate.png` 的人物造型、低头动作、手部空间与合成落位。
+- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层的独立落位已确认并锁定。成年主角低头 v001 已拒绝，当前待确认项为 `char_adult_commuter_seated_down_v002_candidate.png` 的年龄感、低头动作、非对称持机手势与合成落位。
 
 ## confirmation_rounds
 
@@ -126,6 +131,7 @@
 - 第 12 轮：2026-08-10，用户确认 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` 更好；该图对应的仓库候选晋级为正式 production 背景，下一道 Gate 改为前景遮挡层。
 - 第 13 轮：2026-08-11，用户指出前景物件不应使用全画布，应按实际内容尺寸裁切后摆入场景；将左右两组不相连遮挡物拆成两张 production 资产，并新增可独立校正的非交互 `layers` 布局。
 - 第 14 轮：2026-08-11，用户确认两张紧边界结构层的现有位置与尺寸；两层锁定后开始成年主角低头坐姿单项候选。首次人物合成验证只校正左侧扶手到人物后方，未改变用户确认的坐标或尺寸。
+- 第 15 轮：2026-08-11，用户拒绝成年主角低头 v001，指出人物显老且手部姿势不自然；v002 收回到约 32–35 岁，并改为画面右手单手握手机槽、画面左手自然搭腿。
 
 ## merge_guidance
 
@@ -133,6 +139,7 @@
 - 合并到构图灰稿：完整保留公交、道路、对向焦点车、同向红车、人物与倒影的位置关系。
 - 合并到生成提示词：人物身份纠正和品牌清理是允许变化项；车厢、道路、车辆方向、镜头、光线与交互目标位置是不变量。
 - 合并到人物生成：两人的骨盆、躯干、胸口与肩线都朝车前方（画面正面）；成年人只把头转向右侧玻璃，儿童倒影只把头转向左侧成年人。头部与视线按反射关系对应，儿童身体不能呈左侧面，儿童手中不出现手机。
+- 合并到成年低头状态：人物应读作约 32–35 岁的普通东亚男性，疲惫不等于显老；低头时使用非对称生活化动作，一手单手握手机，另一手自然搭腿。人物资产以透明手机槽保留手指前后关系，正式手机作为独立层置于手指后方。
 - 合并到倒影合成：以车窗透明玻璃的内轮廓作为硬遮罩，儿童所有像素只能出现在遮罩内；下沿斜向金属窗台及其下方必须完全保留原车厢材质。
 - 合并到儿童设计：保持同一人物的脸型与发型联系，但使用儿童日常上衣、空手和自然轻快的神情，不再镜像成年人的手机或成人化衣着。
 - 合并到表情设计：以松弛眉眼、短暂亮起的自然关注和轻微面颊变化表达“快活”，嘴唇微张或近中性，不使用任何笑容动作。

@@ -39,8 +39,10 @@
 | `game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png` | `reference_only` | `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png` | 保留为全画布对齐与提取母版；不作为可摆放运行时物件 |
 | `game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_seat_armrest_occluder_v001.png` | `approved` | 上述母版无损裁切 | 左侧座位扶手紧边界运行时资产，可独立校正 |
 | `game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png` | `approved` | 上述母版无损裁切 | 底部弧形扶手与前排座椅上缘紧边界运行时资产，可独立校正 |
-| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png` | `candidate` | `exec-26d4b9d0-f804-447c-80c8-86731062e0bf.png` | 成年主角低头坐姿独立候选；等待单项确认，不接入 production |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v001.png` | `review_only` | 本地确定性合成 | 正式背景、成人候选和两个已确认结构层的评审预览 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png` | `rejected` | `exec-26d4b9d0-f804-447c-80c8-86731062e0bf.png` | 用户指出人物显老，双手对称捧空不自然 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v001.png` | `rejected_review` | 本地确定性合成 | v001 合成反例，保留用于对照年龄与手势问题 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png` | `candidate` | `exec-b7256d0c-c7c9-4551-87ef-77cce49e2174.png` | 更年轻的成年主角，右手单手握手机槽、左手自然搭腿；等待单项确认 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v002.png` | `review_only` | 本地确定性合成 | v002 与临时灰蓝手机占位、正式背景和结构层的评审预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -280,6 +282,8 @@ Avoid: moving, enlarging, completing or inventing rails; including the empty sea
 
 评审预览 `preview_c01_s02_adult_down_v001.png` 使用正式背景原生 941 × 1672 画布，将人物候选缩放并放在 `rect = [-28, 612, 575, 1040]`。首次合成发现左侧水平扶手以 `z_index = 7` 绘制会横穿人物面部；保留其用户确认的坐标和尺寸，只将该层改为人物后方的 `z_index = 2`。底部弧形扶手与前排座椅继续以 `z_index = 7` 遮挡人物腿部。修正后预览 SHA-256 为 `0b50906b8c91fd82cd1fe0876766338cc77ad44ec80b6d57fd61aa761a08287d`。
 
+用户随后指出 v001 的面部年龄明显偏大，且双手对称捧空的姿势不自然；v001 和对应预览均标记为 `rejected`，不进入 production。
+
 提示词核心约束：
 
 ```text
@@ -288,6 +292,20 @@ Generate exactly one ordinary East Asian man around age 35, average build, seate
 Include the complete hair, torso, forearms, hands, lap and enough upper legs for a believable seated pose. Leave a clean rectangular negative space between relaxed hands for a separate phone asset; do not draw the phone, seat, rail, bus, window, reflection, prop or UI.
 Style: original hand-painted 2D animation character, gentle graphite contour, matte gouache and restrained simplified cel shading, observed everyday anatomy, cool blue-gray ambient light and limited warm ochre edge light; stylized rather than photorealistic, not chibi, mascot-like, glossy 3D or franchise anime.
 Backdrop: uniform solid #00ff00 chroma key with clean margin around the figure. No shadow, gradient, texture, halo, text, logo or watermark.
+```
+
+`char_adult_commuter_seated_down_v002_candidate.png` 继续使用内置 `image_gen` 编辑模式迭代。第一步源 `exec-58a139f1-d074-4cd7-a3c5-9fb61624d897.png` 建立纯绿色手机占位片与真实手指接触；第二步源 `exec-95229a27-c7e6-4650-8bdd-5d7740781445.png` 只减轻面部年龄感；最终源 `exec-b7256d0c-c7c9-4551-87ef-77cce49e2174.png` 将双手改为非对称动作：画面右手单手握持手机槽，画面左手自然搭在大腿上。最终源为 1086 × 1448 RGB PNG，SHA-256 为 `e888df4c1955e3efb9011e3891b7fc5992caf86ec95723a7b1181e42dca8050b`。
+
+最终源继续通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill` 去色键；自动采样键色为 `#0bd608`，全画布得到 913,382 个全透明像素和 6,007 个半透明边缘像素。人物 Alpha 包围盒为 `[182, 104, 912, 1448]`，以 16 px 透明安全边裁切为 762 × 1376 RGBA PNG；成品四边非透明像素为 0，SHA-256 为 `d61710c6867fc37fd8f0532c3476b06b938bcd0a24eee113663c639641cc04b8`。纯绿色手机占位片同时被移除，形成供独立手机层置于手指后方的透明槽。
+
+评审预览 `preview_c01_s02_adult_down_v002.png` 保持人物 `rect = [-28, 612, 576, 1040]`，左侧扶手在人物后方，底部前排座椅在人物前方。为使持机手势可读，预览仅在透明手机槽下方绘制无文字、无细节的灰蓝校准占位：外框 `(284, 1234, 365, 1371)`，内区 `(291, 1243, 358, 1360)`；它不是正式手机资产。预览 SHA-256 为 `b1c03b31cbaa1725e86f8d444d984785c153ab02ed8d65903864cb1eb0eabe61`。
+
+v002 最终手势提示词核心约束：
+
+```text
+Preserve the youthful 32-to-34-year-old face, bowed head, frontal seated torso and green-screen workflow. Replace only both forearms, wrists, hands and the green phone placeholder with a relaxed asymmetrical commuter pose.
+On the image-right side, one hand naturally holds a portrait phone-shaped #00ff00 chroma-key placeholder slightly right of center; four fingers curl behind it and the thumb rests along the lower front-side edge. On the image-left side, the other hand rests palm-down on the upper thigh with loose, gently separated fingers.
+Avoid mirrored bowl-shaped hands, touching fingertips, an invisible sphere, crossed wrists, fused or extra fingers, a finished phone, environment, text, logo, watermark or UI.
 ```
 
 ## 资产清单
