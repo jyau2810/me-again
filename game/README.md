@@ -85,7 +85,7 @@ HOME=/tmp/me-again-godot-home \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-预期结果包含 `186 assertions` 和 `17 contracts`。
+预期结果包含 `197 assertions` 和 `17 renderer contracts`。
 
 ## 导出边界
 

@@ -104,7 +104,7 @@ HOME=/tmp/me-again-godot-home /Applications/Godot.app/Contents/MacOS/Godot \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-结果：182 条断言、17 类交互契约通过；覆盖 JSON 解析、样板交互布局、两张独立视觉层、裁切坐标、视觉/命中尺寸分离和旧布局回退检查。
+结果：197 条断言、17 类交互契约通过；覆盖 JSON 解析、样板交互布局、三张独立视觉层、人物状态与正式手机资源路径、裁切坐标、视觉/命中尺寸分离和旧布局回退检查。
 
 ## 8. 发布边界
 

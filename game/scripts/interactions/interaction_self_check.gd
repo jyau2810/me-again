@@ -59,6 +59,7 @@ func _test_scene_layout_store() -> void:
 	_expect(phone.get("visual_size", Vector2.ZERO) == Vector2(62.0, 105.0), "visual size remains independent from hit size")
 	_expect(phone.get("z_index") == 3, "phone renders behind the adult's gripping fingers")
 	_expect(phone.get("mode") == "sprite", "JSON sprite presentation is normalized")
+	_expect(phone.get("asset_path") == "res://assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png", "confirmed phone resolves its production asset")
 
 	var armrest := LayoutStore.layer("c01_s02_commute_window", "seat_armrest_occluder")
 	_expect(not armrest.is_empty(), "runtime resolves a non-interactive visual layer from JSON")

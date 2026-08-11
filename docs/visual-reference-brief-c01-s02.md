@@ -66,10 +66,10 @@
 - `reference_type`：已确认的同锚点成年主角抬头状态生产参考
 - `reference_purpose`：锁定身体朝车前方、头转向画面右侧车窗、略向上视线、平静注意表情及状态切换稳定性
 - `source_marker`：`../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`
-- `reference_id`：`candidate_c01_s02_phone_cold_01`
-- `reference_type`：待确认的紧边界独立手机候选
-- `reference_purpose`：确认无品牌造型、低亮度冷蓝灰屏幕、手指前后关系、尺寸与两种成人状态兼容性
-- `source_marker`：`../game/assets/art/style-studies/c01_s02/props/prop_phone_commute_cold_v001_candidate.png`
+- `reference_id`：`approved_c01_s02_phone_cold_01`
+- `reference_type`：已确认的紧边界独立手机 production 资产
+- `reference_purpose`：锁定无品牌造型、低亮度冷蓝灰屏幕、手指前后关系、尺寸与两种成人状态兼容性
+- `source_marker`：`../game/assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png`
 
 ## observed_signals
 
@@ -127,7 +127,7 @@
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
 - `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
 - `bg_c01_s02_bus_night_base_v001_candidate.png` 已确认并晋级 production 正式背景，不再回到背景完成度评审。
-- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层与成年主角低头、抬头状态均已确认。当前待确认项为 `prop_phone_commute_cold_v001_candidate.png`，重点检查尺寸、屏幕冷光、手指前后关系和同一落位对两种人物状态的兼容性。
+- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层、成年主角低头/抬头状态与 `prop_phone_commute_cold_v001.png` 均已确认。当前待确认项为独立对向焦点车辆，重点检查车头方向、道路透视、无品牌日常家用车造型，以及车灯和车牌后续覆盖层的几何空间。
 
 ## confirmation_rounds
 
@@ -149,6 +149,7 @@
 - 第 16 轮：2026-08-11，用户认为成年主角低头 v002 仍然显老，将年龄目标明确为约 26 岁；v003 同步年轻化面部、颈部、肩臂和手部，保留非对称持机动作。
 - 第 17 轮：2026-08-11，用户确认成年主角低头 v003；候选晋级 production，人物落位与手机透明槽坐标写入场景 JSON，下一道 Gate 为同锚点的抬头状态。
 - 第 18 轮：2026-08-11，用户确认成年主角抬头 v001；候选晋级 production，并以状态资源映射复用低头人物的锚点、尺寸和层级，下一道 Gate 为独立手机候选。
+- 第 19 轮：2026-08-11，用户确认独立手机 v001；候选逐字节晋级 production，运行时写入正式路径并保留可人工校正的布局，下一道 Gate 为独立对向焦点车辆。
 
 ## merge_guidance
 

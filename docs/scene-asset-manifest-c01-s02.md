@@ -170,16 +170,16 @@
 
 ### 交互物件
 
-#### `prop_phone_commute_cold_v001_candidate.png`
+#### `prop_phone_commute_cold_v001.png`
 
-- 状态：`candidate`；位于 `../game/assets/art/style-studies/c01_s02/props/`，确认前不进入 production，JSON `phone.asset_path` 继续留空。
+- 状态：`approved`；用户于 2026-08-11 确认。生产文件位于 `../game/assets/art/production/c01_s02_commute_window/props/`，与 `style-studies` 候选逐字节一致。
 - 内容：无品牌当代手机，屏幕只显示不可读的冷色块。
 - 状态需求：基础、轻微暗下两个状态可通过运行时调色完成，无需重复生成。
 - 分层：放在成年人物层下方，通过人物资产的透明手机槽显示；不得覆盖握持手指。
 - 文件：746 × 1261 紧边界 RGBA，四周透明；运行时按 `62 × 105` 显示，中心 `(0.3448, 0.7790)`，层级 3，命中尺寸仍为 `180 × 180`。
 - 双状态预览：`preview_c01_s02_phone_cold_adult_down_v001.png` 与 `preview_c01_s02_phone_cold_adult_look_up_v001.png` 使用同一手机落位；两张图中手指均正确覆盖手机边缘。
-- 生产目标：确认后晋级为 `../game/assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png`，再写入 `phone.asset_path` 并锁定视觉尺寸；命中区域继续允许人工校正。
-- 技术检查：Godot 4.7.1 手机候选与两张预览导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 196 条断言、17 类契约。
+- 布局登记：`phone.asset_path` 已写入 production 路径；中心、视觉尺寸、命中尺寸与层级保持已确认值，`locked = false`，手机视觉和命中区域都继续允许人工校正。
+- 技术检查：Godot 4.7.1 production 手机导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 197 条断言、17 类契约。
 
 #### `prop_vehicle_focus_base_v001.png`
 

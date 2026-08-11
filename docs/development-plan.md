@@ -78,6 +78,7 @@
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png`：抬头候选、临时手机校准占位、正式背景和结构层合成评审图。
 - `../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`：已确认并登记为 `look_up` 状态的成年主角抬头 production 资产。
 - `../game/assets/art/style-studies/c01_s02/props/prop_phone_commute_cold_v001_candidate.png`：无品牌、低亮度冷蓝灰屏幕的紧边界独立手机候选。
+- `../game/assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png`：已确认并接入运行时、仍可人工校正落位的独立手机 production 资产。
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_down_v001.png`：手机候选与低头人物的合成评审图。
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_look_up_v001.png`：同一手机落位与抬头人物的兼容性评审图。
 
@@ -137,9 +138,11 @@
 - 抬头状态晋级回归通过：Godot 4.7.1 正常导入 production 抬头人物；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 196 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - 首张手机候选已独立生成并紧边界裁切为 746 × 1261 RGBA；屏幕只保留不可读冷蓝灰块面。按 `(284, 1234, 81, 137)` 合成到正式背景后，低头与抬头人物都能以同一落位自然遮住手机边缘；候选确认前不写入 production 或 JSON `phone.asset_path`。
 - 手机候选检查点回归通过：Godot 4.7.1 正常导入手机候选与两张评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 196 条断言、17 类契约；主场景与校准器 smoke test 正常。
+- 用户确认手机 v001；候选逐字节晋级为 `../game/assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png`，SHA-256 保持 `13ad4a4fb751f649975e0e60fadf6fd281900643a078c1616c66ae8b8c075338`。布局写入 production 路径，继续使用 `anchor = (0.3448, 0.7790)`、`visual_size = 62 × 105`、`hit_size = 180 × 180`、`z_index = 3`，并保持 `locked = false` 供人工校正。
+- 手机晋级回归通过：Godot 4.7.1 正常导入 production 手机；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 197 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - v002 检查点回归通过：Godot 4.7.1 正常导入候选和评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 186 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - v001 检查点的技术回归曾通过，但随后因年龄与手势视觉问题被用户拒绝；技术通过不替代单项视觉确认。
-- Stage 3 继续保持“进行中”；成年主角低头与抬头状态 Gate 均已关闭，当前只生成并评审独立手机候选，不提前生成焦点车辆或扩展其他场景。
+- Stage 3 继续保持“进行中”；成年主角低头、抬头和独立手机 Gate 均已关闭。下一道 Gate 只生成并评审独立对向焦点车辆，不提前生成车灯、车牌、儿童倒影或扩展其他场景。
 
 ### 验收标准
 
@@ -338,7 +341,7 @@
 
 ## 当前下一步
 
-执行 Stage 3：两个紧边界 production 结构层与约 26 岁的成年主角低头、抬头状态均已确认；人物状态共用一个锁定落位，手机目标已按透明槽重标且保持可人工校正。当前只生成并评审 `prop_phone_commute_cold_v001_candidate.png` 的尺寸、冷光、手指前后关系和双人物状态兼容性，确认前不生成焦点车辆或扩展到其余场景。
+执行 Stage 3：两个紧边界 production 结构层、约 26 岁成年主角的低头/抬头状态和独立手机均已确认；人物状态共用一个锁定落位，手机使用 production 路径并保持可人工校正。当前只生成并评审 `prop_vehicle_focus_base_v001_candidate.png`：普通无品牌深色家用车必须位于空置对向车道、车头朝向公交并符合现有道路透视，同时为后续独立车灯和车牌覆盖层保留清楚几何；确认前不生成车灯、车牌、儿童倒影或扩展到其余场景。
 
 ### 方向重置记录
 
@@ -367,3 +370,4 @@
 - 2026-08-11：生成成年主角抬头候选 v001；人物身体保持朝车前方，头转向画面右侧车窗并略向上看，使用平静注意表情；候选与合成预览等待确认。
 - 2026-08-11：用户确认成年主角抬头候选 v001；候选晋级 production，并作为同一人物层的 `look_up` 状态资源登记，Stage 3 转入独立手机单项候选。
 - 2026-08-11：生成独立手机候选 v001；无品牌正面机身、低亮度冷蓝灰屏幕和两种人物状态的手指遮边关系进入单项评审。
+- 2026-08-11：用户确认独立手机候选 v001；候选逐字节晋级 production，运行时写入正式路径并保留人工校正能力，Stage 3 转入独立对向焦点车辆单项候选。
