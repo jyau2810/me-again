@@ -76,6 +76,10 @@
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png`：已确认的低头状态、临时手机校准占位和结构层合成评审图。
 - `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_look_up_v001_candidate.png`：与低头状态同画布、同锚点的成年主角抬头状态候选。
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png`：抬头候选、临时手机校准占位、正式背景和结构层合成评审图。
+- `../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`：已确认并登记为 `look_up` 状态的成年主角抬头 production 资产。
+- `../game/assets/art/style-studies/c01_s02/props/prop_phone_commute_cold_v001_candidate.png`：无品牌、低亮度冷蓝灰屏幕的紧边界独立手机候选。
+- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_down_v001.png`：手机候选与低头人物的合成评审图。
+- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_look_up_v001.png`：同一手机落位与抬头人物的兼容性评审图。
 
 ### 2026-08-07 当前检查点
 
@@ -131,6 +135,8 @@
 - 抬头候选检查点回归通过：Godot 4.7.1 正常导入候选与评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 193 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - 用户确认抬头 v001；候选逐字节晋级为 `../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`。布局在同一成人层中登记 `down` / `look_up` 两个 production 状态路径，继续共用已确认锚点、尺寸和层级，不创建重叠常驻层。
 - 抬头状态晋级回归通过：Godot 4.7.1 正常导入 production 抬头人物；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 196 条断言、17 类契约；主场景与校准器 smoke test 正常。
+- 首张手机候选已独立生成并紧边界裁切为 746 × 1261 RGBA；屏幕只保留不可读冷蓝灰块面。按 `(284, 1234, 81, 137)` 合成到正式背景后，低头与抬头人物都能以同一落位自然遮住手机边缘；候选确认前不写入 production 或 JSON `phone.asset_path`。
+- 手机候选检查点回归通过：Godot 4.7.1 正常导入手机候选与两张评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 196 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - v002 检查点回归通过：Godot 4.7.1 正常导入候选和评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 186 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - v001 检查点的技术回归曾通过，但随后因年龄与手势视觉问题被用户拒绝；技术通过不替代单项视觉确认。
 - Stage 3 继续保持“进行中”；成年主角低头与抬头状态 Gate 均已关闭，当前只生成并评审独立手机候选，不提前生成焦点车辆或扩展其他场景。
@@ -360,3 +366,4 @@
 - 2026-08-11：用户确认成年主角低头候选 v003；候选晋级 production，人物与手机槽落位接入布局 JSON，Stage 3 转入同锚点抬头状态单项候选。
 - 2026-08-11：生成成年主角抬头候选 v001；人物身体保持朝车前方，头转向画面右侧车窗并略向上看，使用平静注意表情；候选与合成预览等待确认。
 - 2026-08-11：用户确认成年主角抬头候选 v001；候选晋级 production，并作为同一人物层的 `look_up` 状态资源登记，Stage 3 转入独立手机单项候选。
+- 2026-08-11：生成独立手机候选 v001；无品牌正面机身、低亮度冷蓝灰屏幕和两种人物状态的手指遮边关系进入单项评审。

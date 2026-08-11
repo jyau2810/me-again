@@ -49,6 +49,9 @@
 | `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_look_up_v001_candidate.png` | `approved_reference` | `exec-04e0017f-a15d-4657-936e-562fd8fe2d77.png` | 用户确认同锚点抬头状态；保留为生产来源 |
 | `game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png` | `approved` | 上述候选逐字节复制 | 已登记为成人层的 `look_up` 状态资源 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png` | `approved_review` | 本地确定性合成 | 已确认的抬头状态、手机校准占位、正式背景和结构层合成关系 |
+| `game/assets/art/style-studies/c01_s02/props/prop_phone_commute_cold_v001_candidate.png` | `candidate` | `exec-2ce4e535-43fe-4927-9704-9ffbb3ec83d3.png` | 无品牌低亮度冷蓝灰手机；等待单项确认 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_down_v001.png` | `review_only` | 本地确定性合成 | 手机候选与低头人物、正式背景和结构层的评审预览 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_look_up_v001.png` | `review_only` | 本地确定性合成 | 同一手机候选与抬头人物的兼容性评审预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -347,6 +350,21 @@ Keep an original hand-painted 2D animation language with gentle graphite, matte 
 ```text
 Preserve the exact canvas, identity, age about 26, frontal seated body, clothing, arms, hands and green phone slot from the confirmed low-head source. Change only the head and neck with minimal necessary shoulder response: lift the head, turn naturally toward the image-right bus window, and look upward-right in a modest three-quarter view.
 Keep a calm, newly attentive expression with relaxed brows and neutral lips. No smile, fear, surprise, direct camera gaze, environment, phone, child, reflection, text, logo, watermark or UI.
+```
+
+### 通勤手机候选
+
+`prop_phone_commute_cold_v001_candidate.png` 使用内置 `image_gen` 生成。首次源 `exec-6d7ab856-428a-431c-8c11-1ee46ec5bbaf.png` 的机身比例偏窄，未入库；最终源 `exec-2ce4e535-43fe-4927-9704-9ffbb3ec83d3.png` 只加宽机身，保留正面竖持角度、暗色磨砂边框、低亮度冷蓝灰屏幕和不可读抽象块面。最终源为 964 × 1632 RGB PNG，SHA-256 为 `f392019af3f507db7013073c63683e4b09457b73447eaf650a61fc20cc570d53`。
+
+最终源通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --edge-contract 1 --despill` 去色键；自动采样键色为 `#06f405`，全画布得到 778,775 个全透明像素和 3,956 个半透明边缘像素，Alpha 包围盒为 `[151, 185, 811, 1414]`。裁切后将 660 × 1229 主体轻微横向归一化为 714 × 1229，再增加四周 16 px 透明边，得到 746 × 1261 RGBA；纹理宽高比为 `0.591594`，与运行时 `62 × 105` 容器基本一致。最后清除 Alpha 小于 32 的边缘噪点并中和残余色键污染；可见像素中不再存在绿色主导边缘。成品四边非透明像素为 0，SHA-256 为 `13ad4a4fb751f649975e0e60fadf6fd281900643a078c1616c66ae8b8c075338`。
+
+两张评审预览都将手机绘制在正式背景原生画布 `(284, 1234, 81, 137)`，对应逻辑布局 `anchor = (0.3448, 0.7790)`、`visual_size = 62 × 105`、`z_index = 3`；人物继续使用 `rect = [-28, 612, 575, 1040]`、`z_index = 4`，因此手指覆盖手机边缘。低头预览 `preview_c01_s02_phone_cold_adult_down_v001.png` 的 SHA-256 为 `46274fd7098e256e520c410b527a53795aeeecfaa60330f284f3d4052b39cbd2`；抬头预览 `preview_c01_s02_phone_cold_adult_look_up_v001.png` 的 SHA-256 为 `c2930f7abb15e5cd070a5e0a84f1c688951b0f068cf9e8c949ab01c5de1224c4`。候选确认前不进入 production，JSON `phone.asset_path` 继续留空。
+
+手机提示词核心约束：
+
+```text
+Generate exactly one ordinary contemporary unbranded smartphone, front-facing and upright, with a tall narrow 0.59 width-to-height silhouette, thin dark charcoal blue-gray matte case, and dim cool blue-gray screen containing only unreadable abstract value blocks.
+Match the original hand-painted 2D graphite-and-gouache prop language. Use a uniform #00ff00 chroma-key background. No hand, person, scene, readable UI, text, icons, clock, logo, watermark, glow halo, shadow or any other object.
 ```
 
 ## 资产清单
