@@ -43,8 +43,9 @@
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v001.png` | `rejected_review` | 本地确定性合成 | v001 合成反例，保留用于对照年龄与手势问题 |
 | `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png` | `rejected` | `exec-b7256d0c-c7c9-4551-87ef-77cce49e2174.png` | 手势改善，但用户认为人物仍显老，目标改为约 26 岁 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v002.png` | `rejected_review` | 本地确定性合成 | v002 年龄感反例，保留用于对照 |
-| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v003_candidate.png` | `candidate` | `exec-3e5d8d76-72cf-4467-a1b6-3df3e5c0a347.png` | 约 26 岁，右手单手握手机槽、左手自然搭腿；等待单项确认 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png` | `review_only` | 本地确定性合成 | v003 与临时灰蓝手机占位、正式背景和结构层的评审预览 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v003_candidate.png` | `approved_reference` | `exec-3e5d8d76-72cf-4467-a1b6-3df3e5c0a347.png` | 用户确认约 26 岁、低头与非对称持机动作；保留为生产来源 |
+| `game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png` | `approved` | 上述候选逐字节复制 | 已接入运行时的低头状态人物，紧边界且可独立校正 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png` | `approved_review` | 本地确定性合成 | 已确认的低头人物、临时手机占位、正式背景和结构层合成关系 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -317,6 +318,8 @@ Avoid mirrored bowl-shaped hands, touching fingertips, an invisible sphere, cros
 源图通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill` 去色键；自动采样键色为 `#07d804`，全画布得到 912,005 个全透明像素和 5,610 个半透明边缘像素。人物 Alpha 包围盒为 `[181, 99, 913, 1448]`，以 16 px 透明安全边裁切为 764 × 1381 RGBA PNG；成品四边非透明像素为 0，SHA-256 为 `ba929bce75f7096ed67bd0974d85aec6efec76311a5d6697fd8d729695403886`。纯绿色手机占位片同步形成透明手机槽。
 
 评审预览 `preview_c01_s02_adult_down_v003.png` 使用人物 `rect = [-28, 612, 575, 1040]`，继续在人物下方使用与 v002 相同的无文字灰蓝手机校准占位，左侧扶手位于人物后方，底部前排座椅位于人物前方。预览 SHA-256 为 `7e1dee3267e695182096cabd1f7521f56532a5f78f7149b143cccfc62457733d`。
+
+用户于 2026-08-11 确认 v003。候选逐字节晋级为 `game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png`，SHA-256 仍为 `ba929bce75f7096ed67bd0974d85aec6efec76311a5d6697fd8d729695403886`。运行时人物层使用 `anchor = (0.2758, 0.6770)`、`visual_size = 440 × 796`、`z_index = 4`；对应源图裁切坐标为 `[181, 99, 732, 1349]`。临时手机位按透明槽重标为 `anchor = (0.3448, 0.7790)`、`visual_size = 62 × 105`、`hit_size = 180 × 180`、`z_index = 3`，正式手机仍待单独生成和确认。
 
 v003 年龄修正提示词核心约束：
 

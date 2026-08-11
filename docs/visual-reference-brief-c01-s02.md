@@ -1,6 +1,6 @@
 # `c01_s02_commute_window` 视觉参考摘要
 
-版本：v1.7
+版本：v1.8
 
 日期：2026-08-11
 
@@ -58,10 +58,10 @@
 - `reference_type`：已拒绝的紧边界成年主角低头坐姿候选
 - `reference_purpose`：手势改善但年龄仍高于目标的反例
 - `source_marker`：`../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png`
-- `reference_id`：`candidate_c01_s02_adult_down_03`
-- `reference_type`：待确认的紧边界成年主角低头坐姿候选
-- `reference_purpose`：确认约 26 岁的年龄感、低头动作、单手握持透明手机槽、另一手搭腿、座椅承载和前后遮挡关系
-- `source_marker`：`../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v003_candidate.png`
+- `reference_id`：`approved_c01_s02_adult_down_03`
+- `reference_type`：已确认的紧边界成年主角低头坐姿生产参考
+- `reference_purpose`：锁定约 26 岁的年龄感、低头动作、单手握持透明手机槽、另一手搭腿、座椅承载和前后遮挡关系
+- `source_marker`：`../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png`
 
 ## observed_signals
 
@@ -119,7 +119,7 @@
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
 - `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
 - `bg_c01_s02_bus_night_base_v001_candidate.png` 已确认并晋级 production 正式背景，不再回到背景完成度评审。
-- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层的独立落位已确认并锁定。成年主角低头 v001 与 v002 已拒绝，当前待确认项为 `char_adult_commuter_seated_down_v003_candidate.png` 是否准确呈现约 26 岁，以及低头动作、非对称持机手势与合成落位。
+- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层的独立落位已确认并锁定。成年主角低头 v001 与 v002 已拒绝，v003 已确认并晋级 production。当前待确认项转为同画布、同锚点的成年主角抬头状态。
 
 ## confirmation_rounds
 
@@ -139,6 +139,7 @@
 - 第 14 轮：2026-08-11，用户确认两张紧边界结构层的现有位置与尺寸；两层锁定后开始成年主角低头坐姿单项候选。首次人物合成验证只校正左侧扶手到人物后方，未改变用户确认的坐标或尺寸。
 - 第 15 轮：2026-08-11，用户拒绝成年主角低头 v001，指出人物显老且手部姿势不自然；v002 收回到约 32–35 岁，并改为画面右手单手握手机槽、画面左手自然搭腿。
 - 第 16 轮：2026-08-11，用户认为成年主角低头 v002 仍然显老，将年龄目标明确为约 26 岁；v003 同步年轻化面部、颈部、肩臂和手部，保留非对称持机动作。
+- 第 17 轮：2026-08-11，用户确认成年主角低头 v003；候选晋级 production，人物落位与手机透明槽坐标写入场景 JSON，下一道 Gate 为同锚点的抬头状态。
 
 ## merge_guidance
 

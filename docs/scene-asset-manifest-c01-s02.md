@@ -138,13 +138,15 @@
 
 #### `char_adult_commuter_seated_down_v003_candidate.png`
 
-- 状态：`candidate`；位于 `../game/assets/art/style-studies/c01_s02/characters/`，确认前不进入 production。
+- 状态：`approved_reference`；用户于 2026-08-11 确认，保留在 `style-studies` 作为生产来源。
 - 内容：约 26 岁的普通东亚男性低头坐姿；身体与双肩朝车前方，画面右手单手握持透明手机槽，画面左手自然搭在大腿上。
 - 锚点：座椅接触点和骨盆位置。
 - 文件：764 × 1381 紧边界 RGBA，四周 16 px 透明安全边；不含座椅、扶手、正式手机、倒影或环境。
-- 当前评审落位：正式背景原生画布 `rect = [-28, 612, 575, 1040]`；只写入合成预览，确认后才换算并写入场景布局。
+- 生产文件：`../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png`，状态 `approved`，与候选逐字节一致。
+- 确认落位：正式背景原生画布 `rect = [-28, 612, 575, 1040]`；逻辑画布为 `anchor = (0.2758, 0.6770)`、`visual_size = 440 × 796`、`z_index = 4`，已写入场景布局并锁定。
 - 手机分层：人物右手内部保留由色键移除的透明手机槽；正式手机必须绘制在人物手指后方、人物躯干前方。v003 预览中的灰蓝矩形只用于验证手势，不是手机资产。
 - 合成检查：脸、颈部、体态和手部均读作二十多岁；背部与骨盆由固定座椅承接，底部前排座椅遮住腿部下缘。
+- 技术检查：Godot 4.7.1 production 导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 193 条断言、17 类契约。
 
 #### `char_adult_commuter_seated_look_up_v001.png`
 
@@ -258,8 +260,8 @@
 2. 已确认 `bg_c01_s02_bus_night_layout_v003.png` 的扶手终止位置、固定座椅乘坐空间、人物承载关系、公交结构、双向道路和三个叠加预留区。
 3. 已确认 `bg_c01_s02_bus_night_base_v001_candidate.png` 并晋级正式背景 `production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`。
 4. 已将全画布遮挡母版改为 `reference_only`，拆出 `seat_armrest` 与 `front_seat` 两张紧边界 production 资产，并确认各自落位和人物可移动范围后锁定。
-5. v001 因显老和手势不自然被拒绝，v002 因年龄仍高于目标被拒绝；当前评审 v003 是否准确呈现约 26 岁、低头姿态、单手握持透明手机槽、另一手搭腿及前景遮挡关系，确认前不晋级 production。
-6. 成年主角确认后生成抬头状态；两张图必须同画布、同锚点。
+5. v001 因显老和手势不自然被拒绝，v002 因年龄仍高于目标被拒绝；v003 已确认并晋级 production，人物与手机槽的运行时落位已写入 JSON。
+6. 当前生成成年主角抬头状态；两张图必须同画布、同锚点，确认后再晋级 production。
 7. 人物状态确认后生成手机和焦点车，再对齐手部、道路与车灯/车牌位置。
 8. 最后生成儿童倒影和冷暖效果，进入完整场景合成。
 9. 所有层在校正工具中人工调整并保存，再接入三次观察状态。
