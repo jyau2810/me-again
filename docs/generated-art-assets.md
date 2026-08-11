@@ -53,6 +53,9 @@
 | `game/assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png` | `approved` | 上述候选逐字节复制 | 已接入运行时并保留人工校正能力的手机生产资产 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_down_v001.png` | `approved_review` | 本地确定性合成 | 已确认手机与低头人物、正式背景和结构层的评审预览 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_phone_cold_adult_look_up_v001.png` | `approved_review` | 本地确定性合成 | 已确认手机与抬头人物的兼容性评审预览 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_focus_base_v001_candidate.png` | `candidate` | `exec-762cbc04-e661-4cca-b411-e6d299e752e7.png` | 近正面迎向公交的普通无品牌深色家用车；等待单项确认 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_v001.png` | `review_only` | 本地确定性合成 | 车辆候选与正式背景、双向车流和初始落位的评审预览 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_look_up_v001.png` | `review_only` | 本地确定性合成 | 车辆候选与已确认人物、手机和结构层的完整关系预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -368,6 +371,21 @@ Keep a calm, newly attentive expression with relaxed brows and neutral lips. No 
 ```text
 Generate exactly one ordinary contemporary unbranded smartphone, front-facing and upright, with a tall narrow 0.59 width-to-height silhouette, thin dark charcoal blue-gray matte case, and dim cool blue-gray screen containing only unreadable abstract value blocks.
 Match the original hand-painted 2D graphite-and-gouache prop language. Use a uniform #00ff00 chroma-key background. No hand, person, scene, readable UI, text, icons, clock, logo, watermark, glow halo, shadow or any other object.
+```
+
+### 对向焦点车辆候选
+
+`prop_vehicle_focus_base_v001_candidate.png` 使用内置 `image_gen` 生成。首轮源 `exec-3db3f71e-3f51-4b93-a6c5-151bf94961a8.png` 的侧面占比过高、接近产品展示角度，未入库；第二轮源 `exec-811fb3ef-d2a7-4801-a10c-7526edd95229.png` 将同一普通车型转为近正面迎向公交，但质感仍偏产品图，未入库；最终源 `exec-762cbc04-e661-4cca-b411-e6d299e752e7.png` 只收敛为石墨线、哑光水粉与克制赛璐珞明暗，保留第二轮的角度、轮廓、灯罩和空白前牌几何。三张源图 SHA-256 依次为 `2e4db52e5892dd3fbb35a72beaf6d290a338b5d4cae27b92b2b348497e3bfbe9`、`c94159e38c3e4c13993c8d84de0596df979652a9c0b388248668ac9a8ee18ba2`、`f2a3c2f5043d60544c033ce3191df09e9d5118e733c7abcf71e007db9ad85142`。
+
+最终源通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --edge-contract 1 --despill` 去色键；自动采样键色为 `#0eea1a`。清除 Alpha 小于 32 的边缘噪点与残余低 Alpha 色键像素后，按可见包围盒四周增加 16 px 安全边，得到 946 × 696 RGBA 候选。成品 Alpha 包围盒为 `[16, 16, 930, 680]`，四角与四边均为全透明，可见像素中无绿色主导残留，SHA-256 为 `5b90265a45efb6b90b48b0cf2c3fbf9412c4e71fdd5652d96c9c0f1df1167ac4`。
+
+背景评审预览将车辆绘制在正式背景原生画布 `(469, 588, 400, 294)`，对应逻辑建议值 `anchor = (0.7110, 0.4396)`、`visual_size = 306 × 225`、`z_index = 1`。背景预览 `preview_c01_s02_vehicle_focus_base_v001.png` SHA-256 为 `d5101d256ab2f62dd909d735f4d7dc3e4cfc064f71f1b6fb9bfbc0d7dfc6acc0`；完整关系预览 `preview_c01_s02_vehicle_focus_base_look_up_v001.png` SHA-256 为 `18e4854d944716cc3da570eb500d113ab01282c97f434af49a764cf802692a3b`。候选确认前不进入 production，不写入布局 JSON，也不提前生成车灯、车牌或玻璃效果层。
+
+车辆提示词核心约束：
+
+```text
+Generate exactly one ordinary contemporary unbranded dark graphite family car approaching the bus in the opposing lane, nearly head-on with only a restrained front three-quarter cue. Preserve two readable dim-neutral headlamp housings and one centered blank matte-gray plate recess for later independent overlays.
+Match the original hand-painted 2D graphite, matte-gouache and restrained cel-shaded game language on a uniform #00ff00 chroma-key background. No road, shadow, rain, occupants, readable text, logo, badge, watermark, glow, beam, cartoon face, recognizable real model, photorealism or glossy 3D.
 ```
 
 ## 资产清单

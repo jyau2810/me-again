@@ -181,11 +181,15 @@
 - 布局登记：`phone.asset_path` 已写入 production 路径；中心、视觉尺寸、命中尺寸与层级保持已确认值，`locked = false`，手机视觉和命中区域都继续允许人工校正。
 - 技术检查：Godot 4.7.1 production 手机导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 197 条断言、17 类契约。
 
-#### `prop_vehicle_focus_base_v001.png`
+#### `prop_vehicle_focus_base_v001_candidate.png`
 
-- 状态：`planned`
-- 内容：普通无品牌家用车的正面或前侧视角，位于对向车道迎面驶来，与道路透视一致。
-- 要求：车灯和车牌位置清楚，为独立状态覆盖层保留准确锚点。
+- 状态：`candidate`；位于 `../game/assets/art/style-studies/c01_s02/props/`，确认前不进入 production 或布局 JSON。
+- 内容：普通无品牌深色家用车的近正面轻微三分之四视角，位于对向车道迎面驶向公交；与背景右侧同向远离的暗红车方向相反。
+- 文件：946 × 696 紧边界 RGBA，四边 16 px 透明安全边；不包含道路、投影、雨滴、车灯光束或车牌文字。
+- 几何：两侧灯罩和居中空白前牌清楚可读，基础灯罩保持低亮度，不烘焙后续车灯和车牌交互状态，不把车头设计成卡通脸。
+- 初始评审落位：正式背景原生画布 `rect = [469, 588, 400, 294]`；对应逻辑建议值为 `anchor = (0.7110, 0.4396)`、`visual_size = 306 × 225`、`z_index = 1`。确认后以 `locked = false` 接入校正工具，不直接锁定该初值。
+- 预览：`preview_c01_s02_vehicle_focus_base_v001.png` 只验证背景与车流；`preview_c01_s02_vehicle_focus_base_look_up_v001.png` 验证与抬头人物、手机和结构遮挡的完整关系。
+- 技术检查：Godot 4.7.1 候选与两张预览导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 197 条断言、17 类契约。
 
 #### `prop_vehicle_headlights_neutral_v001.png`
 
@@ -233,6 +237,7 @@
 | 视觉层 ID | 独立资产 | 初始中心 | 初始显示尺寸 | 层级 | 状态 |
 | --- | --- | --- | --- | --- | --- |
 | `seat_armrest_occluder` | `fg_c01_s02_seat_armrest_occluder_v001.png` | `(0.1775, 0.5105)` | `256 × 77` | 2 | 用户确认位置；人物合成后改到人物后方，已锁定 |
+| `focus_vehicle_base` | `prop_vehicle_focus_base_v001_candidate.png` | `(0.7110, 0.4396)` | `306 × 225` | 1 | 候选预览初值；尚未写入 JSON，确认后保持可人工校正 |
 | `adult_commuter_down` | 默认低头图；状态映射含抬头图 | `(0.2758, 0.6770)` | `440 × 796` | 4 | 两种人物状态共用落位，已锁定 |
 | `front_seat_occluder` | `fg_c01_s02_front_seat_occluder_v001.png` | `(0.6318, 0.9025)` | `530 × 250` | 7 | 用户确认，已锁定 |
 

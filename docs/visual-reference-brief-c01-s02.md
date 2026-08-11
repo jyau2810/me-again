@@ -70,6 +70,10 @@
 - `reference_type`：已确认的紧边界独立手机 production 资产
 - `reference_purpose`：锁定无品牌造型、低亮度冷蓝灰屏幕、手指前后关系、尺寸与两种成人状态兼容性
 - `source_marker`：`../game/assets/art/production/c01_s02_commute_window/props/prop_phone_commute_cold_v001.png`
+- `reference_id`：`candidate_c01_s02_vehicle_focus_base_01`
+- `reference_type`：待确认的紧边界独立对向焦点车辆候选
+- `reference_purpose`：确认普通无品牌车型、近正面迎向公交的方向、道路透视、场景比例、初始落位，以及车灯和车牌后续覆盖层的几何空间
+- `source_marker`：`../game/assets/art/style-studies/c01_s02/props/prop_vehicle_focus_base_v001_candidate.png`
 
 ## observed_signals
 
@@ -127,7 +131,7 @@
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
 - `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
 - `bg_c01_s02_bus_night_base_v001_candidate.png` 已确认并晋级 production 正式背景，不再回到背景完成度评审。
-- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层、成年主角低头/抬头状态与 `prop_phone_commute_cold_v001.png` 均已确认。当前待确认项为独立对向焦点车辆，重点检查车头方向、道路透视、无品牌日常家用车造型，以及车灯和车牌后续覆盖层的几何空间。
+- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层、成年主角低头/抬头状态与 `prop_phone_commute_cold_v001.png` 均已确认。当前待确认项为 `prop_vehicle_focus_base_v001_candidate.png`，重点检查近正面车头方向、道路透视、普通无品牌家用车造型、`(469, 588, 400, 294)` 初始落位，以及车灯和车牌后续覆盖层的几何空间。
 
 ## confirmation_rounds
 
@@ -150,6 +154,7 @@
 - 第 17 轮：2026-08-11，用户确认成年主角低头 v003；候选晋级 production，人物落位与手机透明槽坐标写入场景 JSON，下一道 Gate 为同锚点的抬头状态。
 - 第 18 轮：2026-08-11，用户确认成年主角抬头 v001；候选晋级 production，并以状态资源映射复用低头人物的锚点、尺寸和层级，下一道 Gate 为独立手机候选。
 - 第 19 轮：2026-08-11，用户确认独立手机 v001；候选逐字节晋级 production，运行时写入正式路径并保留可人工校正的布局，下一道 Gate 为独立对向焦点车辆。
+- 第 20 轮：2026-08-11，生成独立对向焦点车辆 v001 候选；车辆以近正面角度驶向公交，与右侧暗红车形成相反车流，灯罩和空白前牌保持独立覆盖空间，初始落位等待确认。
 
 ## merge_guidance
 
