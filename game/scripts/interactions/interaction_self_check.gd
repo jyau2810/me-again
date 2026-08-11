@@ -50,6 +50,7 @@ func _test_scene_layout_store() -> void:
 	_expect(not sample.is_empty(), "sample scene layout JSON parses")
 	_expect(sample.get("scene_id") == "c01_s02_commute_window", "sample scene ID matches its file")
 	_expect(sample.get("targets", {}).size() == 4, "sample scene exposes four calibrated targets")
+	_expect(sample.get("layers", {}).size() == 2, "sample scene exposes two independent visual layers")
 
 	var phone := LayoutStore.target("c01_s02_commute_window", "phone")
 	_expect(not phone.is_empty(), "runtime resolves a target from JSON")
@@ -57,6 +58,13 @@ func _test_scene_layout_store() -> void:
 	_expect(phone.get("hit_size", Vector2.ZERO) == Vector2(180.0, 180.0), "JSON hit size is preserved")
 	_expect(phone.get("visual_size", Vector2.ZERO) == Vector2(105.0, 140.0), "visual size remains independent from hit size")
 	_expect(phone.get("mode") == "sprite", "JSON sprite presentation is normalized")
+
+	var armrest := LayoutStore.layer("c01_s02_commute_window", "seat_armrest_occluder")
+	_expect(not armrest.is_empty(), "runtime resolves a non-interactive visual layer from JSON")
+	_expect(armrest.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.1775, 0.5105)), "visual layer anchor becomes scene-space Vector2")
+	_expect(armrest.get("visual_size", Vector2.ZERO) == Vector2(256.0, 77.0), "cropped visual layer keeps its authored display size")
+	_expect(armrest.get("source_rect", []) == [0, 803, 334, 101], "visual layer retains extraction coordinates for reproducible placement")
+	_expect(LayoutStore.layer("c01_s02_commute_window", "missing_layer").is_empty(), "unknown visual layer resolves empty")
 
 	var fallback := LayoutStore.target("c01_s01_room_morning", "alarm")
 	_expect(not fallback.is_empty(), "unmigrated scene falls back to the historical layout")
@@ -68,6 +76,7 @@ func _test_scene_layout_store() -> void:
 	var minimal := LayoutStore.decode_scene('{"scene_id":"sample","targets":{}}', "sample")
 	_expect(not minimal.is_empty(), "valid minimal layout JSON is accepted")
 	_expect(LayoutStore.decode_scene('{"scene_id":"other","targets":{}}', "sample").is_empty(), "mismatched scene ID is rejected")
+	_expect(LayoutStore.decode_scene('{"scene_id":"sample","targets":{},"layers":[]}', "sample").is_empty(), "non-dictionary visual layers are rejected")
 	_expect(LayoutStore.normalize_target({"anchor": [0.5, 0.5]}).is_empty(), "target without a hit size is rejected")
 
 

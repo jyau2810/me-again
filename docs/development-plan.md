@@ -67,14 +67,16 @@
 - `../game/assets/art/style-studies/c01_s02/`：三种原创视觉方向评审稿。
 - `../game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v001.png`：无人物、无手机、无近处焦点车的背景构图灰稿候选。
 - `../game/assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`：已确认的首个正式无人物背景。
-- `../game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png`：与正式背景同画布的透明前景遮挡层候选。
+- `../game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png`：只用于坐标追溯的全画布透明提取母版。
+- `../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_seat_armrest_occluder_v001.png`：紧边界左侧座位扶手遮挡层。
+- `../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png`：紧边界底部扶手与前排座椅遮挡层。
 
 ### 2026-08-07 当前检查点
 
 - 方向稿已按版本归档；其最终采纳与拒绝状态以 2026-08-10 方向确认和分层资产清单为准，没有任何方向稿进入正式资产目录。
 - JSON 布局覆盖、逐目标旧布局回退、视觉尺寸与命中尺寸分离已经接入正式运行时。
 - Godot 校正工具已经完成启动与实际渲染检查，可调整中心、视觉尺寸、命中尺寸、层级、模式、资产路径和拖动锁定，并保存/重新载入 JSON。
-- 交互系统自检扩展为 175 条断言，17 类契约全部通过；Stage 3 尚未完成。
+- 交互系统自检扩展为 182 条断言，17 类契约全部通过；新增两张非交互视觉层的解析、裁切坐标和独立落位检查，Stage 3 尚未完成。
 
 ### 2026-08-10 方向确认
 
@@ -102,8 +104,14 @@
 - 用户确认 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` 更好；对应候选晋级为 `production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`，校准器改用 production 路径。
 - 新增前景遮挡分层决策：空座前方水平扶手、底部弧形扶手和最前排座椅上缘必须以同画布透明层绘制在人物之上，不能硬裁进可移动人物资产。
 - 已生成 `fg_c01_s02_bus_rail_occluder_v001_candidate.png`：941 × 1672 RGBA，保留两段扶手与底部座椅上缘，透明覆盖和同坐标合成检查通过，等待视觉确认后再晋级 production。
-- production 背景与遮挡候选均已由 Godot 4.7.1 正常导入；540 × 960 校准器实帧确认 production 背景非空且画幅正确，`window`、`phone`、`headlight`、`plate` 四个热点未漂移。当前回归继续通过：状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 175 条断言、17 类契约；主场景与校准器 smoke test 正常。
-- Stage 3 继续保持“进行中”；前景遮挡层未确认前不生成人物或交互物件，也不批量扩展其他场景。
+- production 背景与遮挡候选均已由 Godot 4.7.1 正常导入；540 × 960 校准器实帧确认 production 背景非空且画幅正确，`window`、`phone`、`headlight`、`plate` 四个热点未漂移。该检查点的交互自检为 175 条断言、17 类契约。
+
+### 2026-08-11 前景拆分
+
+- 用户否定将全画布透明图直接作为前景物件；原图降为对齐母版，不再接入场景。两组相距较远的内容已无损拆为 334 × 101 左侧扶手和 693 × 326 底部前排座椅两张 production 资产。
+- 布局 JSON 升级为 version 2，新增与 `targets` 分离的非交互 `layers`；每层记录 `source_rect`、中心、显示尺寸、层级、路径和锁定状态，校准器可分别移动和缩放，不再为前景物件制造虚假命中区域。
+- 两张裁切图贴回母版后的 Alpha 与可见 RGBA 像素差异均为 0；Godot 4.7.1 导入和 540 × 960 校准器实帧通过，自动推导的初始位置与背景重合。当前回归通过：状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 182 条断言、17 类契约；主场景与校准器 smoke test 正常。
+- Stage 3 继续保持“进行中”；两个前景层的独立落位未确认前不生成人物或交互物件，也不批量扩展其他场景。
 
 ### 验收标准
 
@@ -237,7 +245,7 @@
 
 - 状态与存档：138 条断言通过。
 - 内容目录：5 章、30 幕、9 件收集物，自检通过。
-- 交互系统：175 条断言、17 类契约，自检通过；2026-08-07 增加布局 JSON 与旧布局回退检查。
+- 交互系统：182 条断言、17 类契约，自检通过；覆盖布局 JSON 的交互目标与非交互视觉层、裁切坐标和旧布局回退。
 - Godot 资源导入与主场景 headless smoke test 通过。
 
 本机缺少与 `4.7.1.stable.official.a13da4feb` 精确匹配的 export templates。本阶段完成的是本地制作整合，不宣称已生成 Web、桌面或小游戏发布包；导出属于阶段 8。
@@ -302,7 +310,7 @@
 
 ## 当前下一步
 
-执行 Stage 3：确认 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 是否只保留需要盖住人物的两段前景扶手和最前排座椅上缘，透明边缘、同画布位置和人物可移动区是否成立。确认后晋级到 `production/c01_s02_commute_window/foreground/` 并接入校准器；此前不开始成年人物，单幕未验收前不扩展到其余场景。
+执行 Stage 3：在校准器确认 `seat_armrest_occluder` 与 `front_seat_occluder` 两张紧边界 production 资产的初始中心、显示尺寸和人物可移动区。确认后锁定两个 `layers` 落位并开始成年主角低头坐姿；单幕未验收前不扩展到其余场景。
 
 ### 方向重置记录
 
@@ -323,3 +331,4 @@
 - 2026-08-10：用户确认 v003 可以采用；构图灰稿 Gate 关闭，首个正式完成度无人物背景候选开始评审。
 - 2026-08-10：用户确认 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` 为更好的正式背景；对应候选晋级 production，背景完成度 Gate 关闭。
 - 2026-08-10：发现固定前景扶手和最前排座椅会遮挡可移动人物；新增独立透明前景遮挡层 Gate，候选 v001 已生成并等待确认。
+- 2026-08-11：用户要求前景按内容实际尺寸拆分后摆放；全画布候选降为提取母版，两张紧边界 production 前景层接入 JSON `layers` 和校准器，等待独立落位确认。

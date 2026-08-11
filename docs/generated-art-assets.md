@@ -36,7 +36,9 @@
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v002.png` | `rejected` | `exec-bdc29e4e-4661-477a-a64b-cb9ef00d87bf.png` | 恢复了座椅，但竖向黄扶手穿过靠背、坐垫并落地，明显阻塞乘坐空间 |
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_layout_v003.png` | `approved` | `exec-afe87548-a0b7-4988-9339-da3211c42fdd.png` | 用户确认扶手与座椅关系成立；锁定为正式背景生产的构图基准 |
 | `game/assets/art/style-studies/c01_s02/bg_c01_s02_bus_night_base_v001_candidate.png` | `approved_reference` | `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` | 用户确认该图为正式背景；保留为生成与评审来源，运行时改用 production 副本 |
-| `game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png` | `candidate` | `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png` | 从正式背景同画布隔离两段前景黄扶手与最前排座椅上缘，等待分层确认 |
+| `game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png` | `reference_only` | `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png` | 保留为全画布对齐与提取母版；不作为可摆放运行时物件 |
+| `game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_seat_armrest_occluder_v001.png` | `approved` | 上述母版无损裁切 | 左侧座位扶手紧边界运行时资产，可独立校正 |
+| `game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png` | `approved` | 上述母版无损裁切 | 底部弧形扶手与前排座椅上缘紧边界运行时资产，可独立校正 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -243,7 +245,7 @@ Avoid: bright red or orange, changing the car to a front view, moving it, adding
 
 ### 前景扶手与座椅遮挡层候选
 
-`fg_c01_s02_bus_rail_occluder_v001_candidate.png` 使用内置 `image_gen` 编辑模式生成，输入图为已确认正式背景；生成源为 `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png`。内置工具输出 941 × 1672 RGB 色键图，使用 imagegen 技能自带 `remove_chroma_key.py` 转为同画布 RGBA PNG；透明像素为 1,421,722 / 1,573,352，可见覆盖率约 9.64%，透明边缘像素 3,127，最终 SHA-256 为 `6285d5cea4ec3c913cfb9549acd4098d719ba7ae9b05af5f40df9bb047b70f30`。强不透明像素与正式背景同坐标区域的 RGB 平均绝对误差为 5.31 / 255，合成复查未见位置漂移；确认前仍位于 `style-studies/`，不接入运行时。
+`fg_c01_s02_bus_rail_occluder_v001_candidate.png` 使用内置 `image_gen` 编辑模式生成，输入图为已确认正式背景；生成源为 `exec-8c92f483-91c5-422a-afa9-870ba2f93c33.png`。内置工具输出 941 × 1672 RGB 色键图，使用 imagegen 技能自带 `remove_chroma_key.py` 转为同画布 RGBA PNG；透明像素为 1,421,722 / 1,573,352，可见覆盖率约 9.64%，透明边缘像素 3,127，最终 SHA-256 为 `6285d5cea4ec3c913cfb9549acd4098d719ba7ae9b05af5f40df9bb047b70f30`。强不透明像素与正式背景同坐标区域的 RGB 平均绝对误差为 5.31 / 255，合成复查未见位置漂移。用户随后指出全画布尺寸不适合作为可摆放物件，因此该文件降为 `reference_only` 对齐母版。
 
 最终提示词：
 
@@ -258,6 +260,15 @@ Composition/framing: exact original full-frame 9:16 alignment. Every retained pi
 Constraints: the chroma-key background must be one uniform #00ff00 with no shadows, gradients, texture, reflections or lighting variation. Retain no vertical poles, window frames, glass, road, scenery, vehicles, rear seats, the empty character seat itself, people, phones, reflections, text, logos, watermark or UI. Do not use #00ff00 within retained objects.
 Avoid: moving, enlarging, completing or inventing rails; including the empty seat behind the future character; broad repainting; halos; transparent-looking green contamination; any change to geometry or crop.
 ```
+
+2026-08-11 按用户要求将不相连内容拆成两张紧边界 production 资产。本次没有再次调用图像生成，也没有重绘或缩放，只对上方 RGBA 母版做确定性裁切：
+
+| 文件 | 母版 `source_rect` | 输出尺寸 | SHA-256 |
+| --- | --- | --- | --- |
+| `fg_c01_s02_seat_armrest_occluder_v001.png` | `[0, 803, 334, 101]` | 334 × 101 | `20fa60b18adc6a0273530bc8fff39af35a1a7d52ab697ee121c5151e02dff6c9` |
+| `fg_c01_s02_front_seat_occluder_v001.png` | `[248, 1346, 693, 326]` | 693 × 326 | `c5d6003c44e7c9d084ed56b4f12bf38066bd76d540bcc6632b297e9dd2e39e8e` |
+
+两张裁切图按 `source_rect` 贴回 941 × 1672 母版后，Alpha 差异为空，可见 RGBA 像素差异为 0。初始锚点和显示尺寸由母版坐标换算写入场景布局 JSON，后续允许在 Godot 校准器中分别人工调整。
 
 ## 资产清单
 

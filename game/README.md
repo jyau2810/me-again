@@ -8,8 +8,8 @@
 - 标题、新游戏/继续、章节选择、五章连续流程、收集册、制作信息、存档恢复和精确场景续玩均已接入。
 - Stage 3 已重新启动，先精细化 `c01_s02_commute_window`，再逐幕迁移；现有 7 张背景和 4 张物件图集只作历史对照，不算新一轮正式资产。
 - 已迁移场景优先读取 `data/scene_layouts/<scene_id>.json`；未迁移场景逐目标回退到旧 GDScript 布局表。
-- 独立资产的视觉尺寸、命中尺寸、层级、显示模式和路径可以分别记录，并由 Godot 校准工具人工调整。
-- `c01_s02_commute_window` 的视觉方向、背景构图 v003 与首个正式无人物背景均已确认；校准器已切换到 production 背景，当前评审独立前景扶手/座椅遮挡层，人物与交互物件尚未开始生产。
+- 交互目标和非交互视觉层分别记录；独立资产的中心、视觉尺寸、层级、路径和锁定状态可以由 Godot 校准工具人工调整，命中尺寸与显示模式只属于交互目标。
+- `c01_s02_commute_window` 的视觉方向、背景构图 v003 与首个正式无人物背景均已确认；全画布前景提取图已拆为两张紧边界 production 遮挡层并接入校准器，人物与交互物件尚未开始生产。
 
 ## 启动
 
@@ -19,7 +19,7 @@
 
 在编辑器中运行 `project.godot` 即可从标题页开始。键鼠与触屏均可使用；双指交互另有鼠标/键盘替代输入。
 
-人工校准 `c01_s02_commute_window` 时，在编辑器中打开并运行 `scenes/tools/scene_layout_calibrator.tscn`。工具左侧显示参考背景与目标矩形，右侧可编辑中心、视觉尺寸、命中尺寸、层级、模式、资产路径和锁定状态；保存写回仓库内 JSON。
+人工校准 `c01_s02_commute_window` 时，在编辑器中打开并运行 `scenes/tools/scene_layout_calibrator.tscn`。工具左侧显示参考背景、交互目标和非交互视觉层，右侧可编辑中心、视觉尺寸、层级、资产路径和锁定状态；交互目标另有命中尺寸与模式。保存写回仓库内 JSON。
 
 ## 目录职责
 
@@ -85,7 +85,7 @@ HOME=/tmp/me-again-godot-home \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-预期结果包含 `175 assertions` 和 `17 contracts`。
+预期结果包含 `182 assertions` 和 `17 contracts`。
 
 ## 导出边界
 

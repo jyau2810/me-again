@@ -36,6 +36,7 @@ class CalibrationHandle extends Control:
 	signal anchor_dragged(target_id: String, anchor: Vector2)
 
 	var target_id := ""
+	var display_label := ""
 	var anchor := Vector2(0.5, 0.5)
 	var hit_size := Vector2(120.0, 120.0)
 	var visual_size := Vector2.ZERO
@@ -53,6 +54,7 @@ class CalibrationHandle extends Control:
 
 	func configure(id: String, source: Dictionary, canvas_size: Vector2) -> void:
 		target_id = id
+		display_label = String(source.get("display_label", id))
 		anchor = source.get("anchor", Vector2(0.5, 0.5))
 		hit_size = source.get("hit_size", Vector2(120.0, 120.0))
 		visual_size = source.get("visual_size", Vector2.ZERO)
@@ -65,7 +67,7 @@ class CalibrationHandle extends Control:
 			asset_texture = load(asset_path) as Texture2D
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		focus_mode = Control.FOCUS_ALL
-		tooltip_text = "%s%s" % [target_id, "（已锁定）" if locked else ""]
+		tooltip_text = "%s%s" % [display_label, "（已锁定）" if locked else ""]
 		_refresh_geometry(canvas_size)
 
 
@@ -126,13 +128,14 @@ class CalibrationHandle extends Control:
 			draw_texture_rect(asset_texture, _visual_rect, false)
 		if _visual_rect.size.x > 0.0 and _visual_rect.size.y > 0.0:
 			draw_rect(_visual_rect, visual_color, false, 1.5)
-		draw_rect(_hit_rect, hit_color, false, 2.5 if is_selected else 1.5)
+		if mode != "layer":
+			draw_rect(_hit_rect, hit_color, false, 2.5 if is_selected else 1.5)
 		var center := size * 0.5
 		draw_line(center - Vector2(7.0, 0.0), center + Vector2(7.0, 0.0), hit_color, 1.2)
 		draw_line(center - Vector2(0.0, 7.0), center + Vector2(0.0, 7.0), hit_color, 1.2)
 		var label_width := minf(size.x, 150.0)
 		draw_rect(Rect2(Vector2(0.0, 0.0), Vector2(label_width, 20.0)), Color(0.04, 0.06, 0.07, 0.84), true)
-		draw_string(ThemeDB.fallback_font, Vector2(5.0, 15.0), target_id, HORIZONTAL_ALIGNMENT_LEFT, label_width - 10.0, 12, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, Vector2(5.0, 15.0), display_label, HORIZONTAL_ALIGNMENT_LEFT, label_width - 10.0, 12, Color.WHITE)
 		if locked:
 			draw_circle(Vector2(size.x - 9.0, 9.0), 4.0, Color(0.95, 0.72, 0.3, 0.95))
 
@@ -179,7 +182,7 @@ func _build_ui() -> void:
 	preview_column.add_child(heading)
 
 	var subheading := Label.new()
-	subheading.text = "黄色：当前目标　橙色：视觉矩形　绿色：命中矩形"
+	subheading.text = "黄色：当前对象　橙色：视觉矩形　绿色：交互命中矩形"
 	subheading.add_theme_font_size_override("font_size", 12)
 	subheading.add_theme_color_override("font_color", Color("9fb1aa"))
 	preview_column.add_child(subheading)
@@ -227,7 +230,7 @@ func _build_ui() -> void:
 	inspector_scroll.add_child(inspector)
 
 	var inspector_heading := Label.new()
-	inspector_heading.text = "目标属性"
+	inspector_heading.text = "对象属性"
 	inspector_heading.add_theme_font_size_override("font_size", 18)
 	inspector.add_child(inspector_heading)
 
@@ -239,7 +242,7 @@ func _build_ui() -> void:
 
 	_target_selector = OptionButton.new()
 	_target_selector.item_selected.connect(_on_target_selected)
-	inspector.add_child(_field("目标", _target_selector))
+	inspector.add_child(_field("对象", _target_selector))
 
 	_anchor_x = _make_spin(0.0, 1.0, 0.001)
 	_anchor_y = _make_spin(0.0, 1.0, 0.001)
@@ -320,7 +323,7 @@ func _load_layout() -> void:
 	_rebuild_handles()
 	_dirty = false
 	if _target_selector.item_count > 0:
-		_select_target(String(_target_selector.get_item_metadata(0)))
+		_select_entry(String(_target_selector.get_item_metadata(0)))
 	_set_status("已载入；当前坐标尚待场景合成后验收。")
 
 
@@ -334,13 +337,16 @@ func _load_reference_background() -> void:
 func _rebuild_target_selector() -> void:
 	_synchronizing = true
 	_target_selector.clear()
-	var targets: Dictionary = _layout.get("targets", {})
-	var ids := targets.keys()
-	ids.sort()
-	for id_value in ids:
-		var id := String(id_value)
-		_target_selector.add_item(id)
-		_target_selector.set_item_metadata(_target_selector.item_count - 1, id)
+	for group in ["targets", "layers"]:
+		var entries: Dictionary = _layout.get(group, {})
+		var ids := entries.keys()
+		ids.sort()
+		for id_value in ids:
+			var id := String(id_value)
+			var entry_key := _entry_key(group, id)
+			var prefix := "交互" if group == "targets" else "视觉层"
+			_target_selector.add_item("%s · %s" % [prefix, id])
+			_target_selector.set_item_metadata(_target_selector.item_count - 1, entry_key)
 	_synchronizing = false
 
 
@@ -349,32 +355,34 @@ func _rebuild_handles() -> void:
 		if is_instance_valid(handle):
 			handle.queue_free()
 	_handles.clear()
-	var targets: Dictionary = _layout.get("targets", {})
-	for id_value in targets.keys():
-		var id := String(id_value)
-		var source: Dictionary = targets[id]
-		var normalized := LayoutStore.normalize_target(source)
-		if normalized.is_empty():
-			continue
-		normalized["visual_size"] = _array_vector(source.get("visual_size", []), Vector2.ZERO)
-		normalized["canvas_size"] = _logical_size
-		var handle := CalibrationHandle.new()
-		handle.configure(id, normalized, PREVIEW_SIZE)
-		handle.selected.connect(_select_target)
-		handle.anchor_dragged.connect(_on_handle_anchor_changed)
-		_canvas.add_child(handle)
-		handle.z_index = int(normalized.get("z_index", 1)) + 10
-		_handles[id] = handle
+	for group in ["targets", "layers"]:
+		var entries: Dictionary = _layout.get(group, {})
+		for id_value in entries.keys():
+			var id := String(id_value)
+			var entry_key := _entry_key(group, id)
+			var source: Dictionary = entries[id]
+			var normalized := _normalize_entry(group, source)
+			if normalized.is_empty():
+				continue
+			normalized["canvas_size"] = _logical_size
+			normalized["display_label"] = "%s:%s" % ["T" if group == "targets" else "L", id]
+			var handle := CalibrationHandle.new()
+			handle.configure(entry_key, normalized, PREVIEW_SIZE)
+			handle.selected.connect(_select_entry)
+			handle.anchor_dragged.connect(_on_handle_anchor_changed)
+			_canvas.add_child(handle)
+			handle.z_index = int(normalized.get("z_index", 1)) + 10
+			_handles[entry_key] = handle
 
 
-func _select_target(target_id: String) -> void:
-	if not _layout.get("targets", {}).has(target_id):
+func _select_entry(entry_key: String) -> void:
+	if _entry_source(entry_key).is_empty():
 		return
-	_selected_id = target_id
+	_selected_id = entry_key
 	for id in _handles:
-		_handles[id].set_selected(String(id) == target_id)
+		_handles[id].set_selected(String(id) == entry_key)
 	for index in _target_selector.item_count:
-		if String(_target_selector.get_item_metadata(index)) == target_id:
+		if String(_target_selector.get_item_metadata(index)) == entry_key:
 			_synchronizing = true
 			_target_selector.select(index)
 			_synchronizing = false
@@ -385,25 +393,29 @@ func _select_target(target_id: String) -> void:
 func _on_target_selected(index: int) -> void:
 	if _synchronizing:
 		return
-	_select_target(String(_target_selector.get_item_metadata(index)))
+	_select_entry(String(_target_selector.get_item_metadata(index)))
 
 
 func _sync_inspector() -> void:
-	var source: Dictionary = _layout.get("targets", {}).get(_selected_id, {})
+	var source := _entry_source(_selected_id)
 	if source.is_empty():
 		return
 	_synchronizing = true
+	var is_layer := _entry_group(_selected_id) == "layers"
 	var anchor := _array_vector(source.get("anchor", []), Vector2(0.5, 0.5))
 	var visual := _array_vector(source.get("visual_size", []), Vector2.ZERO)
-	var hit := _array_vector(source.get("hit_size", []), Vector2(120.0, 120.0))
+	var hit := visual if is_layer else _array_vector(source.get("hit_size", []), Vector2(120.0, 120.0))
 	_anchor_x.value = anchor.x
 	_anchor_y.value = anchor.y
 	_visual_width.value = visual.x
 	_visual_height.value = visual.y
 	_hit_width.value = hit.x
 	_hit_height.value = hit.y
+	_hit_width.editable = not is_layer
+	_hit_height.editable = not is_layer
 	_z_index.value = int(source.get("z_index", 1))
 	_mode_selector.select(1 if String(source.get("mode", "sprite")) == "region" else 0)
+	_mode_selector.disabled = is_layer
 	_asset_path.text = String(source.get("asset_path", ""))
 	_locked.button_pressed = bool(source.get("locked", false))
 	_synchronizing = false
@@ -412,48 +424,86 @@ func _sync_inspector() -> void:
 func _on_inspector_changed() -> void:
 	if _synchronizing or _selected_id.is_empty():
 		return
-	var targets: Dictionary = _layout.get("targets", {})
-	var source: Dictionary = targets.get(_selected_id, {}).duplicate(true)
+	var group := _entry_group(_selected_id)
+	var id := _entry_id(_selected_id)
+	var entries: Dictionary = _layout.get(group, {})
+	var source: Dictionary = entries.get(id, {}).duplicate(true)
 	source["anchor"] = [_rounded(_anchor_x.value), _rounded(_anchor_y.value)]
 	source["visual_size"] = [roundi(_visual_width.value), roundi(_visual_height.value)]
-	source["hit_size"] = [roundi(_hit_width.value), roundi(_hit_height.value)]
 	source["z_index"] = roundi(_z_index.value)
-	source["mode"] = _mode_selector.get_item_text(_mode_selector.selected)
 	source["asset_path"] = _asset_path.text.strip_edges()
 	source["locked"] = _locked.button_pressed
-	targets[_selected_id] = source
-	_layout["targets"] = targets
+	if group == "targets":
+		source["hit_size"] = [roundi(_hit_width.value), roundi(_hit_height.value)]
+		source["mode"] = _mode_selector.get_item_text(_mode_selector.selected)
+	entries[id] = source
+	_layout[group] = entries
 	_dirty = true
 	_refresh_handle(_selected_id)
 	_set_status("有未保存调整。")
 
 
-func _on_handle_anchor_changed(target_id: String, anchor: Vector2) -> void:
-	var targets: Dictionary = _layout.get("targets", {})
-	var source: Dictionary = targets.get(target_id, {}).duplicate(true)
+func _on_handle_anchor_changed(entry_key: String, anchor: Vector2) -> void:
+	var group := _entry_group(entry_key)
+	var id := _entry_id(entry_key)
+	var entries: Dictionary = _layout.get(group, {})
+	var source: Dictionary = entries.get(id, {}).duplicate(true)
 	source["anchor"] = [_rounded(anchor.x), _rounded(anchor.y)]
-	targets[target_id] = source
-	_layout["targets"] = targets
+	entries[id] = source
+	_layout[group] = entries
 	_dirty = true
-	_refresh_handle(target_id)
-	if target_id == _selected_id:
+	_refresh_handle(entry_key)
+	if entry_key == _selected_id:
 		_sync_inspector()
 	_set_status("有未保存调整。")
 
 
-func _refresh_handle(target_id: String) -> void:
-	var old_handle: CalibrationHandle = _handles.get(target_id)
+func _refresh_handle(entry_key: String) -> void:
+	var old_handle: CalibrationHandle = _handles.get(entry_key)
 	if old_handle == null:
 		return
-	var source: Dictionary = _layout.get("targets", {}).get(target_id, {})
-	var normalized := LayoutStore.normalize_target(source)
+	var group := _entry_group(entry_key)
+	var source := _entry_source(entry_key)
+	var normalized := _normalize_entry(group, source)
 	if normalized.is_empty():
 		return
-	normalized["visual_size"] = _array_vector(source.get("visual_size", []), Vector2.ZERO)
 	normalized["canvas_size"] = _logical_size
-	old_handle.configure(target_id, normalized, PREVIEW_SIZE)
+	normalized["display_label"] = "%s:%s" % ["T" if group == "targets" else "L", _entry_id(entry_key)]
+	old_handle.configure(entry_key, normalized, PREVIEW_SIZE)
 	old_handle.z_index = int(normalized.get("z_index", 1)) + 10
-	old_handle.set_selected(target_id == _selected_id)
+	old_handle.set_selected(entry_key == _selected_id)
+
+
+func _normalize_entry(group: String, source: Dictionary) -> Dictionary:
+	if group == "layers":
+		var layer := LayoutStore.normalize_layer(source)
+		if layer.is_empty():
+			return {}
+		layer["hit_size"] = layer["visual_size"]
+		layer["mode"] = "layer"
+		return layer
+	var target := LayoutStore.normalize_target(source)
+	if not target.is_empty():
+		target["visual_size"] = _array_vector(source.get("visual_size", []), Vector2.ZERO)
+	return target
+
+
+func _entry_key(group: String, id: String) -> String:
+	return "%s:%s" % [group, id]
+
+
+func _entry_group(entry_key: String) -> String:
+	return entry_key.get_slice(":", 0)
+
+
+func _entry_id(entry_key: String) -> String:
+	return entry_key.get_slice(":", 1)
+
+
+func _entry_source(entry_key: String) -> Dictionary:
+	var entries: Dictionary = _layout.get(_entry_group(entry_key), {})
+	var source: Variant = entries.get(_entry_id(entry_key), {})
+	return source if source is Dictionary else {}
 
 
 func _save_layout() -> void:

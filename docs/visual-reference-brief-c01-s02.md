@@ -1,8 +1,8 @@
 # `c01_s02_commute_window` 视觉参考摘要
 
-版本：v1.3
+版本：v1.4
 
-日期：2026-08-10
+日期：2026-08-11
 
 ## references
 
@@ -39,9 +39,17 @@
 - `reference_purpose`：作为后续全部人物、物件、效果和遮挡层的同画布合成基底
 - `source_marker`：`../game/assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`
 - `reference_id`：`candidate_c01_s02_fg_occluder_01`
-- `reference_type`：待确认的透明前景遮挡层
-- `reference_purpose`：确认空座前方扶手、底部弧形扶手和最前排座椅上缘的独立遮挡范围
+- `reference_type`：全画布透明前景提取母版
+- `reference_purpose`：只用于记录原始像素坐标和复算裁切资产落位，不作为可摆放资产
 - `source_marker`：`../game/assets/art/style-studies/c01_s02/foreground/fg_c01_s02_bus_rail_occluder_v001_candidate.png`
+- `reference_id`：`approved_c01_s02_fg_armrest_01`
+- `reference_type`：紧边界 production 前景层
+- `reference_purpose`：独立遮挡成年人物胸腹前方的左侧座位扶手
+- `source_marker`：`../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_seat_armrest_occluder_v001.png`
+- `reference_id`：`approved_c01_s02_fg_front_seat_01`
+- `reference_type`：紧边界 production 前景层
+- `reference_purpose`：独立遮挡人物下方的底部弧形扶手与前排座椅上缘
+- `source_marker`：`../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png`
 
 ## observed_signals
 
@@ -76,7 +84,7 @@
 - 锁定冷雨夜与局部暖光关系，不改成霓虹、赛博或大面积魔法光效。
 - 锁定左下座椅为背景固定结构，人物骨盆与坐垫接触、背部由靠背承接；人物、手机可以独立移除，座椅不能随人物一起被抹除。
 - 锁定扶手与座椅的物理净空：上方扶手可保留，任何下段竖杆必须在座椅外侧、于上沿终止，或完全隐藏在座椅后方。
-- 锁定前景遮挡层与正式背景共用全画布坐标，只保留需要盖住人物的固定结构；人物、手机和遮挡层分别保留为可替换资产。
+- 全画布前景图只保留为提取母版；运行时按不相连内容拆成左侧扶手和底部前排座椅两张紧边界透明图，通过 `source_rect` 推导初始落位，再分别人工校正。
 
 ## invalid_or_ignored_signals
 
@@ -96,7 +104,7 @@
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
 - `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
 - `bg_c01_s02_bus_night_base_v001_candidate.png` 已确认并晋级 production 正式背景，不再回到背景完成度评审。
-- 当前只等待确认 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 的两段扶手、底部前排座椅上缘、透明边缘和人物可移动区；确认前不开始成年人物资产。
+- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；当前只等待确认两张紧边界 production 前景层在校准器中的独立初始落位，确认前不开始成年人物资产。
 
 ## confirmation_rounds
 
@@ -112,6 +120,7 @@
 - 第 10 轮：2026-08-10，用户指出 v002 的扶手杆明显卡住座位；v003 移除穿过座椅的扶手下段与落地底座，恢复无阻塞乘坐空间，等待确认。
 - 第 11 轮：2026-08-10，用户确认 v003 可以采用；构图灰稿锁定，进入正式无人物背景候选评审。
 - 第 12 轮：2026-08-10，用户确认 `exec-8886f6c0-cb4f-4edb-9fa4-0fa3df1d04ce.png` 更好；该图对应的仓库候选晋级为正式 production 背景，下一道 Gate 改为前景遮挡层。
+- 第 13 轮：2026-08-11，用户指出前景物件不应使用全画布，应按实际内容尺寸裁切后摆入场景；将左右两组不相连遮挡物拆成两张 production 资产，并新增可独立校正的非交互 `layers` 布局。
 
 ## merge_guidance
 
@@ -125,6 +134,6 @@
 - 合并到倒影效果：将儿童图层控制在约实体人物四分之一的视觉强度，继续降低不透明度、饱和度、锐度和局部对比，让大部分边缘消失；只保留足以辨认身份和朝向的信息。
 - 合并到儿童造型：按约五岁设计圆润面颊、短下颌、小鼻口和窄肩颈，以概括线条与简化明暗融入手绘二维动画画面；保留同一人的身份锚点，但不做写实年龄缩放。
 - 合并到资产生产：正式背景不含人物、手机、焦点车辆和倒影；这些内容继续按资产清单独立生产。
-- 合并到前景遮挡：只隔离空座前方水平扶手、底部弧形扶手和最前排座椅上缘，保持与正式背景相同画布和坐标，并绘制在人物、手机及局部效果之上。
+- 合并到前景遮挡：全画布图只用于提取；空座前方水平扶手与底部弧形扶手/前排座椅上缘分别紧边界裁切，通过各自锚点摆放，并绘制在人物、手机及局部效果之上。
 - 合并到背景生产：公交固定座椅、扶手、窗框和人物承载面属于环境背景；移除独立人物或手机时不得破坏这些固定结构。
 - 合并到结构验收：扶手、护栏和座椅必须满足可信遮挡与乘坐净空；不能依靠之后的人物图层掩盖穿模或阻塞问题。

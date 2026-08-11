@@ -30,16 +30,19 @@ Public integration boundary:
 
 Scene placement is resolved by `interaction_scene_layout_store.gd`. It first
 loads `res://data/scene_layouts/<scene_id>.json` and normalizes `anchor`,
-`visual_size`, `hit_size`, `z_index`, `mode`, `asset_path` and `locked`.
+`visual_size`, `hit_size`, `z_index`, `mode`, `asset_path` and `locked` for
+interactive targets. The same JSON can contain non-interactive `layers` with
+`source_rect`, `anchor`, `visual_size`, `z_index`, `asset_path` and `locked`;
+the calibrator edits those layers without inventing hit areas.
 Missing files or targets fall back one target at a time to the historical
 `interaction_scene_layouts.gd` table, so scenes can migrate independently.
 Runtime sprites can use an external transparent asset and a visual rectangle
 that is smaller or larger than the forgiving hit rectangle.
 
 To calibrate the sample scene, open and run
-`res://scenes/tools/scene_layout_calibrator.tscn` in Godot. Select a target on
-the canvas or in the inspector, drag its center, edit visual/hit size, layer,
-mode, asset path or drag lock, then save. The tool and runtime read the same
+`res://scenes/tools/scene_layout_calibrator.tscn` in Godot. Select an interactive
+target or visual layer on the canvas or in the inspector, drag its center, edit
+the fields that belong to that object, then save. The tool and runtime read the same
 repository JSON; Ctrl+S saves and Reload discards unsaved changes.
 
 The board uses native Godot drag payloads for classification, sound slots,
@@ -63,5 +66,5 @@ The test configures all 30 scenes, completes all 17 renderer contracts, checks
 non-punitive retry behavior, instantiates every board layout, validates native
 drop payloads, draws a trace with mouse events, and performs the Chapter 5 touch
 sequence with screen-touch events. It also validates canonical layout JSON,
-independent visual/hit sizes and legacy fallback behavior. The expected result
-is 175 assertions across 17 contracts.
+independent visual/hit sizes, cropped visual layers and legacy fallback behavior.
+The expected result is 182 assertions across 17 contracts.

@@ -31,6 +31,8 @@ static func decode_scene(json_text: String, expected_scene_id := "") -> Dictiona
 		return {}
 	if not data.get("targets", {}) is Dictionary:
 		return {}
+	if data.has("layers") and not data.get("layers") is Dictionary:
+		return {}
 	return data.duplicate(true)
 
 
@@ -43,6 +45,25 @@ static func target(scene_id: String, target_id: String) -> Dictionary:
 		if not normalized.is_empty():
 			return normalized
 	return _normalize_legacy_target(LegacyLayouts.target(scene_id, target_id))
+
+
+static func layers(scene_id: String) -> Dictionary:
+	var scene_data := load_scene(scene_id)
+	var authored_layers: Dictionary = scene_data.get("layers", {})
+	var normalized_layers := {}
+	for id_value in authored_layers.keys():
+		var layer_id := String(id_value)
+		var source: Variant = authored_layers.get(id_value)
+		if not source is Dictionary:
+			continue
+		var normalized := normalize_layer(source)
+		if not normalized.is_empty():
+			normalized_layers[layer_id] = normalized
+	return normalized_layers
+
+
+static func layer(scene_id: String, layer_id: String) -> Dictionary:
+	return layers(scene_id).get(layer_id, {}).duplicate(true)
 
 
 static func normalize_target(source: Dictionary) -> Dictionary:
@@ -61,6 +82,25 @@ static func normalize_target(source: Dictionary) -> Dictionary:
 		"mode": mode,
 		"asset_path": String(source.get("asset_path", "")),
 		"locked": bool(source.get("locked", false)),
+	}
+
+
+static func normalize_layer(source: Dictionary) -> Dictionary:
+	var anchor := _vector2(source.get("anchor"), Vector2(-1.0, -1.0))
+	var visual_size := _vector2(source.get("visual_size"), Vector2.ZERO)
+	var asset_path := String(source.get("asset_path", ""))
+	var source_rect := _rect4(source.get("source_rect"))
+	if anchor.x < 0.0 or anchor.y < 0.0 or visual_size.x <= 0.0 or visual_size.y <= 0.0:
+		return {}
+	if asset_path.is_empty():
+		return {}
+	return {
+		"anchor": anchor,
+		"visual_size": visual_size,
+		"z_index": int(source.get("z_index", 1)),
+		"asset_path": asset_path,
+		"locked": bool(source.get("locked", false)),
+		"source_rect": source_rect,
 	}
 
 
@@ -90,3 +130,9 @@ static func _vector2(value: Variant, fallback: Vector2) -> Vector2:
 	if value is Dictionary and value.has("x") and value.has("y"):
 		return Vector2(float(value["x"]), float(value["y"]))
 	return fallback
+
+
+static func _rect4(value: Variant) -> Array[int]:
+	if value is Array and value.size() >= 4:
+		return [int(value[0]), int(value[1]), int(value[2]), int(value[3])]
+	return []
