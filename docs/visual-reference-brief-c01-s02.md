@@ -1,6 +1,6 @@
 # `c01_s02_commute_window` 视觉参考摘要
 
-版本：v1.8
+版本：v1.9
 
 日期：2026-08-11
 
@@ -62,6 +62,10 @@
 - `reference_type`：已确认的紧边界成年主角低头坐姿生产参考
 - `reference_purpose`：锁定约 26 岁的年龄感、低头动作、单手握持透明手机槽、另一手搭腿、座椅承载和前后遮挡关系
 - `source_marker`：`../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png`
+- `reference_id`：`candidate_c01_s02_adult_look_up_01`
+- `reference_type`：待确认的同锚点成年主角抬头状态候选
+- `reference_purpose`：确认身体朝车前方、头转向画面右侧车窗、略向上视线、平静注意表情及状态切换稳定性
+- `source_marker`：`../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_look_up_v001_candidate.png`
 
 ## observed_signals
 
@@ -119,7 +123,7 @@
 - `direction_selected_v009.png` 已确认，不再回到人物方向评审。
 - `bg_c01_s02_bus_night_layout_v003.png` 已确认，不再回到构图灰稿评审。
 - `bg_c01_s02_bus_night_base_v001_candidate.png` 已确认并晋级 production 正式背景，不再回到背景完成度评审。
-- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层的独立落位已确认并锁定。成年主角低头 v001 与 v002 已拒绝，v003 已确认并晋级 production。当前待确认项转为同画布、同锚点的成年主角抬头状态。
+- 全画布 `fg_c01_s02_bus_rail_occluder_v001_candidate.png` 已降为提取母版；两张紧边界 production 结构层的独立落位已确认并锁定。成年主角低头 v001 与 v002 已拒绝，v003 已确认并晋级 production。当前待确认项为 `char_adult_commuter_seated_look_up_v001_candidate.png`：重点检查头部朝向、视线、表情、约 26 岁年龄感和同锚点落位。
 
 ## confirmation_rounds
 
@@ -148,6 +152,7 @@
 - 合并到生成提示词：人物身份纠正和品牌清理是允许变化项；车厢、道路、车辆方向、镜头、光线与交互目标位置是不变量。
 - 合并到人物生成：两人的骨盆、躯干、胸口与肩线都朝车前方（画面正面）；成年人只把头转向右侧玻璃，儿童倒影只把头转向左侧成年人。头部与视线按反射关系对应，儿童身体不能呈左侧面，儿童手中不出现手机。
 - 合并到成年低头状态：人物应读作约 26 岁的普通东亚男性，疲惫不等于显老；低头时使用非对称生活化动作，一手单手握手机，另一手自然搭腿。人物资产以透明手机槽保留手指前后关系，正式手机作为独立层置于手指后方。
+- 合并到成年抬头状态：保持身体、胸口和双肩朝车前方，只让头颈转向画面右侧车窗并略向上看；使用平静、刚刚注意到外界的中性表情，不微笑、不惊讶、不直视镜头。与低头状态共用 764 × 1381 画布、锚点、比例和手部像素。
 - 合并到倒影合成：以车窗透明玻璃的内轮廓作为硬遮罩，儿童所有像素只能出现在遮罩内；下沿斜向金属窗台及其下方必须完全保留原车厢材质。
 - 合并到儿童设计：保持同一人物的脸型与发型联系，但使用儿童日常上衣、空手和自然轻快的神情，不再镜像成年人的手机或成人化衣着。
 - 合并到表情设计：以松弛眉眼、短暂亮起的自然关注和轻微面颊变化表达“快活”，嘴唇微张或近中性，不使用任何笑容动作。

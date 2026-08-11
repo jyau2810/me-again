@@ -148,11 +148,14 @@
 - 合成检查：脸、颈部、体态和手部均读作二十多岁；背部与骨盆由固定座椅承接，底部前排座椅遮住腿部下缘。
 - 技术检查：Godot 4.7.1 production 导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 193 条断言、17 类契约。
 
-#### `char_adult_commuter_seated_look_up_v001.png`
+#### `char_adult_commuter_seated_look_up_v001_candidate.png`
 
-- 状态：`planned`
-- 内容：同一人物、同一服装和身体位置，只改变头颈、视线和少量肩部动作。
-- 要求：与低头状态使用相同画布、锚点和比例。
+- 状态：`candidate`；位于 `../game/assets/art/style-studies/c01_s02/characters/`，确认前不进入 production。
+- 内容：同一位约 26 岁的普通东亚男性；身体、胸口和双肩保持朝车前方，只抬起头颈并转向画面右侧车窗，视线略向上，表情平静且刚刚注意到外界。
+- 文件：764 × 1381 紧边界 RGBA；严格复用低头状态的固定裁切窗口、锚点和比例，第 658 行以下与已确认 production 低头人物逐像素相等。
+- 评审落位：正式背景原生画布 `rect = [-28, 612, 575, 1040]`，与低头状态完全一致；预览为 `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png`。
+- 生产目标：确认后晋级为 `../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`，再接入人物状态切换。
+- 技术检查：Godot 4.7.1 候选与预览导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 193 条断言、17 类契约。
 
 ### 儿童倒影
 

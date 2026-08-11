@@ -72,8 +72,10 @@
 - `../game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png`：紧边界底部扶手与前排座椅遮挡层。
 - `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png`：已拒绝的首张成年主角低头坐姿候选，保留作年龄与手势反例。
 - `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png`：已拒绝的第二张成年主角低头坐姿候选，年龄仍高于目标。
-- `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v003_candidate.png`：约 26 岁、非对称单手持机的紧边界成年主角低头坐姿候选，等待单项确认。
-- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png`：正式背景、v003 成年人物、临时手机校准占位和已确认结构层的合成评审图。
+- `../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png`：已确认的约 26 岁、非对称单手持机成年主角低头状态。
+- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png`：已确认的低头状态、临时手机校准占位和结构层合成评审图。
+- `../game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_look_up_v001_candidate.png`：与低头状态同画布、同锚点的成年主角抬头状态候选。
+- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png`：抬头候选、临时手机校准占位、正式背景和结构层合成评审图。
 
 ### 2026-08-07 当前检查点
 
@@ -125,9 +127,11 @@
 - 用户确认 v003 的约 26 岁年龄感、低头动作、非对称持机手势和合成落位；候选逐字节晋级为 `../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png`。
 - 布局 JSON 新增锁定人物层 `adult_commuter_down`：`anchor = (0.2758, 0.6770)`、`visual_size = 440 × 796`、`z_index = 4`。手机按透明槽重标为 `anchor = (0.3448, 0.7790)`、`visual_size = 62 × 105`、`hit_size = 180 × 180`、`z_index = 3`，保持可人工校正且位于手指后方。
 - 低头状态晋级回归通过：Godot 4.7.1 正常导入 production 人物；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 193 条断言、17 类契约；主场景与校准器 smoke test 正常。
+- 首张抬头状态候选严格复用低头状态的 764 × 1381 固定裁切、锚点和比例；归一化绿幕源第 741 行以下复用低头源，去色键后再将候选第 658 行以下替换为 production 低头人物对应 RGBA，逐像素相等检查通过，避免双手、手机槽、腰腿在状态切换时漂移。候选只改变头颈与必要上肩过渡，等待单项视觉确认。
+- 抬头候选检查点回归通过：Godot 4.7.1 正常导入候选与评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 193 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - v002 检查点回归通过：Godot 4.7.1 正常导入候选和评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 186 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - v001 检查点的技术回归曾通过，但随后因年龄与手势视觉问题被用户拒绝；技术通过不替代单项视觉确认。
-- Stage 3 继续保持“进行中”；成年主角低头状态 Gate 已关闭，当前只生成同画布、同锚点的抬头状态候选，不提前生成手机或其他交互物件，也不批量扩展其他场景。
+- Stage 3 继续保持“进行中”；成年主角低头状态 Gate 已关闭，当前只评审同画布、同锚点的抬头状态候选，不提前生成手机或其他交互物件，也不批量扩展其他场景。
 
 ### 验收标准
 
@@ -326,7 +330,7 @@
 
 ## 当前下一步
 
-执行 Stage 3：两个紧边界 production 结构层与约 26 岁的成年主角低头状态均已确认并锁定；手机目标已按人物透明槽重标且保持可人工校正。当前只生成并评审同画布、同锚点的成年主角抬头状态，确认前不生成正式手机或扩展到其余场景。
+执行 Stage 3：两个紧边界 production 结构层与约 26 岁的成年主角低头状态均已确认并锁定；手机目标已按人物透明槽重标且保持可人工校正。当前只评审 `char_adult_commuter_seated_look_up_v001_candidate.png` 的头部朝向、视线、表情、年龄感和同锚点落位，确认前不生成正式手机或扩展到其余场景。
 
 ### 方向重置记录
 
@@ -352,3 +356,4 @@
 - 2026-08-11：用户拒绝成年主角低头候选 v001，指出人物显老且双手姿势不自然；v002 收回年龄感并改为单手握持透明手机槽、另一手自然搭腿，继续等待单项确认。
 - 2026-08-11：用户认为成年主角低头候选 v002 仍然显老，将年龄目标明确为约 26 岁；v003 统一年轻化面部、颈部、体态与手部，同时保留已改善的非对称持机动作。
 - 2026-08-11：用户确认成年主角低头候选 v003；候选晋级 production，人物与手机槽落位接入布局 JSON，Stage 3 转入同锚点抬头状态单项候选。
+- 2026-08-11：生成成年主角抬头候选 v001；人物身体保持朝车前方，头转向画面右侧车窗并略向上看，使用平静注意表情；候选与合成预览等待确认。

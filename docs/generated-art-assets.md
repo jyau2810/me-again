@@ -46,6 +46,8 @@
 | `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v003_candidate.png` | `approved_reference` | `exec-3e5d8d76-72cf-4467-a1b6-3df3e5c0a347.png` | 用户确认约 26 岁、低头与非对称持机动作；保留为生产来源 |
 | `game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png` | `approved` | 上述候选逐字节复制 | 已接入运行时的低头状态人物，紧边界且可独立校正 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png` | `approved_review` | 本地确定性合成 | 已确认的低头人物、临时手机占位、正式背景和结构层合成关系 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_look_up_v001_candidate.png` | `candidate` | `exec-04e0017f-a15d-4657-936e-562fd8fe2d77.png` | 同锚点抬头状态；身体与手部复用确认源，等待单项确认 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png` | `review_only` | 本地确定性合成 | 抬头候选与正式背景、手机校准占位和结构层的评审预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -327,6 +329,21 @@ v003 年龄修正提示词核心约束：
 Redraw the person so he reads immediately as an ordinary East Asian man aged about 26, not 30+, middle-aged, or a teenager. Remove mature age cues across the face, neck, build, and hands: smooth forehead and under-eye planes, softly tapered youthful jaw, slightly fuller cheeks, slimmer neck and forearms, smoother youthful hands with lighter joint definition.
 Preserve the exact frontal seated pose, bowed head, downward gaze, image-right single-hand phone grip, image-left hand resting on the thigh, and the uniform #00ff00 phone placeholder for a separate phone layer.
 Keep an original hand-painted 2D animation language with gentle graphite, matte gouache and simplified soft-edged cel shading; avoid idol styling, giant eyes, chibi, glossy 3D, photorealism, text, logo, watermark or UI.
+```
+
+### 成年主角抬头坐姿候选
+
+`char_adult_commuter_seated_look_up_v001_candidate.png` 使用内置 `image_gen` 编辑已确认低头状态的完整绿幕源 `exec-3e5d8d76-72cf-4467-a1b6-3df3e5c0a347.png`，生成源为 `exec-04e0017f-a15d-4657-936e-562fd8fe2d77.png`。生成源为 1085 × 1450 RGB PNG，SHA-256 为 `652fa7eb684e6efe7f63b75a0ceb737450008e7dab63f7ad16e0536e4c5fbeda`；为保持两个状态同坐标，先以 Lanczos 确定性归一化到 1086 × 1448，再只使用其第 0–740 行。第 620–740 行与已确认低头源渐变融合，第 741 行以下逐像素复用低头源，因此腰腿、双臂、双手和手机槽不会随状态切换漂移。归一化源 SHA-256 为 `7f05136cda853b84e7d5973b5e6c3ced2bde94e2e762ea925cb8f3be9df1b3a5`，融合绿幕源 SHA-256 为 `dda2b5ca4b70eaa14955f7d03111ba513996b85582e91f6e07e7de7cc8159964`。
+
+融合源通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill` 去色键；自动采样键色为 `#06ce08`，全画布得到 903,714 个全透明像素和 6,026 个半透明边缘像素。随后严格复用低头状态的固定裁切窗口，不按新 Alpha 包围盒重新定位：从归一化源坐标 `(165, 83)` 起裁切，并在底部补足透明安全边，得到 764 × 1381 RGBA。为消除两次去色键采样差异，最终再将候选第 658 行以下替换为已确认 production 低头人物的对应 RGBA 像素；逐像素相等检查通过。成品 Alpha 包围盒为 `[16, 4, 748, 1365]`，四边非透明像素为 0，含 386,026 个全透明像素和 6,270 个半透明边缘像素，SHA-256 为 `3b0a7307a465c9a77b5584b371f1a9deb9505c7fc1eb4160753c54985ab1962c`。
+
+评审预览 `preview_c01_s02_adult_look_up_v001.png` 与低头状态使用相同人物 `rect = [-28, 612, 575, 1040]`、手机校准占位和结构层顺序。预览 SHA-256 为 `cec14922f2c100291ce7031f4bb0333c3d5d65f05c1972d492169ce4576a4600`。候选只改变头颈与必要的上肩过渡：身体仍朝车前方，头转向画面右侧车窗，视线略向上，表情平静且刚刚注意到外界；确认前不进入 production。
+
+抬头状态提示词核心约束：
+
+```text
+Preserve the exact canvas, identity, age about 26, frontal seated body, clothing, arms, hands and green phone slot from the confirmed low-head source. Change only the head and neck with minimal necessary shoulder response: lift the head, turn naturally toward the image-right bus window, and look upward-right in a modest three-quarter view.
+Keep a calm, newly attentive expression with relaxed brows and neutral lips. No smile, fear, surprise, direct camera gaze, environment, phone, child, reflection, text, logo, watermark or UI.
 ```
 
 ## 资产清单
