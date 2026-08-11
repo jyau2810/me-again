@@ -41,8 +41,10 @@
 | `game/assets/art/production/c01_s02_commute_window/foreground/fg_c01_s02_front_seat_occluder_v001.png` | `approved` | 上述母版无损裁切 | 底部弧形扶手与前排座椅上缘紧边界运行时资产，可独立校正 |
 | `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v001_candidate.png` | `rejected` | `exec-26d4b9d0-f804-447c-80c8-86731062e0bf.png` | 用户指出人物显老，双手对称捧空不自然 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v001.png` | `rejected_review` | 本地确定性合成 | v001 合成反例，保留用于对照年龄与手势问题 |
-| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png` | `candidate` | `exec-b7256d0c-c7c9-4551-87ef-77cce49e2174.png` | 更年轻的成年主角，右手单手握手机槽、左手自然搭腿；等待单项确认 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v002.png` | `review_only` | 本地确定性合成 | v002 与临时灰蓝手机占位、正式背景和结构层的评审预览 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v002_candidate.png` | `rejected` | `exec-b7256d0c-c7c9-4551-87ef-77cce49e2174.png` | 手势改善，但用户认为人物仍显老，目标改为约 26 岁 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v002.png` | `rejected_review` | 本地确定性合成 | v002 年龄感反例，保留用于对照 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v003_candidate.png` | `candidate` | `exec-3e5d8d76-72cf-4467-a1b6-3df3e5c0a347.png` | 约 26 岁，右手单手握手机槽、左手自然搭腿；等待单项确认 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png` | `review_only` | 本地确定性合成 | v003 与临时灰蓝手机占位、正式背景和结构层的评审预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -306,6 +308,22 @@ v002 最终手势提示词核心约束：
 Preserve the youthful 32-to-34-year-old face, bowed head, frontal seated torso and green-screen workflow. Replace only both forearms, wrists, hands and the green phone placeholder with a relaxed asymmetrical commuter pose.
 On the image-right side, one hand naturally holds a portrait phone-shaped #00ff00 chroma-key placeholder slightly right of center; four fingers curl behind it and the thumb rests along the lower front-side edge. On the image-left side, the other hand rests palm-down on the upper thigh with loose, gently separated fingers.
 Avoid mirrored bowl-shaped hands, touching fingertips, an invisible sphere, crossed wrists, fused or extra fingers, a finished phone, environment, text, logo, watermark or UI.
+```
+
+用户随后指出 v002 仍然显老，并将目标年龄明确为约 26 岁；v002 与对应预览均标记为 `rejected`。
+
+`char_adult_commuter_seated_down_v003_candidate.png` 使用内置 `image_gen` 对 v002 最终绿幕源进行年龄修正，生成源为 `exec-3e5d8d76-72cf-4467-a1b6-3df3e5c0a347.png`。本轮保留既有低头坐姿、画面右手持机、画面左手搭腿和纯绿色手机槽，同时统一年轻化面部、颈部、肩臂与手部。源图为 1086 × 1448 RGB PNG，SHA-256 为 `98222e98ae4672efd80cf1aaf94eb1570d81c72ef93c4599d77f8b677552c8b8`。
+
+源图通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill` 去色键；自动采样键色为 `#07d804`，全画布得到 912,005 个全透明像素和 5,610 个半透明边缘像素。人物 Alpha 包围盒为 `[181, 99, 913, 1448]`，以 16 px 透明安全边裁切为 764 × 1381 RGBA PNG；成品四边非透明像素为 0，SHA-256 为 `ba929bce75f7096ed67bd0974d85aec6efec76311a5d6697fd8d729695403886`。纯绿色手机占位片同步形成透明手机槽。
+
+评审预览 `preview_c01_s02_adult_down_v003.png` 使用人物 `rect = [-28, 612, 575, 1040]`，继续在人物下方使用与 v002 相同的无文字灰蓝手机校准占位，左侧扶手位于人物后方，底部前排座椅位于人物前方。预览 SHA-256 为 `7e1dee3267e695182096cabd1f7521f56532a5f78f7149b143cccfc62457733d`。
+
+v003 年龄修正提示词核心约束：
+
+```text
+Redraw the person so he reads immediately as an ordinary East Asian man aged about 26, not 30+, middle-aged, or a teenager. Remove mature age cues across the face, neck, build, and hands: smooth forehead and under-eye planes, softly tapered youthful jaw, slightly fuller cheeks, slimmer neck and forearms, smoother youthful hands with lighter joint definition.
+Preserve the exact frontal seated pose, bowed head, downward gaze, image-right single-hand phone grip, image-left hand resting on the thigh, and the uniform #00ff00 phone placeholder for a separate phone layer.
+Keep an original hand-painted 2D animation language with gentle graphite, matte gouache and simplified soft-edged cel shading; avoid idol styling, giant eyes, chibi, glossy 3D, photorealism, text, logo, watermark or UI.
 ```
 
 ## 资产清单
