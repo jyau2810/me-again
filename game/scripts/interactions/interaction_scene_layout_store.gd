@@ -66,6 +66,16 @@ static func layer(scene_id: String, layer_id: String) -> Dictionary:
 	return layers(scene_id).get(layer_id, {}).duplicate(true)
 
 
+static func layer_asset_path(scene_id: String, layer_id: String, state_id := "") -> String:
+	var authored := layer(scene_id, layer_id)
+	if authored.is_empty():
+		return ""
+	var state_paths: Dictionary = authored.get("state_asset_paths", {})
+	if not state_id.is_empty() and state_paths.has(state_id):
+		return String(state_paths[state_id])
+	return String(authored.get("asset_path", ""))
+
+
 static func normalize_target(source: Dictionary) -> Dictionary:
 	var anchor := _vector2(source.get("anchor"), Vector2(-1.0, -1.0))
 	var hit_size := _vector2(source.get("hit_size"), Vector2.ZERO)
@@ -94,11 +104,20 @@ static func normalize_layer(source: Dictionary) -> Dictionary:
 		return {}
 	if asset_path.is_empty():
 		return {}
+	var state_asset_paths := {}
+	var authored_states: Variant = source.get("state_asset_paths", {})
+	if authored_states is Dictionary:
+		for state_value in authored_states.keys():
+			var state_id := String(state_value)
+			var state_path := String(authored_states[state_value])
+			if not state_id.is_empty() and not state_path.is_empty():
+				state_asset_paths[state_id] = state_path
 	return {
 		"anchor": anchor,
 		"visual_size": visual_size,
 		"z_index": int(source.get("z_index", 1)),
 		"asset_path": asset_path,
+		"state_asset_paths": state_asset_paths,
 		"locked": bool(source.get("locked", false)),
 		"source_rect": source_rect,
 	}

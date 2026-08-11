@@ -46,8 +46,9 @@
 | `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_down_v003_candidate.png` | `approved_reference` | `exec-3e5d8d76-72cf-4467-a1b6-3df3e5c0a347.png` | 用户确认约 26 岁、低头与非对称持机动作；保留为生产来源 |
 | `game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png` | `approved` | 上述候选逐字节复制 | 已接入运行时的低头状态人物，紧边界且可独立校正 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_down_v003.png` | `approved_review` | 本地确定性合成 | 已确认的低头人物、临时手机占位、正式背景和结构层合成关系 |
-| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_look_up_v001_candidate.png` | `candidate` | `exec-04e0017f-a15d-4657-936e-562fd8fe2d77.png` | 同锚点抬头状态；身体与手部复用确认源，等待单项确认 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png` | `review_only` | 本地确定性合成 | 抬头候选与正式背景、手机校准占位和结构层的评审预览 |
+| `game/assets/art/style-studies/c01_s02/characters/char_adult_commuter_seated_look_up_v001_candidate.png` | `approved_reference` | `exec-04e0017f-a15d-4657-936e-562fd8fe2d77.png` | 用户确认同锚点抬头状态；保留为生产来源 |
+| `game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png` | `approved` | 上述候选逐字节复制 | 已登记为成人层的 `look_up` 状态资源 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png` | `approved_review` | 本地确定性合成 | 已确认的抬头状态、手机校准占位、正式背景和结构层合成关系 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -338,6 +339,8 @@ Keep an original hand-painted 2D animation language with gentle graphite, matte 
 融合源通过技能自带 `remove_chroma_key.py` 以 `--auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill` 去色键；自动采样键色为 `#06ce08`，全画布得到 903,714 个全透明像素和 6,026 个半透明边缘像素。随后严格复用低头状态的固定裁切窗口，不按新 Alpha 包围盒重新定位：从归一化源坐标 `(165, 83)` 起裁切，并在底部补足透明安全边，得到 764 × 1381 RGBA。为消除两次去色键采样差异，最终再将候选第 658 行以下替换为已确认 production 低头人物的对应 RGBA 像素；逐像素相等检查通过。成品 Alpha 包围盒为 `[16, 4, 748, 1365]`，四边非透明像素为 0，含 386,026 个全透明像素和 6,270 个半透明边缘像素，SHA-256 为 `3b0a7307a465c9a77b5584b371f1a9deb9505c7fc1eb4160753c54985ab1962c`。
 
 评审预览 `preview_c01_s02_adult_look_up_v001.png` 与低头状态使用相同人物 `rect = [-28, 612, 575, 1040]`、手机校准占位和结构层顺序。预览 SHA-256 为 `cec14922f2c100291ce7031f4bb0333c3d5d65f05c1972d492169ce4576a4600`。候选只改变头颈与必要的上肩过渡：身体仍朝车前方，头转向画面右侧车窗，视线略向上，表情平静且刚刚注意到外界；确认前不进入 production。
+
+用户于 2026-08-11 确认抬头 v001。候选逐字节晋级为 `game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`，SHA-256 仍为 `3b0a7307a465c9a77b5584b371f1a9deb9505c7fc1eb4160753c54985ab1962c`。布局中的成人层保留低头图为默认 `asset_path`，并以 `state_asset_paths.down` / `state_asset_paths.look_up` 登记两个 production 路径；两种状态共享同一锚点、尺寸和层级，不创建会与默认人物重叠的第二个常驻视觉层。
 
 抬头状态提示词核心约束：
 

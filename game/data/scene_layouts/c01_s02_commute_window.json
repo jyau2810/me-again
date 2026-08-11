@@ -17,6 +17,10 @@
 			"visual_size": [440, 796],
 			"z_index": 4,
 			"asset_path": "res://assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png",
+			"state_asset_paths": {
+				"down": "res://assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_down_v001.png",
+				"look_up": "res://assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png"
+			},
 			"source_rect": [181, 99, 732, 1349],
 			"locked": true
 		},
@@ -67,5 +71,5 @@
 			"locked": false
 		}
 	},
-	"notes": "Approved production background, two tightly cropped structural layers, and the confirmed low-head adult character. All visual-layer placements were derived on the 941 x 1672 review master, converted to the 720 x 1280 logical canvas, visually confirmed, and locked on 2026-08-11. The seat armrest renders behind the adult at z 2; the provisional phone target renders through the adult's transparent hand slot at z 3; the adult renders at z 4; the front seat and curved rail remain foreground occluders at z 7. The phone remains independently adjustable with a 180 x 180 hit area. Headlight and plate remain provisional until the focus vehicle is composited."
+	"notes": "Approved production background, two tightly cropped structural layers, and confirmed down/look-up adult states sharing one locked placement. All visual-layer placements were derived on the 941 x 1672 review master and converted to the 720 x 1280 logical canvas. The seat armrest renders behind the adult at z 2; the provisional phone target renders through the adult's transparent hand slot at z 3; the adult renders at z 4; the front seat and curved rail remain foreground occluders at z 7. The phone remains independently adjustable with a 180 x 180 hit area. Headlight and plate remain provisional until the focus vehicle is composited."
 }

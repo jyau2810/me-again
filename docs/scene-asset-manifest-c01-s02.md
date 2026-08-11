@@ -150,12 +150,14 @@
 
 #### `char_adult_commuter_seated_look_up_v001_candidate.png`
 
-- 状态：`candidate`；位于 `../game/assets/art/style-studies/c01_s02/characters/`，确认前不进入 production。
+- 状态：`approved_reference`；用户于 2026-08-11 确认，保留在 `style-studies` 作为生产来源。
 - 内容：同一位约 26 岁的普通东亚男性；身体、胸口和双肩保持朝车前方，只抬起头颈并转向画面右侧车窗，视线略向上，表情平静且刚刚注意到外界。
 - 文件：764 × 1381 紧边界 RGBA；严格复用低头状态的固定裁切窗口、锚点和比例，第 658 行以下与已确认 production 低头人物逐像素相等。
 - 评审落位：正式背景原生画布 `rect = [-28, 612, 575, 1040]`，与低头状态完全一致；预览为 `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_adult_look_up_v001.png`。
-- 生产目标：确认后晋级为 `../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`，再接入人物状态切换。
+- 生产文件：`../game/assets/art/production/c01_s02_commute_window/characters/char_adult_commuter_seated_look_up_v001.png`，状态 `approved`，与候选逐字节一致。
+- 状态登记：与低头状态共用 `adult_commuter_down` 的锚点、尺寸和层级，通过 `state_asset_paths.look_up` 解析，不创建第二个常驻人物层。
 - 技术检查：Godot 4.7.1 候选与预览导入、主场景和校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 193 条断言、17 类契约。
+- 晋级检查：production 抬头人物导入正常；状态资源解析与默认回退加入自检后，交互系统为 196 条断言、17 类契约，其余回归保持通过。
 
 ### 儿童倒影
 
@@ -218,7 +220,7 @@
 | 目标 ID | 显示模式 | 独立资产 | 初始中心 | 初始命中尺寸 | 说明 |
 | --- | --- | --- | --- | --- | --- |
 | `window` | `region` | 无 | `(0.620, 0.390)` | `470 × 680` | 覆盖主要车窗，人工校正后保存 |
-| `phone` | `sprite` | `prop_phone_commute_cold_v001.png` | `(0.535, 0.764)` | `180 × 180` | 与人物手部对齐 |
+| `phone` | `sprite` | `prop_phone_commute_cold_v001.png` | `(0.3448, 0.7790)` | `180 × 180` | 视觉尺寸 `62 × 105`、层级 3；按透明手机槽校准且保持可调整 |
 | `headlight` | `region` | 焦点车与车灯状态层 | `(0.710, 0.440)` | `220 × 120` | 必须落在实际车灯上 |
 | `plate` | `region` | 焦点车与车牌状态层 | `(0.716, 0.484)` | `120 × 80` | 必须落在实际车牌上 |
 
@@ -227,6 +229,7 @@
 | 视觉层 ID | 独立资产 | 初始中心 | 初始显示尺寸 | 层级 | 状态 |
 | --- | --- | --- | --- | --- | --- |
 | `seat_armrest_occluder` | `fg_c01_s02_seat_armrest_occluder_v001.png` | `(0.1775, 0.5105)` | `256 × 77` | 2 | 用户确认位置；人物合成后改到人物后方，已锁定 |
+| `adult_commuter_down` | 默认低头图；状态映射含抬头图 | `(0.2758, 0.6770)` | `440 × 796` | 4 | 两种人物状态共用落位，已锁定 |
 | `front_seat_occluder` | `fg_c01_s02_front_seat_occluder_v001.png` | `(0.6318, 0.9025)` | `530 × 250` | 7 | 用户确认，已锁定 |
 
 视觉层不设置命中尺寸，不参与点击判定；校准器只编辑其中心、显示尺寸、层级、资产路径和锁定状态。
@@ -264,7 +267,7 @@
 3. 已确认 `bg_c01_s02_bus_night_base_v001_candidate.png` 并晋级正式背景 `production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png`。
 4. 已将全画布遮挡母版改为 `reference_only`，拆出 `seat_armrest` 与 `front_seat` 两张紧边界 production 资产，并确认各自落位和人物可移动范围后锁定。
 5. v001 因显老和手势不自然被拒绝，v002 因年龄仍高于目标被拒绝；v003 已确认并晋级 production，人物与手机槽的运行时落位已写入 JSON。
-6. 当前生成成年主角抬头状态；两张图必须同画布、同锚点，确认后再晋级 production。
-7. 人物状态确认后生成手机和焦点车，再对齐手部、道路与车灯/车牌位置。
+6. 成年主角抬头状态已确认并晋级 production；两张人物图同画布、同锚点，并登记为同一人物层的状态资源。
+7. 当前生成手机并对齐透明手机槽；确认后再生成焦点车并校准道路与车灯/车牌位置。
 8. 最后生成儿童倒影和冷暖效果，进入完整场景合成。
 9. 所有层在校正工具中人工调整并保存，再接入三次观察状态。
