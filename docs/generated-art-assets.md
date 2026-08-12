@@ -60,9 +60,11 @@
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v002.png` | `rejected_review` | 本地确定性合成 | v002 车宽/车道宽完整关系反例 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v003.png` | `rejected_review` | `exec-4d247436-7197-4397-b96b-a6fff7465c6b.png` + 本地徽标清理 | 车辆大小获认可，但近侧车道线拓扑错误；保留为车辆尺度基准 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v003.png` | `rejected_review` | 本地确定性合成 | v003 完整关系道路反例 |
-| `game/assets/art/style-studies/c01_s02/references/reference_c01_s02_vehicle_lane_markup_v001.png` | `approved_reference` | 用户标注附件 | 长红线为正确近侧车道边界，红圈内旧亮线必须移除 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v004.png` | `candidate_review` | v003 + 局部湿路 donor + 确定性车道线修正 | 当前车道轨迹候选；车辆像素锁定 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v004.png` | `candidate_review` | 本地确定性合成 | v004 与已确认人物、手机和结构层的完整关系预览 |
+| `game/assets/art/style-studies/c01_s02/references/reference_c01_s02_vehicle_lane_markup_v001.png` | `approved_reference` | 用户标注附件 | 长红线只表示大致位置、方向和首尾通道，红圈内旧亮线必须移除；不复刻手绘抖动 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v004.png` | `rejected_review` | v003 + 局部湿路 donor + 确定性车道线修正 | 旧亮线已清除，但错误复刻了手绘曲线 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v004.png` | `rejected_review` | 本地确定性合成 | v004 完整关系曲线反例 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v005.png` | `candidate_review` | v003 + 局部湿路 donor + 确定性透视直线 | 当前直线车道候选；车辆像素锁定 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v005.png` | `candidate_review` | 本地确定性合成 | v005 与已确认人物、手机和结构层的完整关系预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -431,9 +433,21 @@ v004 为确定性局部修正。先将用户 738 × 596 标注按 `941 / 738` �
 Change only the road lane markings. Preserve the exact current car size, position, proportions, three-quarter angle, lighting, contact shadow, wet reflections, rain and glass texture. Remove the circled lower-right bright stripe. Place one worn, dim lane boundary along the user's long red trajectory, converging from upper-left to lower-right and widening subtly toward the foreground. Do not move, resize or redraw the vehicle.
 ```
 
-最终 `preview_c01_s02_vehicle_focus_context_v004.png` SHA-256 为 `1d5e49479961f61af5d9203962671c3079f1ae4e7121244b8fc0f74f30ad8ab8`；完整关系版 SHA-256 为 `e96a4e3b03ef98d695a5a1b03a4fd7f6b20ab7046976c0c0b66b55f2423551f1`。v004 当前只用于场景评审，没有生成独立车辆或效果层，也没有改 production 与布局 JSON；确认后才从 v004 派生分层资产并保留未锁定布局供人工校正。
+最终 `preview_c01_s02_vehicle_focus_context_v004.png` SHA-256 为 `1d5e49479961f61af5d9203962671c3079f1ae4e7121244b8fc0f74f30ad8ab8`；完整关系版 SHA-256 为 `e96a4e3b03ef98d695a5a1b03a4fd7f6b20ab7046976c0c0b66b55f2423551f1`。v004 当时只用于场景评审，没有生成独立车辆或效果层，也没有改 production 与布局 JSON。
 
 Godot 4.7.1 已正常导入两张 v004 预览和用户标注参考；像素差异仅位于原图 `(418, 781)–(940, 1064)` 道路区域，车辆区域最大像素差为 0；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 197 条断言与 17 类契约均通过，主场景和校准器 smoke test 正常。
+
+用户随后澄清：红线是手工位置示意，不应完全按其弯折绘制；正确车道线必须是直线。v004 因过度复刻手绘路径降为 `rejected_review`。v005 继续使用同一湿路 donor 清除旧线，但不再对红色连通域逐点跟踪，而是只取大致端点 `(422, 785)` 与 `(905, 1057)` 建立严格直线中心轴；线宽从远端约 6 px 线性渐增到近端约 12 px，磨损只调制透明度和边缘，不改变几何方向。车辆区域继续逐像素取自 v003。
+
+v005 的精确局部编辑约束如下：
+
+```text
+Treat the user's red stroke only as a positional corridor, not exact geometry. The lane boundary centerline must be a straight perspective line between the approximate marked endpoints. It may widen linearly toward the foreground and vary only in opacity or edge wear; it must not bend, wobble or follow the hand-drawn stroke point by point. Preserve every vehicle pixel and remove the circled old stripe.
+```
+
+最终 `preview_c01_s02_vehicle_focus_context_v005.png` SHA-256 为 `dbf7ac8c7ac7fc0b5a482bae3d63dfdb1b33541d72f525771d578d57ac5eeac6`；完整关系版 SHA-256 为 `56821c1ff82eebcab880a931ec568532d25d3fc4dfb6f87e2353dc08223a47b6`。v005 当前只用于场景评审，没有生成独立车辆或效果层，也没有改 production 与布局 JSON；确认后才从 v005 派生分层资产并保留未锁定布局供人工校正。
+
+v005 的中心轴相对端点直线最大叉积误差约 `7.28e-11`，只存在浮点误差；像素差异仅位于原图 `(418, 781)–(940, 1063)` 道路区域，车辆区域最大像素差为 0。Godot 4.7.1 已正常导入两张 v005 预览；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 197 条断言与 17 类契约均通过，主场景和校准器 smoke test 正常。
 
 ## 资产清单
 
