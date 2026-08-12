@@ -58,8 +58,11 @@
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_look_up_v001.png` | `rejected_review` | 本地确定性合成 | v001 完整关系反例 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v002.png` | `rejected_review` | `exec-fed6b3dd-247d-4140-8d46-095ce07fb159.png` | 角度正确但车辆外宽超过该处可用车道宽 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v002.png` | `rejected_review` | 本地确定性合成 | v002 车宽/车道宽完整关系反例 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v003.png` | `candidate_review` | `exec-4d247436-7197-4397-b96b-a6fff7465c6b.png` + 本地徽标清理 | 当前车道尺度、角度、接地、湿反射和玻璃雨层候选 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v003.png` | `candidate_review` | 本地确定性合成 | v003 与已确认人物、手机和结构层的完整关系预览 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v003.png` | `rejected_review` | `exec-4d247436-7197-4397-b96b-a6fff7465c6b.png` + 本地徽标清理 | 车辆大小获认可，但近侧车道线拓扑错误；保留为车辆尺度基准 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v003.png` | `rejected_review` | 本地确定性合成 | v003 完整关系道路反例 |
+| `game/assets/art/style-studies/c01_s02/references/reference_c01_s02_vehicle_lane_markup_v001.png` | `approved_reference` | 用户标注附件 | 长红线为正确近侧车道边界，红圈内旧亮线必须移除 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v004.png` | `candidate_review` | v003 + 局部湿路 donor + 确定性车道线修正 | 当前车道轨迹候选；车辆像素锁定 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v004.png` | `candidate_review` | 本地确定性合成 | v004 与已确认人物、手机和结构层的完整关系预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -418,9 +421,19 @@ v003 使用的核心尺度约束：
 The opposing lane runs from distant upper-left to near lower-right. Preserve the corrected three-quarter angle with the image-left front fender/flank/mirror dominant and the image-right side receding. Keep normal vehicle proportions; never horizontally squeeze. At the vehicle depth, tire-to-tire width must occupy about 75 percent of the usable lane width, with a continuous visible strip of wet pavement between both outer tire edges and the adjacent lane boundaries. Preserve contact shadow, broken wet reflection, and rain/glass texture above and through the vehicle. No logo, badge, readable plate or recognizable real model.
 ```
 
-v003 当前仍只保存两张场景评审图，没有生成独立车辆或效果层，也没有改 production 与布局 JSON。确认车宽/车道宽比例后，才从 v003 派生 `prop_vehicle_focus_base_v003_candidate.png`、路面阴影/湿反射和玻璃雨纹三层，并保留未锁定布局供人工校正。
+用户随后确认 v003 的车辆大小符合，但通过 `reference_c01_s02_vehicle_lane_markup_v001.png` 指出道路拓扑错误：右下圈出的旧亮线必须删除，近侧边界必须沿长红线从车身左后方延伸到画面右下。v003 两张图因此改为 `rejected_review`，但继续作为车辆大小、位置、角度、阴影和湿反射的锁定基准。
 
-Godot 4.7.1 已正常导入两张 v003 预览；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 197 条断言与 17 类契约均通过，主场景和校准器 smoke test 正常。
+v004 为确定性局部修正。先将用户 738 × 596 标注按 `941 / 738` 比例映射回原始画布并补偿约 320 px 的标注截图纵向裁切；使用未含焦点车的内置 `image_gen` 失败稿 `exec-f666a5f8-800f-4184-8280-e2542b85ae52.png` 仅作为右下旧亮线区域的湿路像素 donor，不采用其余区域。新边界中心线按标注轨迹约从 `(422, 785)` 延伸到 `(905, 1057)`，由远及近从约 6 px 渐宽到 12 px，并加入低对比、羽化和确定性磨损。最终车辆区域取自 v003，大小、位置、角度、车灯、前牌、阴影、反射与玻璃雨层均未重生成。
+
+本轮精确局部编辑约束如下：
+
+```text
+Change only the road lane markings. Preserve the exact current car size, position, proportions, three-quarter angle, lighting, contact shadow, wet reflections, rain and glass texture. Remove the circled lower-right bright stripe. Place one worn, dim lane boundary along the user's long red trajectory, converging from upper-left to lower-right and widening subtly toward the foreground. Do not move, resize or redraw the vehicle.
+```
+
+最终 `preview_c01_s02_vehicle_focus_context_v004.png` SHA-256 为 `1d5e49479961f61af5d9203962671c3079f1ae4e7121244b8fc0f74f30ad8ab8`；完整关系版 SHA-256 为 `e96a4e3b03ef98d695a5a1b03a4fd7f6b20ab7046976c0c0b66b55f2423551f1`。v004 当前只用于场景评审，没有生成独立车辆或效果层，也没有改 production 与布局 JSON；确认后才从 v004 派生分层资产并保留未锁定布局供人工校正。
+
+Godot 4.7.1 已正常导入两张 v004 预览和用户标注参考；像素差异仅位于原图 `(418, 781)–(940, 1064)` 道路区域，车辆区域最大像素差为 0；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 197 条断言与 17 类契约均通过，主场景和校准器 smoke test 正常。
 
 ## 资产清单
 
