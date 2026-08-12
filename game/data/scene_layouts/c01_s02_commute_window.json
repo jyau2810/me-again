@@ -23,7 +23,7 @@
 		"vehicle_glass_rain": {
 			"anchor": [0.6791, 0.4228],
 			"visual_size": [268, 168],
-			"z_index": 2,
+			"z_index": 3,
 			"asset_path": "res://assets/art/production/c01_s02_commute_window/effects/fx_vehicle_glass_rain_v001.png",
 			"source_rect": [464, 597, 350, 220],
 			"locked": false
@@ -77,23 +77,33 @@
 			"locked": false
 		},
 		"headlight": {
-			"anchor": [0.71, 0.44],
-			"visual_size": [0, 0],
-			"hit_size": [220, 120],
-			"z_index": 3,
-			"mode": "region",
-			"asset_path": "",
+			"anchor": [0.7062, 0.4333],
+			"visual_size": [157, 45],
+			"hit_size": [176, 72],
+			"z_index": 2,
+			"mode": "sprite",
+			"asset_path": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png",
+			"state_asset_paths": {
+				"neutral": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png",
+				"blink": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_blink_v001.png"
+			},
+			"source_rect": [562, 695, 205, 59],
 			"locked": false
 		},
 		"plate": {
-			"anchor": [0.716, 0.484],
-			"visual_size": [0, 0],
-			"hit_size": [120, 80],
-			"z_index": 3,
-			"mode": "region",
-			"asset_path": "",
+			"anchor": [0.7242, 0.4542],
+			"visual_size": [71, 27],
+			"hit_size": [96, 56],
+			"z_index": 2,
+			"mode": "sprite",
+			"asset_path": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png",
+			"state_asset_paths": {
+				"neutral": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png",
+				"mouth_hint": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_plate_mouth_hint_v001.png"
+			},
+			"source_rect": [635, 742, 93, 35],
 			"locked": false
 		}
 	},
-	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. All three vehicle layers remain unlocked for manual placement correction; the lane marking belongs only to the background. The seat armrest renders behind the adult at z 2; the phone renders through the adult's transparent hand slot at z 3; the adult renders at z 4; the front seat and curved rail remain foreground occluders at z 7. Headlight and plate hotspots remain provisional until their independent visual states are produced."
+	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. The lane marking belongs only to the background. Headlight and plate review candidates use exact source-derived crops, share one placement across states, remain unlocked for manual correction, and keep hit rectangles larger than their visuals. The glass-rain layer renders above both state overlays. Candidate paths stay under style-studies until visual approval."
 }

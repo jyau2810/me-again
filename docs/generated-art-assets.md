@@ -70,6 +70,13 @@
 | `game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_grounding_v001.png` | `production_adjustable` | v005 确定性紧边界提取 | 独立接地阴影和破碎湿反射，`locked = false` |
 | `game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_glass_rain_v001.png` | `production_adjustable` | v005 与无车 donor 的局部高频差分 | 独立玻璃雨纹，`locked = false` |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_layers_v001.png` | `approved_technical_review` | 四张 production 资产本地确定性回组 | 初始分层合成检查图 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png` | `candidate_review` | v005 production 车身确定性裁切 | 两只中性灯罩，205 × 59 RGBA |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_blink_v001.png` | `candidate_review` | 中性灯罩局部亮度/遮光处理 | 同裁切轻微收暗态，不画眼睛 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png` | `candidate_review` | v005 production 车身确定性裁切 | 不可读前牌，93 × 35 RGBA |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_plate_mouth_hint_v001.png` | `candidate_review` | 中性前牌局部阴影处理 | 同裁切下缘轻弧阴影，不画嘴巴 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_state_candidates_v001.png` | `candidate_review` | 本地确定性合成 | 单项透明边界和放大状态对照 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_neutral_v001.png` | `candidate_review` | 本地确定性合成 | 中性状态完整场景关系 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_hint_v001.png` | `candidate_review` | 本地确定性合成 | 收暗车灯与轻弧车牌完整场景关系 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -461,9 +468,20 @@ v005 的中心轴相对端点直线最大叉积误差约 `7.28e-11`，只存在�
 | `background/bg_c01_s02_bus_night_lane_v002.png` | `[0, 0, 941, 1672]` | 全画布 | `720 × 1280` | 背景 | `af5524ced48deb58552aec3f62d294c7e099099fc378aeffd033ad5f9983801d` |
 | `props/prop_vehicle_focus_base_v001.png` | `[456, 596, 367, 226]` | `(0.6796, 0.4240)` | `281 × 173` | 1 | `91cd20dd0a39f5bea71b7c0b7961ecfe31fd23e29c323157987a5ff266d69b3b` |
 | `effects/fx_vehicle_grounding_v001.png` | `[435, 729, 408, 328]` | `(0.6791, 0.5341)` | `312 × 251` | 0 | `54d2f2159777723835c6c85a820b25f5639cb71ea3e85bb97ff94d1a2f20cad7` |
-| `effects/fx_vehicle_glass_rain_v001.png` | `[464, 597, 350, 220]` | `(0.6791, 0.4228)` | `268 × 168` | 2 | `3c97454b76b5ed1105ff5d479004c4f2853e101c4668c44bfbca499519985d51` |
+| `effects/fx_vehicle_glass_rain_v001.png` | `[464, 597, 350, 220]` | `(0.6791, 0.4228)` | `268 × 168` | 3 | `3c97454b76b5ed1105ff5d479004c4f2853e101c4668c44bfbca499519985d51` |
 
-三张可移动层均为 RGBA、`locked = false`；接地层在车身下方，玻璃雨纹在车身上方，车道线不在任一可移动层。Godot 正式主场景与校正器实帧均显示正确，交互自检扩展为 217 条断言、17 类契约。此处未调用新一轮图片生成：分层完全来自已确认图和同场景无车 donor 的确定性局部处理，避免改变车辆设计。
+三张可移动层均为 RGBA、`locked = false`；接地层在车身下方，玻璃雨纹当前位于车身及后续车灯/车牌覆盖层上方，车道线不在任一可移动层。首次分层检查时交互自检为 217 条断言、17 类契约；车灯/车牌接入后的当前结果见下文。此处未调用新一轮图片生成：分层完全来自已确认图和同场景无车 donor 的确定性局部处理，避免改变车辆设计。
+
+2026-08-12 继续从 production 车身确定性派生车灯和车牌状态，没有调用新一轮图片生成，也没有重绘整车。车灯使用车身局部 `source_rect = [562, 695, 205, 59]`，两只灯罩之间的格栅保持透明；车牌使用 `source_rect = [635, 742, 93, 35]`。中性态保留确认图像素，车灯变化态只在灯罩蒙版内降低亮度并增加轻微上缘遮光，车牌变化态只在不可读牌面下缘增加约 2 px 的浅弧形阴影。四张状态共用各自裁切、锚点和透明边界，雨纹在合成预览与运行时均重新置于其上方。
+
+| 候选文件 | SHA-256 |
+| --- | --- |
+| `props/prop_vehicle_headlights_neutral_v001.png` | `b66b8977f401ab9c37593a8da67b59f34cfab6406ce2c773c9a4fa4e7741abda` |
+| `props/prop_vehicle_headlights_blink_v001.png` | `49e9228cbe470736c26ff7c8949ac6b230b3c68e5eec7b02332ec8afc9baf81b` |
+| `props/prop_vehicle_plate_neutral_v001.png` | `0ac2be5ebd5fd06df255e39f4e3d287fbd568092b762d4706fb10977548482d1` |
+| `props/prop_vehicle_plate_mouth_hint_v001.png` | `e5b5ed9eef44a17dd3f6a2e999786d63e0676cd841f8687c5725be4de170fe64` |
+
+`preview_c01_s02_vehicle_state_candidates_v001.png` 提供放大状态与 Alpha 边界对照；`preview_c01_s02_vehicle_states_neutral_v001.png` 和 `preview_c01_s02_vehicle_states_hint_v001.png` 提供完整场景关系。初始校正值为：车灯 `(0.7062, 0.4333)`、视觉 `157 × 45`、命中 `176 × 72`；车牌 `(0.7242, 0.4542)`、视觉 `71 × 27`、命中 `96 × 56`。二者保持 `locked = false` 并以 `style-studies` 路径接入评审状态，用户确认前不进入 production。Godot 4.7.1 已正常导入 7 张候选与预览；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 235 条断言与 17 类契约通过，主场景和校准器 smoke test 正常。
 
 ## 资产清单
 

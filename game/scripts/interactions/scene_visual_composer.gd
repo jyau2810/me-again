@@ -10,6 +10,7 @@ var _scene_id := ""
 var _layer_views: Dictionary = {}
 var _layer_asset_paths: Dictionary = {}
 var _target_views: Dictionary = {}
+var _target_asset_paths: Dictionary = {}
 
 
 func configure(scene_id: String, include_target_visuals := false) -> void:
@@ -36,6 +37,7 @@ func clear_scene() -> void:
 	_layer_views.clear()
 	_layer_asset_paths.clear()
 	_target_views.clear()
+	_target_asset_paths.clear()
 	_scene_id = ""
 
 
@@ -74,6 +76,25 @@ func target_view(target_id: String) -> TextureRect:
 	return _target_views.get(target_id)
 
 
+func set_target_state(target_id: String, state_id: String) -> bool:
+	var view: TextureRect = _target_views.get(target_id)
+	if view == null:
+		return false
+	var path := LayoutStore.target_asset_path(_scene_id, target_id, state_id)
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return false
+	var texture := load(path) as Texture2D
+	if texture == null:
+		return false
+	view.texture = texture
+	_target_asset_paths[target_id] = path
+	return true
+
+
+func target_asset_path(target_id: String) -> String:
+	return String(_target_asset_paths.get(target_id, ""))
+
+
 func _add_layer(layer_id: String, layer: Dictionary) -> void:
 	var view := _add_view("Layer_%s" % layer_id, layer)
 	if view == null:
@@ -93,6 +114,7 @@ func _add_target_visuals(scene_id: String) -> void:
 		var view := _add_view("Target_%s" % target_id, target)
 		if view != null:
 			_target_views[target_id] = view
+			_target_asset_paths[target_id] = String(target.get("asset_path", ""))
 
 
 func _add_view(view_name: String, source: Dictionary) -> TextureRect:

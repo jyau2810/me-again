@@ -31,7 +31,8 @@ Public integration boundary:
 
 Scene placement is resolved by `interaction_scene_layout_store.gd`. It first
 loads `res://data/scene_layouts/<scene_id>.json` and normalizes `anchor`,
-`visual_size`, `hit_size`, `z_index`, `mode`, `asset_path` and `locked` for
+`visual_size`, `hit_size`, `z_index`, `mode`, `asset_path`, optional
+`state_asset_paths` / `source_rect`, and `locked` for
 interactive targets. The same JSON can contain non-interactive `layers` with
 `source_rect`, `anchor`, `visual_size`, `z_index`, `asset_path` and `locked`;
 the calibrator edits those layers without inventing hit areas.
@@ -44,10 +45,12 @@ that is smaller or larger than the forgiving hit rectangle.
 and asset-backed target visuals whose z order must cross layer boundaries.
 `MainApp` uses the JSON `reference_background_path`, mounts the composer across
 the full 720 x 1280 canvas, and keeps every visual layer mouse-transparent. It
-sorts by authored `z_index` and can switch `state_asset_paths` such as the
-commuter's `down` / `look_up` pair without duplicating placement. The observation
-field also spans the same full logical canvas, so saved calibrator anchors do not
-need an additional runtime offset.
+sorts by authored `z_index` and can switch `state_asset_paths` for both visual
+layers and asset-backed targets, such as the commuter's `down` / `look_up` pair,
+the headlights' `neutral` / `blink` pair, and the plate's `neutral` /
+`mouth_hint` pair, without duplicating placement. The observation field also
+spans the same full logical canvas, so saved calibrator anchors do not need an
+additional runtime offset.
 
 To calibrate the sample scene, open and run
 `res://scenes/tools/scene_layout_calibrator.tscn` in Godot. Select an interactive
@@ -76,5 +79,5 @@ The test configures all 30 scenes, completes all 17 renderer contracts, checks
 non-punitive retry behavior, instantiates every board layout, validates native
 drop payloads, draws a trace with mouse events, and performs the Chapter 5 touch
 sequence with screen-touch events. It also validates canonical layout JSON,
-independent visual/hit sizes, cropped visual layers and legacy fallback behavior.
-The expected result is 217 assertions across 17 contracts.
+independent visual/hit sizes, cropped visual layers, target visual states and
+legacy fallback behavior. The expected result is 235 assertions across 17 contracts.

@@ -63,7 +63,7 @@ AudioDirector（Music / Ambience / SFX）贯穿场景阶段
 
 交互层覆盖完整 720 × 1280 逻辑画布，保持透明；视觉层统一使用 `MOUSE_FILTER_IGNORE`，底部叙事也是鼠标穿透的渐变字幕层，不会切断校门、桌沿、手机或化石台的命中。全局导航按钮只存在于标题、章节选择、收集册、制作信息和必要的暂停/返回位置；它们不代替场景动作。
 
-`interaction_scene_layout_store.gd` 是正式运行时、`SceneVisualComposer` 与校准工具的共同数据边界。运行时交互目标先读取 JSON 并规范化为 Godot `Vector2`；文件缺失、目标尚未迁移或 JSON 目标无效时，再逐目标读取历史布局。非交互视觉层不回退到旧表，按紧边界资产和 `source_rect` 独立记录；同一人物可由 `state_asset_paths` 切换状态而不复制落位。`scene_layout_calibrator.tscn` 可直接拖动交互目标或视觉层，按对象类型调整字段并保存/重新载入同一份 JSON，不需要修改 GDScript 常量。
+`interaction_scene_layout_store.gd` 是正式运行时、`SceneVisualComposer` 与校准工具的共同数据边界。运行时交互目标先读取 JSON 并规范化为 Godot `Vector2`；文件缺失、目标尚未迁移或 JSON 目标无效时，再逐目标读取历史布局。非交互视觉层不回退到旧表，按紧边界资产和 `source_rect` 独立记录；人物视觉层与带图片的交互目标均可由 `state_asset_paths` 切换状态而不复制落位，例如通勤人物的 `down` / `look_up`、车灯的 `neutral` / `blink` 和车牌的 `neutral` / `mouth_hint`。`scene_layout_calibrator.tscn` 可直接拖动交互目标或视觉层，按对象类型调整字段并保存/重新载入同一份 JSON，不需要修改 GDScript 常量。
 
 ## 5. 内容与资源映射
 

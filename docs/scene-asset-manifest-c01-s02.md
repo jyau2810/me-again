@@ -236,32 +236,36 @@
 | 直线车道背景 | `background/bg_c01_s02_bus_night_lane_v002.png` | `[0, 0, 941, 1672]` | 全画布 | `720 × 1280` | 背景 | 不适用 |
 | 接地阴影/湿反射 | `effects/fx_vehicle_grounding_v001.png` | `[435, 729, 408, 328]` | `(0.6791, 0.5341)` | `312 × 251` | 0 | `false` |
 | 焦点车身 | `props/prop_vehicle_focus_base_v001.png` | `[456, 596, 367, 226]` | `(0.6796, 0.4240)` | `281 × 173` | 1 | `false` |
-| 玻璃雨纹 | `effects/fx_vehicle_glass_rain_v001.png` | `[464, 597, 350, 220]` | `(0.6791, 0.4228)` | `268 × 168` | 2 | `false` |
+| 玻璃雨纹 | `effects/fx_vehicle_glass_rain_v001.png` | `[464, 597, 350, 220]` | `(0.6791, 0.4228)` | `268 × 168` | 3 | `false` |
 
 - 背景只继承 `v005 - v003` 的道路差分，保留已确认无车场景并把直线车道固定在环境层；车道线不随车辆移动。
 - `preview_c01_s02_vehicle_layers_v001.png` 是四层初始坐标回组检查图；正式主场景实帧确认车辆尺度、角度、两侧湿路余量和人物关系没有漂移。
-- `scene_visual_composer.gd` 已让正式游戏读取同一 JSON 的背景、六张视觉层与带资产的交互目标视觉，按 `z_index` 渲染并忽略鼠标；手机因此真正位于人物手指下方，Board 只保留透明命中区。校正器与正式场景共用完整 `720 × 1280` 坐标。
+- `scene_visual_composer.gd` 已让正式游戏读取同一 JSON 的背景、六张视觉层与带资产的交互目标视觉，按 `z_index` 渲染并忽略鼠标；手机因此真正位于人物手指下方，车灯/车牌状态位于雨纹下方，Board 只保留透明命中区。校正器与正式场景共用完整 `720 × 1280` 坐标。
 - 分层检查点：交互自检 217 条断言、17 类契约通过；状态与存档、内容目录及两处 smoke test 继续通过。
 
 #### `prop_vehicle_headlights_neutral_v001.png`
 
-- 状态：`planned`
-- 内容：中性车灯覆盖层。
+- 状态：`candidate_review`
+- 位置：`../game/assets/art/style-studies/c01_s02/props/`；`205 × 59` RGBA，母版 `source_rect = [562, 695, 205, 59]`。
+- 内容：从已确认 v005 production 车身原像素确定性裁出的两只中性灯罩；不重绘车辆，不改变灯罩几何、车身透视或光色。
 
 #### `prop_vehicle_headlights_blink_v001.png`
 
-- 状态：`planned`
-- 内容：同一画布和锚点的轻微眨动状态，不出现字面卡通眼睛。
+- 状态：`candidate_review`
+- 内容：与中性态同一裁切、锚点和透明边界，只降低灯罩内亮度并增加极轻上缘遮光；不出现眼皮、瞳孔或字面卡通眼睛。
 
 #### `prop_vehicle_plate_neutral_v001.png`
 
-- 状态：`planned`
-- 内容：不可读、无真实号码的车牌覆盖层，外形中性。
+- 状态：`candidate_review`
+- 位置：`../game/assets/art/style-studies/c01_s02/props/`；`93 × 35` RGBA，母版 `source_rect = [635, 742, 93, 35]`。
+- 内容：从已确认车身原像素确定性裁出的不可读、无真实号码前牌中性态。
 
 #### `prop_vehicle_plate_mouth_hint_v001.png`
 
-- 状态：`planned`
-- 内容：只通过弧度和阴影产生“像嘴”的错觉，不画真实嘴巴。
+- 状态：`candidate_review`
+- 内容：与中性态同一裁切和锚点，只在牌面下缘增加极浅弧形阴影产生“像抿嘴”的错觉；不画真实嘴巴，不增加任何字符。
+
+评审图：`previews/preview_c01_s02_vehicle_state_candidates_v001.png` 提供放大单项对照；`preview_c01_s02_vehicle_states_neutral_v001.png` 与 `preview_c01_s02_vehicle_states_hint_v001.png` 提供完整场景关系。四张状态候选均等待用户确认，尚未晋级 production。
 
 ### 场景效果
 
@@ -281,17 +285,17 @@
 | --- | --- | --- | --- | --- | --- |
 | `window` | `region` | 无 | `(0.620, 0.390)` | `470 × 680` | 覆盖主要车窗，人工校正后保存 |
 | `phone` | `sprite` | `prop_phone_commute_cold_v001.png` | `(0.3448, 0.7790)` | `180 × 180` | 视觉尺寸 `62 × 105`、层级 3；按透明手机槽校准且保持可调整 |
-| `headlight` | `region` | 焦点车与车灯状态层 | `(0.710, 0.440)` | `220 × 120` | 必须落在实际车灯上 |
-| `plate` | `region` | 焦点车与车牌状态层 | `(0.716, 0.484)` | `120 × 80` | 必须落在实际车牌上 |
+| `headlight` | `sprite` | 两张车灯候选状态 | `(0.7062, 0.4333)` | `176 × 72` | 视觉 `157 × 45`；覆盖实际两只灯罩，保持可人工校正 |
+| `plate` | `sprite` | 两张车牌候选状态 | `(0.7242, 0.4542)` | `96 × 56` | 视觉 `71 × 27`；覆盖实际前牌，保持可人工校正 |
 
-初始值仅用于迁移当前交互契约，不视为视觉确认结果。v005 独立车身派生后，`headlight` 与 `plate` 必须按实际灯罩和前牌重新校正；正式构图与资产进入 Godot 后，全部通过校正工具人工调整。
+2026-08-12 已按 v005 实际灯罩与前牌重新校正；命中框刻意大于视觉框以保留触控容错。当前坐标是候选检查点，不视为最终视觉确认结果；两项目标均保持 `locked = false`，可在校正工具中继续人工调整。
 
 | 视觉层 ID | 独立资产 | 初始中心 | 初始显示尺寸 | 层级 | 状态 |
 | --- | --- | --- | --- | --- | --- |
 | `seat_armrest_occluder` | `fg_c01_s02_seat_armrest_occluder_v001.png` | `(0.1775, 0.5105)` | `256 × 77` | 2 | 用户确认位置；人物合成后改到人物后方，已锁定 |
 | `vehicle_grounding` | `fx_vehicle_grounding_v001.png` | `(0.6791, 0.5341)` | `312 × 251` | 0 | 接地和湿反射，保持可人工校正 |
 | `vehicle_focus_base` | `prop_vehicle_focus_base_v001.png` | `(0.6796, 0.4240)` | `281 × 173` | 1 | 已确认车辆像素的紧边界层，保持可人工校正 |
-| `vehicle_glass_rain` | `fx_vehicle_glass_rain_v001.png` | `(0.6791, 0.4228)` | `268 × 168` | 2 | 车辆上方玻璃雨纹，保持可人工校正 |
+| `vehicle_glass_rain` | `fx_vehicle_glass_rain_v001.png` | `(0.6791, 0.4228)` | `268 × 168` | 3 | 车辆上方玻璃雨纹，覆盖车身和车灯/车牌状态层，保持可人工校正 |
 | `adult_commuter_down` | 默认低头图；状态映射含抬头图 | `(0.2758, 0.6770)` | `440 × 796` | 4 | 两种人物状态共用落位，已锁定 |
 | `front_seat_occluder` | `fg_c01_s02_front_seat_occluder_v001.png` | `(0.6318, 0.9025)` | `530 × 250` | 7 | 用户确认，已锁定 |
 
