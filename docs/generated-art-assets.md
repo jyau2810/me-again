@@ -63,8 +63,13 @@
 | `game/assets/art/style-studies/c01_s02/references/reference_c01_s02_vehicle_lane_markup_v001.png` | `approved_reference` | 用户标注附件 | 长红线只表示大致位置、方向和首尾通道，红圈内旧亮线必须移除；不复刻手绘抖动 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v004.png` | `rejected_review` | v003 + 局部湿路 donor + 确定性车道线修正 | 旧亮线已清除，但错误复刻了手绘曲线 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v004.png` | `rejected_review` | 本地确定性合成 | v004 完整关系曲线反例 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v005.png` | `candidate_review` | v003 + 局部湿路 donor + 确定性透视直线 | 当前直线车道候选；车辆像素锁定 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v005.png` | `candidate_review` | 本地确定性合成 | v005 与已确认人物、手机和结构层的完整关系预览 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v005.png` | `approved_reference` | v003 + 局部湿路 donor + 确定性透视直线 | 2026-08-12 用户确认；车辆完整场景与直线车道基准 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v005.png` | `approved_review` | 本地确定性合成 | v005 与已确认人物、手机和结构层的完整关系预览 |
+| `game/assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_lane_v002.png` | `production` | v001 背景 + v005-v003 道路差分 | 无焦点车、保留直线车道的正式背景 |
+| `game/assets/art/production/c01_s02_commute_window/props/prop_vehicle_focus_base_v001.png` | `production_adjustable` | v005 确定性紧边界提取 | 独立焦点车身，`locked = false` |
+| `game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_grounding_v001.png` | `production_adjustable` | v005 确定性紧边界提取 | 独立接地阴影和破碎湿反射，`locked = false` |
+| `game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_glass_rain_v001.png` | `production_adjustable` | v005 与无车 donor 的局部高频差分 | 独立玻璃雨纹，`locked = false` |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_layers_v001.png` | `approved_technical_review` | 四张 production 资产本地确定性回组 | 初始分层合成检查图 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -445,9 +450,20 @@ v005 的精确局部编辑约束如下：
 Treat the user's red stroke only as a positional corridor, not exact geometry. The lane boundary centerline must be a straight perspective line between the approximate marked endpoints. It may widen linearly toward the foreground and vary only in opacity or edge wear; it must not bend, wobble or follow the hand-drawn stroke point by point. Preserve every vehicle pixel and remove the circled old stripe.
 ```
 
-最终 `preview_c01_s02_vehicle_focus_context_v005.png` SHA-256 为 `dbf7ac8c7ac7fc0b5a482bae3d63dfdb1b33541d72f525771d578d57ac5eeac6`；完整关系版 SHA-256 为 `56821c1ff82eebcab880a931ec568532d25d3fc4dfb6f87e2353dc08223a47b6`。v005 当前只用于场景评审，没有生成独立车辆或效果层，也没有改 production 与布局 JSON；确认后才从 v005 派生分层资产并保留未锁定布局供人工校正。
+最终 `preview_c01_s02_vehicle_focus_context_v005.png` SHA-256 为 `dbf7ac8c7ac7fc0b5a482bae3d63dfdb1b33541d72f525771d578d57ac5eeac6`；完整关系版 SHA-256 为 `56821c1ff82eebcab880a931ec568532d25d3fc4dfb6f87e2353dc08223a47b6`。用户于 2026-08-12 确认 v005，状态改为 `approved_reference`。
 
 v005 的中心轴相对端点直线最大叉积误差约 `7.28e-11`，只存在浮点误差；像素差异仅位于原图 `(418, 781)–(940, 1063)` 道路区域，车辆区域最大像素差为 0。Godot 4.7.1 已正常导入两张 v005 预览；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 197 条断言与 17 类契约均通过，主场景和校准器 smoke test 正常。
+
+确认后不再生成车辆，而是从同一 v005 确定性派生四层。正式背景把 `v005 - v003` 的道路差分施加到已确认无车背景，保证直线车道只属于环境；车身、接地效果和玻璃雨纹按可见内容紧边界裁切，初始坐标从 941 × 1672 母版换算到 720 × 1280 逻辑画布。结果如下：
+
+| production 文件 | `source_rect` | 逻辑 `anchor` | `visual_size` | `z_index` | SHA-256 |
+| --- | --- | --- | --- | --- | --- |
+| `background/bg_c01_s02_bus_night_lane_v002.png` | `[0, 0, 941, 1672]` | 全画布 | `720 × 1280` | 背景 | `af5524ced48deb58552aec3f62d294c7e099099fc378aeffd033ad5f9983801d` |
+| `props/prop_vehicle_focus_base_v001.png` | `[456, 596, 367, 226]` | `(0.6796, 0.4240)` | `281 × 173` | 1 | `91cd20dd0a39f5bea71b7c0b7961ecfe31fd23e29c323157987a5ff266d69b3b` |
+| `effects/fx_vehicle_grounding_v001.png` | `[435, 729, 408, 328]` | `(0.6791, 0.5341)` | `312 × 251` | 0 | `54d2f2159777723835c6c85a820b25f5639cb71ea3e85bb97ff94d1a2f20cad7` |
+| `effects/fx_vehicle_glass_rain_v001.png` | `[464, 597, 350, 220]` | `(0.6791, 0.4228)` | `268 × 168` | 2 | `3c97454b76b5ed1105ff5d479004c4f2853e101c4668c44bfbca499519985d51` |
+
+三张可移动层均为 RGBA、`locked = false`；接地层在车身下方，玻璃雨纹在车身上方，车道线不在任一可移动层。Godot 正式主场景与校正器实帧均显示正确，交互自检扩展为 217 条断言、17 类契约。此处未调用新一轮图片生成：分层完全来自已确认图和同场景无车 donor 的确定性局部处理，避免改变车辆设计。
 
 ## 资产清单
 

@@ -15,6 +15,7 @@ signal completed(metrics: Dictionary)
 signal feedback_changed(text: String, tone: String)
 signal collectible_requested(item_id: String)
 signal sfx_requested(kind: String)
+signal interaction_state_changed(state: Dictionary)
 
 const ModelScript = preload("res://scripts/interactions/interaction_model.gd")
 const DragTokenScript = preload("res://scripts/interactions/interaction_drag_token.gd")
@@ -73,6 +74,7 @@ var _feedback_label: Label
 var _progress_label: Label
 var _hint_button: Button
 var _surface
+var _scene_field: Control
 var _buttons: Dictionary = {}
 var _tokens: Dictionary = {}
 var _drop_slots: Dictionary = {}
@@ -90,6 +92,7 @@ var _hold_fired := false
 var _gap_slider: HSlider
 var _gap_label: Label
 var _gap_sent := false
+var _render_target_visuals := true
 
 
 func _ready() -> void:
@@ -100,9 +103,10 @@ func _ready() -> void:
 		_apply_scene()
 
 
-func configure(scene_data: Dictionary, already_collected: Array = []) -> void:
+func configure(scene_data: Dictionary, already_collected: Array = [], render_target_visuals := true) -> void:
 	_scene = scene_data.duplicate(true)
 	_already_collected = _strings(already_collected)
+	_render_target_visuals = render_target_visuals
 	_model.configure(_scene)
 	_completion_emitted = false
 	_clear_hold()
@@ -112,12 +116,13 @@ func configure(scene_data: Dictionary, already_collected: Array = []) -> void:
 
 func reset_interaction() -> void:
 	if not _scene.is_empty():
-		configure(_scene, _already_collected)
+		configure(_scene, _already_collected, _render_target_visuals)
 
 
 func submit_action(action: String, target_id := "", data: Dictionary = {}) -> Dictionary:
 	var result: Dictionary = _model.dispatch(action, target_id, data)
 	_apply_result(result)
+	interaction_state_changed.emit(result.get("state", {}).duplicate(true))
 	return result
 
 
@@ -133,6 +138,7 @@ func _build_shell() -> void:
 	for child in get_children():
 		child.queue_free()
 	_shell = PanelContainer.new()
+	_shell.name = "BoardShell"
 	_shell.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_shell.add_theme_stylebox_override("panel", _panel_style(COLOR_PANEL, 0.0, Color.TRANSPARENT, 0.0))
 	add_child(_shell)
@@ -220,6 +226,9 @@ func _apply_scene() -> void:
 	_tokens.clear()
 	_drop_slots.clear()
 	_surface = null
+	if _scene_field != null and is_instance_valid(_scene_field):
+		_scene_field.queue_free()
+	_scene_field = null
 	_gap_slider = null
 	_gap_label = null
 	_gap_sent = false
@@ -261,9 +270,12 @@ func _apply_scene() -> void:
 func _build_observation() -> void:
 	var contract: Dictionary = _scene.get("interaction", {})
 	var field := Control.new()
-	field.custom_minimum_size = Vector2(600.0, 490.0)
-	field.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_content.add_child(field)
+	field.name = "SceneInteractionField"
+	field.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	field.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	field.z_index = 1
+	add_child(field)
+	_scene_field = field
 	var target_ids := _strings(contract.get("target_ids", []))
 	var spot_index := 0
 	for target_id in target_ids:
@@ -586,7 +598,7 @@ func _place_scene_node(
 	var hit_size: Vector2 = placement.get("hit_size", fallback_size)
 	if node.has_method("set_scene_presentation"):
 		node.set_scene_presentation(String(placement.get("mode", "sprite")))
-	if node.has_method("set_scene_visual"):
+	if _render_target_visuals and node.has_method("set_scene_visual"):
 		node.set_scene_visual(
 			String(placement.get("asset_path", "")),
 			placement.get("visual_size", hit_size)

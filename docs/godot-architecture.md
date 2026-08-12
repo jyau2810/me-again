@@ -24,7 +24,7 @@
 ```text
 StoryContentCatalog（5 章 / 30 幕 / 9 收集物）
               ↓
-MainApp（标题、章节、场景、图文卡片、收集册）
+MainApp + SceneVisualComposer（场景背景、分层视觉、图文卡片）
               ↓
 InteractionBoard（17 类语义交互 + 场景内热点）
               ↓
@@ -39,7 +39,7 @@ AudioDirector（Music / Ambience / SFX）贯穿场景阶段
 - `SessionState` 保存精确续玩场景和静音设置；短谜题不持久化一半完成的手势状态。
 - `StoryContentCatalog` 保留五章脚本中的场景链和交互参数，不直接写存档。
 - `InteractionBoard` 把点击、重复、拖放、轨迹、描线、长按和多点触控转换为语义完成事件。
-- `MainApp` 负责可视编排和反馈，不把章节规则复制进 UI。
+- `MainApp` 负责可视编排和反馈；`SceneVisualComposer` 按场景 JSON 在完整 720 × 1280 画布渲染非交互视觉层，不把章节规则复制进 UI。
 - `AudioDirector` 在现实、入界、里世界和回声之间切换音乐、环境声和交互音效。
 
 ## 3. 画面、窗口与输入
@@ -55,15 +55,15 @@ AudioDirector（Music / Ambience / SFX）贯穿场景阶段
 
 交互不采用 App 式表单或一排操作按钮。运行时遵循以下层级：
 
-1. 背景和透明物件图集共同构成场景。
+1. 已迁移场景优先使用 JSON 的 `reference_background_path`，再由 `SceneVisualComposer` 叠加独立透明视觉层；未迁移场景继续使用章节背景。
 2. 已迁移场景由 `data/scene_layouts/<scene_id>.json` 分别记录交互 `targets` 与非交互视觉 `layers`。两者共用中心、视觉尺寸、层级、资产路径和锁定状态；命中尺寸与显示模式只属于交互目标，裁切视觉层另存 `source_rect`。未迁移目标回退到 `interaction_scene_layouts.gd`。
 3. 普通观察弹出图文观察卡，展示物件局部图和一句克制反馈。
 4. 一幕完成时弹出图文回忆卡，用画面和短文本完成情绪收束。
 5. 提示优先通过物件轻动、光影、声音和环境文案给出，最后才使用轻量视觉强调。
 
-交互层覆盖近乎完整画布，保持透明；底部叙事是鼠标穿透的渐变字幕层，不会切断校门、桌沿、手机或化石台的命中。全局导航按钮只存在于标题、章节选择、收集册、制作信息和必要的暂停/返回位置；它们不代替场景动作。
+交互层覆盖完整 720 × 1280 逻辑画布，保持透明；视觉层统一使用 `MOUSE_FILTER_IGNORE`，底部叙事也是鼠标穿透的渐变字幕层，不会切断校门、桌沿、手机或化石台的命中。全局导航按钮只存在于标题、章节选择、收集册、制作信息和必要的暂停/返回位置；它们不代替场景动作。
 
-`interaction_scene_layout_store.gd` 是正式运行时与校准工具的共同数据边界。运行时交互目标先读取 JSON 并规范化为 Godot `Vector2`；文件缺失、目标尚未迁移或 JSON 目标无效时，再逐目标读取历史布局。非交互视觉层不回退到旧表，按紧边界资产和 `source_rect` 独立记录。`scene_layout_calibrator.tscn` 可直接拖动交互目标或视觉层，按对象类型调整字段并保存/重新载入同一份 JSON，不需要修改 GDScript 常量。
+`interaction_scene_layout_store.gd` 是正式运行时、`SceneVisualComposer` 与校准工具的共同数据边界。运行时交互目标先读取 JSON 并规范化为 Godot `Vector2`；文件缺失、目标尚未迁移或 JSON 目标无效时，再逐目标读取历史布局。非交互视觉层不回退到旧表，按紧边界资产和 `source_rect` 独立记录；同一人物可由 `state_asset_paths` 切换状态而不复制落位。`scene_layout_calibrator.tscn` 可直接拖动交互目标或视觉层，按对象类型调整字段并保存/重新载入同一份 JSON，不需要修改 GDScript 常量。
 
 ## 5. 内容与资源映射
 
@@ -104,7 +104,7 @@ HOME=/tmp/me-again-godot-home /Applications/Godot.app/Contents/MacOS/Godot \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-结果：197 条断言、17 类交互契约通过；覆盖 JSON 解析、样板交互布局、三张独立视觉层、人物状态与正式手机资源路径、裁切坐标、视觉/命中尺寸分离和旧布局回退检查。
+结果：217 条断言、17 类交互契约通过；覆盖 JSON 背景与画布解析、六张视觉层和手机目标视觉的运行时实例化、跨视觉/交互层级与鼠标穿透、人物状态切换、车辆分层与未锁定状态、裁切坐标、视觉/命中尺寸分离和旧布局回退检查。
 
 ## 8. 发布边界
 

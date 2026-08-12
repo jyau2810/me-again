@@ -27,6 +27,7 @@ Public integration boundary:
 - `feedback_changed(text, tone)` uses calm, warm, gentle and complete tones.
 - `collectible_requested(item_id)` omits items already passed to `configure`.
 - `sfx_requested(kind)` asks the audio layer for a semantic sound, not a file.
+- `interaction_state_changed(state)` lets scene visuals respond to accepted interaction progress without owning game rules.
 
 Scene placement is resolved by `interaction_scene_layout_store.gd`. It first
 loads `res://data/scene_layouts/<scene_id>.json` and normalizes `anchor`,
@@ -38,6 +39,15 @@ Missing files or targets fall back one target at a time to the historical
 `interaction_scene_layouts.gd` table, so scenes can migrate independently.
 Runtime sprites can use an external transparent asset and a visual rectangle
 that is smaller or larger than the forgiving hit rectangle.
+
+`scene_visual_composer.gd` is the runtime consumer for non-interactive `layers`
+and asset-backed target visuals whose z order must cross layer boundaries.
+`MainApp` uses the JSON `reference_background_path`, mounts the composer across
+the full 720 x 1280 canvas, and keeps every visual layer mouse-transparent. It
+sorts by authored `z_index` and can switch `state_asset_paths` such as the
+commuter's `down` / `look_up` pair without duplicating placement. The observation
+field also spans the same full logical canvas, so saved calibrator anchors do not
+need an additional runtime offset.
 
 To calibrate the sample scene, open and run
 `res://scenes/tools/scene_layout_calibrator.tscn` in Godot. Select an interactive
@@ -67,4 +77,4 @@ non-punitive retry behavior, instantiates every board layout, validates native
 drop payloads, draws a trace with mouse events, and performs the Chapter 5 touch
 sequence with screen-touch events. It also validates canonical layout JSON,
 independent visual/hit sizes, cropped visual layers and legacy fallback behavior.
-The expected result is 186 assertions across 17 contracts.
+The expected result is 217 assertions across 17 contracts.

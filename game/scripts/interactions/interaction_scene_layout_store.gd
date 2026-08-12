@@ -21,6 +21,16 @@ static func load_scene(scene_id: String) -> Dictionary:
 	return decode_scene(FileAccess.get_file_as_string(path), scene_id)
 
 
+static func reference_background_path(scene_id: String) -> String:
+	var scene_data := load_scene(scene_id)
+	return String(scene_data.get("reference_background_path", ""))
+
+
+static func canvas_size(scene_id: String) -> Vector2:
+	var scene_data := load_scene(scene_id)
+	return _vector2(scene_data.get("canvas_size"), Vector2(720.0, 1280.0))
+
+
 static func decode_scene(json_text: String, expected_scene_id := "") -> Dictionary:
 	var json := JSON.new()
 	if json.parse(json_text) != OK or not json.data is Dictionary:

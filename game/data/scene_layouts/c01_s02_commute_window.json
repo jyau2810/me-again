@@ -2,8 +2,32 @@
 	"version": 2,
 	"scene_id": "c01_s02_commute_window",
 	"canvas_size": [720, 1280],
-	"reference_background_path": "res://assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_base_v001.png",
+	"reference_background_path": "res://assets/art/production/c01_s02_commute_window/background/bg_c01_s02_bus_night_lane_v002.png",
 	"layers": {
+		"vehicle_grounding": {
+			"anchor": [0.6791, 0.5341],
+			"visual_size": [312, 251],
+			"z_index": 0,
+			"asset_path": "res://assets/art/production/c01_s02_commute_window/effects/fx_vehicle_grounding_v001.png",
+			"source_rect": [435, 729, 408, 328],
+			"locked": false
+		},
+		"vehicle_focus_base": {
+			"anchor": [0.6796, 0.4240],
+			"visual_size": [281, 173],
+			"z_index": 1,
+			"asset_path": "res://assets/art/production/c01_s02_commute_window/props/prop_vehicle_focus_base_v001.png",
+			"source_rect": [456, 596, 367, 226],
+			"locked": false
+		},
+		"vehicle_glass_rain": {
+			"anchor": [0.6791, 0.4228],
+			"visual_size": [268, 168],
+			"z_index": 2,
+			"asset_path": "res://assets/art/production/c01_s02_commute_window/effects/fx_vehicle_glass_rain_v001.png",
+			"source_rect": [464, 597, 350, 220],
+			"locked": false
+		},
 		"seat_armrest_occluder": {
 			"anchor": [0.1775, 0.5105],
 			"visual_size": [256, 77],
@@ -71,5 +95,5 @@
 			"locked": false
 		}
 	},
-	"notes": "Approved production background, two tightly cropped structural layers, confirmed down/look-up adult states sharing one locked placement, and the approved independent phone asset. All visual-layer placements were derived on the 941 x 1672 review master and converted to the 720 x 1280 logical canvas. The seat armrest renders behind the adult at z 2; the phone renders through the adult's transparent hand slot at z 3; the adult renders at z 4; the front seat and curved rail remain foreground occluders at z 7. The phone stays unlocked for manual placement correction and keeps a 180 x 180 hit area. Headlight and plate remain provisional until the focus vehicle is composited."
+	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. All three vehicle layers remain unlocked for manual placement correction; the lane marking belongs only to the background. The seat armrest renders behind the adult at z 2; the phone renders through the adult's transparent hand slot at z 3; the adult renders at z 4; the front seat and curved rail remain foreground occluders at z 7. Headlight and plate hotspots remain provisional until their independent visual states are produced."
 }

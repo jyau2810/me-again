@@ -2,6 +2,8 @@ extends Control
 
 const StoryCatalog = preload("res://scripts/content/story_content_catalog.gd")
 const InteractionBoardScript = preload("res://scripts/interactions/interaction_board.gd")
+const SceneLayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
+const SceneVisualComposerScript = preload("res://scripts/interactions/scene_visual_composer.gd")
 
 const ART := {
 	"title": "res://assets/art/title_key_art.png",
@@ -22,6 +24,7 @@ const CHAPTER_END_LINES := {
 }
 
 var _background: TextureRect
+var _scene_visuals: Control
 var _shade: ColorRect
 var _screen_host: Control
 var _toast: Label
@@ -117,14 +120,21 @@ func _build_shell() -> void:
 	_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_background)
 
+	_scene_visuals = SceneVisualComposerScript.new()
+	_scene_visuals.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_scene_visuals.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_scene_visuals)
+
 	_shade = ColorRect.new()
 	_shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_shade.color = Color("#07101666")
 	_shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_shade.z_index = 50
 	add_child(_shade)
 
 	_screen_host = Control.new()
 	_screen_host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_screen_host.z_index = 100
 	add_child(_screen_host)
 
 	_toast = Label.new()
@@ -136,7 +146,7 @@ func _build_shell() -> void:
 	_toast.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_toast.position = Vector2(-230, 88)
 	_toast.size = Vector2(460, 58)
-	_toast.z_index = 20
+	_toast.z_index = 200
 	add_child(_toast)
 
 
@@ -375,7 +385,12 @@ func _build_game_screen() -> void:
 		tint = Color("#17211833")
 	elif phase == "echo":
 		tint = Color("#2c211133")
-	_set_background(background_key, tint)
+	var scene_background_path := SceneLayoutStore.reference_background_path(_current_scene_id)
+	if not scene_background_path.is_empty() and ResourceLoader.exists(scene_background_path):
+		_set_background_path(scene_background_path, tint)
+		_scene_visuals.configure(_current_scene_id, true)
+	else:
+		_set_background(background_key, tint)
 
 	# A light HUD leaves the illustration as the actual play field.  The small
 	# text actions are secondary navigation, not the scene's interaction.
@@ -402,15 +417,16 @@ func _build_game_screen() -> void:
 	# mouse-transparent caption above it, so low objects such as the school gate,
 	# desk edge and fossil table remain reachable in their painted positions.
 	_interaction_board = InteractionBoardScript.new()
-	_interaction_board.position = Vector2(0, 82)
-	_interaction_board.size = Vector2(720, 1166)
-	_interaction_board.custom_minimum_size = Vector2(720, 1166)
+	_interaction_board.position = Vector2.ZERO
+	_interaction_board.size = Vector2(720, 1280)
+	_interaction_board.custom_minimum_size = Vector2(720, 1280)
 	_screen_host.add_child(_interaction_board)
 	_interaction_board.completed.connect(_on_interaction_completed)
 	_interaction_board.feedback_changed.connect(_on_feedback_changed)
 	_interaction_board.collectible_requested.connect(_on_collectible_requested)
 	_interaction_board.sfx_requested.connect(AudioDirector.play_sfx)
-	_interaction_board.configure(_current_scene, GameState.collected_items)
+	_interaction_board.interaction_state_changed.connect(_on_interaction_state_changed)
+	_interaction_board.configure(_current_scene, GameState.collected_items, scene_background_path.is_empty())
 	_scene_feedback_enabled = true
 
 	var story_card := Control.new()
@@ -520,6 +536,13 @@ func _on_interaction_completed(metrics: Dictionary = {}) -> void:
 		if GameState.complete_chapter(String(_current_scene["chapter_id"])):
 			SessionState.clear_resume()
 	_show_completion_reveal()
+
+
+func _on_interaction_state_changed(state: Dictionary) -> void:
+	if _current_scene_id != "c01_s02_commute_window" or _scene_visuals == null:
+		return
+	var adult_state := "look_up" if int(state.get("sequence_index", 0)) >= 2 else "down"
+	_scene_visuals.set_layer_state("adult_commuter_down", adult_state)
 
 
 func _show_observation_card(text: String, tone := "neutral") -> void:
@@ -812,6 +835,12 @@ func _toggle_audio() -> void:
 
 func _set_background(key: String, tint: Color) -> void:
 	var path: String = ART.get(key, ART["reality"])
+	_set_background_path(path, tint)
+	if _scene_visuals != null:
+		_scene_visuals.clear_scene()
+
+
+func _set_background_path(path: String, tint: Color) -> void:
 	_background.texture = load(path) as Texture2D
 	_shade.color = tint
 

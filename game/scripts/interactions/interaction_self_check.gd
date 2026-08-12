@@ -13,6 +13,7 @@ const TokenScript = preload("res://scripts/interactions/interaction_drag_token.g
 const SlotScript = preload("res://scripts/interactions/interaction_drop_slot.gd")
 const SurfaceScript = preload("res://scripts/interactions/interaction_gesture_surface.gd")
 const LayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
+const VisualComposerScript = preload("res://scripts/interactions/scene_visual_composer.gd")
 
 var _assertions := 0
 var _failures: Array[String] = []
@@ -26,6 +27,7 @@ func _run() -> void:
 	_test_scene_layout_store()
 	_test_all_catalog_contracts_complete()
 	_test_gentle_retry_rules()
+	await _test_scene_visual_composer()
 	await _test_board_renders_every_scene()
 	await _test_native_drag_and_drop()
 	await _test_trace_pointer_input()
@@ -50,7 +52,9 @@ func _test_scene_layout_store() -> void:
 	_expect(not sample.is_empty(), "sample scene layout JSON parses")
 	_expect(sample.get("scene_id") == "c01_s02_commute_window", "sample scene ID matches its file")
 	_expect(sample.get("targets", {}).size() == 4, "sample scene exposes four calibrated targets")
-	_expect(sample.get("layers", {}).size() == 3, "sample scene exposes three independent visual layers")
+	_expect(sample.get("layers", {}).size() == 6, "sample scene exposes six independent visual layers")
+	_expect(LayoutStore.canvas_size("c01_s02_commute_window") == Vector2(720.0, 1280.0), "runtime resolves the authored logical canvas")
+	_expect(LayoutStore.reference_background_path("c01_s02_commute_window").ends_with("bg_c01_s02_bus_night_lane_v002.png"), "runtime resolves the approved straight-lane production background")
 
 	var phone := LayoutStore.target("c01_s02_commute_window", "phone")
 	_expect(not phone.is_empty(), "runtime resolves a target from JSON")
@@ -81,6 +85,16 @@ func _test_scene_layout_store() -> void:
 	var front_seat := LayoutStore.layer("c01_s02_commute_window", "front_seat_occluder")
 	_expect(front_seat.get("z_index") == 7, "front seat remains above the seated adult")
 	_expect(front_seat.get("locked") == true, "confirmed front seat placement is locked")
+	var vehicle := LayoutStore.layer("c01_s02_commute_window", "vehicle_focus_base")
+	_expect(vehicle.get("source_rect", []) == [456, 596, 367, 226], "vehicle body retains its tight extraction coordinates")
+	_expect(vehicle.get("visual_size", Vector2.ZERO) == Vector2(281.0, 173.0), "vehicle body converts from review-master pixels to logical size")
+	_expect(vehicle.get("locked") == false, "vehicle body remains available for manual correction")
+	var grounding := LayoutStore.layer("c01_s02_commute_window", "vehicle_grounding")
+	_expect(grounding.get("z_index") == 0, "vehicle grounding renders below the body and glass rain")
+	_expect(grounding.get("locked") == false, "vehicle grounding remains independently adjustable")
+	var glass_rain := LayoutStore.layer("c01_s02_commute_window", "vehicle_glass_rain")
+	_expect(glass_rain.get("z_index") == 2, "vehicle glass rain renders over the vehicle body")
+	_expect(glass_rain.get("locked") == false, "vehicle glass rain remains independently adjustable")
 	_expect(LayoutStore.layer("c01_s02_commute_window", "missing_layer").is_empty(), "unknown visual layer resolves empty")
 
 	var fallback := LayoutStore.target("c01_s01_room_morning", "alarm")
@@ -95,6 +109,28 @@ func _test_scene_layout_store() -> void:
 	_expect(LayoutStore.decode_scene('{"scene_id":"other","targets":{}}', "sample").is_empty(), "mismatched scene ID is rejected")
 	_expect(LayoutStore.decode_scene('{"scene_id":"sample","targets":{},"layers":[]}', "sample").is_empty(), "non-dictionary visual layers are rejected")
 	_expect(LayoutStore.normalize_target({"anchor": [0.5, 0.5]}).is_empty(), "target without a hit size is rejected")
+
+
+func _test_scene_visual_composer() -> void:
+	var composer = VisualComposerScript.new()
+	composer.size = Vector2(720.0, 1280.0)
+	root.add_child(composer)
+	composer.configure("c01_s02_commute_window", true)
+	await process_frame
+	_expect(composer.layer_ids().size() == 6, "runtime composer instantiates every authored visual layer")
+	var vehicle_view: TextureRect = composer.layer_view("vehicle_focus_base")
+	_expect(vehicle_view != null, "runtime composer creates the vehicle body view")
+	_expect(vehicle_view.size.is_equal_approx(Vector2(281.0, 173.0)), "runtime vehicle view uses the calibrator visual size")
+	_expect(vehicle_view.z_index == 1, "runtime vehicle view keeps its authored z index")
+	_expect(composer.layer_view("vehicle_glass_rain").mouse_filter == Control.MOUSE_FILTER_IGNORE, "visual layers never intercept interaction input")
+	var phone_view: TextureRect = composer.target_view("phone")
+	_expect(phone_view != null, "runtime composer instantiates the independent phone visual")
+	_expect(phone_view.z_index == 3 and composer.layer_view("adult_commuter_down").z_index == 4, "phone visual renders below the adult while its hotspot stays interactive")
+	_expect(composer.set_layer_state("adult_commuter_down", "look_up"), "runtime composer switches the adult to its confirmed look-up state")
+	_expect(composer.layer_asset_path("adult_commuter_down").ends_with("char_adult_commuter_seated_look_up_v001.png"), "runtime composer records the active state asset")
+	_expect(composer.set_layer_state("adult_commuter_down", "missing"), "unknown adult state falls back to its confirmed default asset")
+	_expect(composer.layer_asset_path("adult_commuter_down").ends_with("char_adult_commuter_seated_down_v001.png"), "runtime composer records the default asset after state fallback")
+	composer.queue_free()
 
 
 func _test_all_catalog_contracts_complete() -> void:
@@ -233,7 +269,7 @@ func _test_board_renders_every_scene() -> void:
 	for scene_id in Catalog.get_scene_ids():
 		board.configure(Catalog.get_scene(scene_id), ["candy_badge"])
 		await process_frame
-		_expect(board.get_child_count() == 1, "%s renders one reusable board shell" % scene_id)
+		_expect(board.get_node_or_null("BoardShell") != null, "%s renders one reusable board shell" % scene_id)
 		_expect(board.get_interaction_state()["interaction_type"] == Catalog.get_scene(scene_id)["interaction_type"], "%s config reaches board model" % scene_id)
 	_expect(board.custom_minimum_size.x <= 680.0, "board fits a 680px-wide host")
 	_expect(board.custom_minimum_size.y <= 500.0, "board fits a 500px-high host")
