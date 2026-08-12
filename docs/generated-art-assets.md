@@ -56,8 +56,10 @@
 | `game/assets/art/style-studies/c01_s02/props/prop_vehicle_focus_base_v001_candidate.png` | `rejected` | `exec-762cbc04-e661-4cca-b411-e6d299e752e7.png` | 角度与车道纵轴不符，车轮悬浮且覆盖雨纹，保留作反例 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_v001.png` | `rejected_review` | 本地确定性合成 | v001 背景落位反例 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_base_look_up_v001.png` | `rejected_review` | 本地确定性合成 | v001 完整关系反例 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v002.png` | `candidate_review` | `exec-fed6b3dd-247d-4140-8d46-095ce07fb159.png` | 当前场景内角度、车道、接地、湿反射和玻璃雨层基准；确认前不拆分 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v002.png` | `candidate_review` | 本地确定性合成 | v002 与已确认人物、手机和结构层的完整关系预览 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v002.png` | `rejected_review` | `exec-fed6b3dd-247d-4140-8d46-095ce07fb159.png` | 角度正确但车辆外宽超过该处可用车道宽 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v002.png` | `rejected_review` | 本地确定性合成 | v002 车宽/车道宽完整关系反例 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_v003.png` | `candidate_review` | `exec-4d247436-7197-4397-b96b-a6fff7465c6b.png` + 本地徽标清理 | 当前车道尺度、角度、接地、湿反射和玻璃雨层候选 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_focus_context_look_up_v003.png` | `candidate_review` | 本地确定性合成 | v003 与已确认人物、手机和结构层的完整关系预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -404,7 +406,21 @@ Constraints: believable tire contact, subtle undercar shadow, broken wet-road re
 Avoid: symmetric head-on or product-shot view, dominant image-right body side, floating wheels, pasted sharp silhouette, dry road beneath the car, logo, badge, readable plate, real model, photorealism, glossy 3D or cartoon face.
 ```
 
-当前只保存两张评审预览，没有生成 `prop_vehicle_focus_base_v002_candidate.png`，也没有写入 production 或布局 JSON。用户确认场景角度、车道、尺度、接地、湿反射和玻璃雨层后，才从该基准派生独立车身、路面阴影/湿反射和玻璃雨纹三层，并分别保留未锁定布局供人工校正；车灯、车牌状态和儿童倒影继续后置。
+v002 当时只保存两张评审预览，没有生成 `prop_vehicle_focus_base_v002_candidate.png`，也没有写入 production 或布局 JSON；计划在场景关系确认后才派生独立车身、路面阴影/湿反射和玻璃雨纹三层。
+
+用户于 2026-08-12 撤回继续指令并拒绝 v002：车辆外宽几乎占满甚至超过该深度的可用车道宽，轮胎两侧缺少连续湿路余量。v002 两张预览改为 `rejected_review`，未开始的拆分、production 晋级和布局接入继续取消。
+
+v003 尺度修正使用内置 `image_gen` 的 `compositing` / `precise-object-edit` 流程，以正式空道路背景为编辑底图、v002 为角度参考，并用临时像素标注约束车道边界与最大车身范围。过小远景版本 `exec-36b841eb-c69e-4e92-afff-353d3a9a3c05.png`、错误回到近似 v002 大小的 `exec-13149008-466d-4fff-b4c8-d4ce618d8067.png`、再次过小的 `exec-1402c090-77f3-4160-af29-2d2d5ab16299.png` 和仍含徽标的 `exec-e670ad83-8d59-4138-be28-8c48ba47fbaa.png` 均未入库。最终采用的生成源为 `exec-4d247436-7197-4397-b96b-a6fff7465c6b.png`，SHA-256 为 `a475ad4e66ded92f754f2fe5cbbb05252be76b355d6c441076e1a8b615c8aed5`；车辆外轮廓约 300 px，该深度可用车道宽约 400 px，两侧均留出连续湿路。源图格栅中央出现约 42 × 41 px 的疑似徽标，本地使用逐行水平纹理插值并以羽化椭圆只覆盖徽标区域，未改变车辆尺度、角度、灯、车牌、阴影、反射或其余场景。最终 `preview_c01_s02_vehicle_focus_context_v003.png` SHA-256 为 `bc893ffc8b30619d51cceb470711a1db4ffc9784356fdc9cc7e0999536ed43c9`；完整关系版 SHA-256 为 `64b5ed1c4c82611d675eb90d8d1c825e8a4e9fa196cabf7115b37d06cba573a7`。
+
+v003 使用的核心尺度约束：
+
+```text
+The opposing lane runs from distant upper-left to near lower-right. Preserve the corrected three-quarter angle with the image-left front fender/flank/mirror dominant and the image-right side receding. Keep normal vehicle proportions; never horizontally squeeze. At the vehicle depth, tire-to-tire width must occupy about 75 percent of the usable lane width, with a continuous visible strip of wet pavement between both outer tire edges and the adjacent lane boundaries. Preserve contact shadow, broken wet reflection, and rain/glass texture above and through the vehicle. No logo, badge, readable plate or recognizable real model.
+```
+
+v003 当前仍只保存两张场景评审图，没有生成独立车辆或效果层，也没有改 production 与布局 JSON。确认车宽/车道宽比例后，才从 v003 派生 `prop_vehicle_focus_base_v003_candidate.png`、路面阴影/湿反射和玻璃雨纹三层，并保留未锁定布局供人工校正。
+
+Godot 4.7.1 已正常导入两张 v003 预览；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 197 条断言与 17 类契约均通过，主场景和校准器 smoke test 正常。
 
 ## 资产清单
 
