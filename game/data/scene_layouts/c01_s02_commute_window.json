@@ -68,6 +68,23 @@
 			"source_rect": [111, 53, 762, 1484],
 			"locked": false
 		},
+		"window_reflection_warm": {
+			"anchor": [0.6856, 0.5244],
+			"visual_size": [138, 255],
+			"z_index": 5,
+			"asset_path": "res://assets/art/production/c01_s02_commute_window/effects/fx_c01_s02_window_reflection_warm_v002.png",
+			"style": {
+				"alpha": 0.0,
+				"blend_mode": "screen"
+			},
+			"state_styles": {
+				"hidden": {"alpha": 0.0},
+				"visible": {"alpha": 0.14}
+			},
+			"clip_polygon": [[287, 7], [713, 7], [713, 1055], [282, 775]],
+			"source_rect": [555, 710, 180, 333],
+			"locked": false
+		},
 		"front_seat_occluder": {
 			"anchor": [0.6318, 0.9025],
 			"visual_size": [530, 250],
@@ -125,5 +142,5 @@
 			"locked": false
 		}
 	},
-	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. The lane marking belongs only to the background. The approved headlight and plate production states use exact source-derived crops, share one placement across states, remain unlocked for manual correction, and keep hit rectangles larger than their visuals. The approved child reflection is a separate adjustable production layer: it stays hidden before the second observation, uses 11 percent alpha for the second observation and 22 percent for the third, and is always clipped to the authored glass polygon."
+	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. The lane marking belongs only to the background. The approved headlight and plate production states use exact source-derived crops, share one placement across states, remain unlocked for manual correction, and keep hit rectangles larger than their visuals. The approved child reflection is a separate adjustable production layer: it stays hidden before the second observation, uses 11 percent alpha for the second observation and 22 percent for the third, and is always clipped to the authored glass polygon. The approved local warm reflection is another unlocked production layer; it stays hidden for the first two observations, uses a 14 percent screen blend only in the third, and shares the same glass clip."
 }

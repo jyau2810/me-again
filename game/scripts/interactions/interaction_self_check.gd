@@ -52,7 +52,7 @@ func _test_scene_layout_store() -> void:
 	_expect(not sample.is_empty(), "sample scene layout JSON parses")
 	_expect(sample.get("scene_id") == "c01_s02_commute_window", "sample scene ID matches its file")
 	_expect(sample.get("targets", {}).size() == 4, "sample scene exposes four calibrated targets")
-	_expect(sample.get("layers", {}).size() == 7, "sample scene exposes seven independent visual layers")
+	_expect(sample.get("layers", {}).size() == 8, "sample scene exposes eight independent visual layers")
 	_expect(LayoutStore.canvas_size("c01_s02_commute_window") == Vector2(720.0, 1280.0), "runtime resolves the authored logical canvas")
 	_expect(LayoutStore.reference_background_path("c01_s02_commute_window").ends_with("bg_c01_s02_bus_night_lane_v002.png"), "runtime resolves the approved straight-lane production background")
 
@@ -119,6 +119,15 @@ func _test_scene_layout_store() -> void:
 	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "child_reflection", "hidden").get("alpha", -1.0)), 0.0), "child reflection is hidden before the second observation")
 	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "child_reflection", "faint").get("alpha", -1.0)), 0.11), "second observation uses the faint child reflection state")
 	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "child_reflection", "visible").get("alpha", -1.0)), 0.22), "third observation uses the confirmed child reflection strength")
+	var warm_reflection := LayoutStore.layer("c01_s02_commute_window", "window_reflection_warm")
+	_expect(warm_reflection.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.6856, 0.5244)), "warm reflection keeps its confirmed review placement")
+	_expect(warm_reflection.get("visual_size", Vector2.ZERO) == Vector2(138.0, 255.0), "warm reflection uses its confirmed tight-crop display size")
+	_expect(warm_reflection.get("source_rect", []) == [555, 710, 180, 333], "warm reflection retains its review-master placement coordinates")
+	_expect(warm_reflection.get("locked") == false, "warm reflection remains available for manual placement correction")
+	_expect(warm_reflection.get("clip_polygon", []).size() == 4, "warm reflection carries a four-point hard glass mask")
+	_expect(String(LayoutStore.layer_style("c01_s02_commute_window", "window_reflection_warm").get("blend_mode", "")) == "screen", "warm reflection uses the approved screen blend")
+	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "window_reflection_warm", "hidden").get("alpha", -1.0)), 0.0), "warm reflection is hidden before the third observation")
+	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "window_reflection_warm", "visible").get("alpha", -1.0)), 0.14), "third observation uses the approved local warmth strength")
 	_expect(LayoutStore.layer("c01_s02_commute_window", "missing_layer").is_empty(), "unknown visual layer resolves empty")
 
 	var fallback := LayoutStore.target("c01_s01_room_morning", "alarm")
@@ -141,7 +150,7 @@ func _test_scene_visual_composer() -> void:
 	root.add_child(composer)
 	composer.configure("c01_s02_commute_window", true)
 	await process_frame
-	_expect(composer.layer_ids().size() == 7, "runtime composer instantiates every authored visual layer")
+	_expect(composer.layer_ids().size() == 8, "runtime composer instantiates every authored visual layer")
 	var vehicle_view: TextureRect = composer.layer_view("vehicle_focus_base")
 	_expect(vehicle_view != null, "runtime composer creates the vehicle body view")
 	_expect(vehicle_view.size.is_equal_approx(Vector2(281.0, 173.0)), "runtime vehicle view uses the calibrator visual size")
@@ -169,6 +178,13 @@ func _test_scene_visual_composer() -> void:
 	_expect(is_equal_approx(child_view.modulate.a, 0.11), "second-observation child reflection is very faint")
 	_expect(composer.set_layer_state("child_reflection", "visible"), "runtime switches the child to the third-observation reflection state")
 	_expect(is_equal_approx(child_view.modulate.a, 0.22), "third-observation child reflection keeps the confirmed visual strength")
+	var warm_view: TextureRect = composer.layer_view("window_reflection_warm")
+	_expect(warm_view != null, "runtime composer instantiates the independent local warm reflection")
+	_expect(is_equal_approx(warm_view.modulate.a, 0.0), "local warm reflection starts hidden")
+	_expect(warm_view.stretch_mode == TextureRect.STRETCH_SCALE, "runtime preserves the approved warm-reflection review rectangle")
+	_expect(warm_view.material is ShaderMaterial, "local warm reflection receives its screen blend and glass mask")
+	_expect(composer.set_layer_state("window_reflection_warm", "visible"), "runtime switches warmth on only for the third observation")
+	_expect(is_equal_approx(warm_view.modulate.a, 0.14), "third-observation warmth keeps the approved visual strength")
 	composer.queue_free()
 
 

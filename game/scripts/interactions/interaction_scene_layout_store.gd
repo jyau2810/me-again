@@ -235,4 +235,7 @@ static func _normalize_style(value: Variant) -> Dictionary:
 		style["contrast"] = clampf(float(source["contrast"]), 0.0, 2.0)
 	if source.has("blur"):
 		style["blur"] = clampf(float(source["blur"]), 0.0, 8.0)
+	if source.has("blend_mode"):
+		var blend_mode := String(source["blend_mode"])
+		style["blend_mode"] = blend_mode if blend_mode in ["mix", "screen"] else "mix"
 	return style

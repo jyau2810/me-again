@@ -6,6 +6,7 @@ extends Control
 
 const LayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
 const LAYER_SHADER = preload("res://shaders/visual_layer_treatment.gdshader")
+const SCREEN_LAYER_SHADER = preload("res://shaders/local_screen_reflection.gdshader")
 
 var _scene_id := ""
 var _layer_views: Dictionary = {}
@@ -133,7 +134,12 @@ func _add_view(view_name: String, source: Dictionary) -> TextureRect:
 	view.name = view_name
 	view.texture = texture
 	view.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var style: Dictionary = source.get("style", {})
+	view.stretch_mode = (
+		TextureRect.STRETCH_SCALE
+		if String(style.get("blend_mode", "mix")) == "screen"
+		else TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	)
 	view.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	view.set_anchor(SIDE_LEFT, anchor.x)
 	view.set_anchor(SIDE_RIGHT, anchor.x)
@@ -158,14 +164,17 @@ func _apply_layer_style(view: TextureRect, source: Dictionary, state_id := "") -
 	needs_material = needs_material or not is_equal_approx(float(style.get("saturation", 1.0)), 1.0)
 	needs_material = needs_material or not is_equal_approx(float(style.get("contrast", 1.0)), 1.0)
 	needs_material = needs_material or float(style.get("blur", 0.0)) > 0.001
+	needs_material = needs_material or String(style.get("blend_mode", "mix")) == "screen"
 	if not needs_material:
 		view.material = null
 		return
 	var material := view.material as ShaderMaterial
 	if material == null:
 		material = ShaderMaterial.new()
-		material.shader = LAYER_SHADER
 		view.material = material
+	var shader: Shader = SCREEN_LAYER_SHADER if String(style.get("blend_mode", "mix")) == "screen" else LAYER_SHADER
+	if material.shader != shader:
+		material.shader = shader
 	material.set_shader_parameter("saturation", float(style.get("saturation", 1.0)))
 	material.set_shader_parameter("contrast", float(style.get("contrast", 1.0)))
 	material.set_shader_parameter("blur_amount", float(style.get("blur", 0.0)))

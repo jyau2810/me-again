@@ -550,6 +550,7 @@ func _on_interaction_state_changed(state: Dictionary) -> void:
 	elif sequence_index >= 3:
 		child_state = "visible"
 	_scene_visuals.set_layer_state("child_reflection", child_state)
+	_scene_visuals.set_layer_state("window_reflection_warm", "visible" if sequence_index >= 3 else "hidden")
 	_scene_visuals.set_target_state("headlight", "blink" if sequence_index >= 3 else "neutral")
 	_scene_visuals.set_target_state("plate", "mouth_hint" if sequence_index >= 3 else "neutral")
 

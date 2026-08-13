@@ -55,7 +55,10 @@ four-point hard clip; the child reflection uses this for its hidden, faint and
 visible states. The calibrator previews the highest visible style with the same
 shader while keeping the layer manually adjustable. The observation field also
 spans the same full logical canvas, so saved calibrator anchors do not need an
-additional runtime offset.
+additional runtime offset. The third observation also enables an independent
+local warm-reflection layer. Its dedicated shader uses the approved 14% screen
+blend and the same hard glass clip; the first two observations keep it hidden,
+and the calibrator keeps its placement unlocked for manual correction.
 
 To calibrate the sample scene, open and run
 `res://scenes/tools/scene_layout_calibrator.tscn` in Godot. Select an interactive
@@ -85,4 +88,4 @@ non-punitive retry behavior, instantiates every board layout, validates native
 drop payloads, draws a trace with mouse events, and performs the Chapter 5 touch
 sequence with screen-touch events. It also validates canonical layout JSON,
 independent visual/hit sizes, cropped visual layers, target visual states and
-legacy fallback behavior. The expected result is 251 assertions across 17 contracts.
+legacy fallback behavior. The expected result is 265 assertions across 17 contracts.

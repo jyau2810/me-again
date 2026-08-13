@@ -230,7 +230,7 @@
 - 车辆：逐像素锁定 v003 的大小、位置、比例、角度、车灯、前牌、接地阴影、破碎湿反射和车窗雨层；没有通过移动或缩放车辆迁就道路。
 - 完整关系预览：`preview_c01_s02_vehicle_focus_context_look_up_v005.png` 只叠加已确认的人物、手机和结构层，用于检查人物视线、遮挡和焦点关系。
 - 分层结果：已从同一基准派生 `bg_c01_s02_bus_night_lane_v002.png`、`prop_vehicle_focus_base_v001.png`、`fx_vehicle_grounding_v001.png` 和 `fx_vehicle_glass_rain_v001.png`；三张可移动层分别落位且保持 `locked = false`。
-- 当前边界：车辆完整场景、初始分层、车灯/车牌状态和儿童倒影 Gate 已关闭；下一道 Gate 为局部冷暖效果候选与三状态整场预览。
+- 最新边界：车辆完整场景、初始分层、车灯/车牌状态、儿童倒影、固定窗外三态和第三态局部暖意 Gate 均已关闭；下一道 Gate 为三次观察完整运行时合成与单幕内部验收。
 - 技术检查：中心轴相对端点直线的最大叉积误差约 `7.28e-11`，只存在浮点误差；像素差异仅位于原图 `(418, 781)–(940, 1063)` 道路区域，车辆区域最大像素差为 0。Godot 4.7.1 两张 v005 预览导入、主场景与校准器 smoke test 正常；状态与存档 138 条断言，内容目录 5 章、30 幕、9 件收集物，交互系统 197 条断言、17 类契约。
 
 #### v005 production 分层
@@ -285,7 +285,14 @@
 - 内容：与冷色状态独立的局部暖化效果，范围集中在儿童倒影与焦点车辆之间；`702 × 1422` 紧边界 RGBA，不包含人物、车辆或整场色层。
 - 拒绝原因：随同 v001 整场预览退回；局部暖意需在 v005 固定母版的三态关系重新确认后单独设计。
 
-v001 四张评审图状态为 `rejected_review`：它们使用 720 × 1280 运行时分层重组帧，导致窗外场景不再保持用户确认的 v005 整场像素。修正版 `preview_c01_s02_observation_state_01_locked_v002.png`、`preview_c01_s02_observation_state_02_faint_v002.png`、`preview_c01_s02_observation_state_03_visible_v002.png` 和横向 `preview_c01_s02_observation_states_v002.png` 均以 941 × 1672 v005 整场母版构建，不使用冷暖候选。`game/scripts/tools/build_c01_s02_observation_previews.gd` 断言成人状态、儿童倒影和车辆状态的授权遮罩之外差异为 0 像素；当前只评审固定窗外场景下的三态关系。
+v001 四张评审图状态为 `rejected_review`：它们使用 720 × 1280 运行时分层重组帧，导致窗外场景不再保持用户确认的 v005 整场像素。修正版 `preview_c01_s02_observation_state_01_locked_v002.png`、`preview_c01_s02_observation_state_02_faint_v002.png`、`preview_c01_s02_observation_state_03_visible_v002.png` 和横向 `preview_c01_s02_observation_states_v002.png` 均以 941 × 1672 v005 整场母版构建，不使用冷暖候选。`game/scripts/tools/build_c01_s02_observation_previews.gd` 断言成人状态、儿童倒影和车辆状态的授权遮罩之外差异为 0 像素；用户于 2026-08-13 确认该组固定窗外三态，下一道 Gate 为只作用于第三态的独立局部暖意候选。
+
+#### `fx_c01_s02_window_reflection_warm_v002.png`
+
+- 状态：`production_adjustable`；工程候选 `style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v002_candidate.png` 已获确认，并以相同 SHA-256 晋级 `production/c01_s02_commute_window/effects/fx_c01_s02_window_reflection_warm_v002.png`。
+- 内容：490 × 860 RGBA 独立笔触；保留稀疏暖灰、暗琥珀雨痕，不包含人物、车辆、道路、窗框或任何完整场景像素；四角透明、无可见紫粉色键污染。
+- 正式落位：母版 `rect = [555, 710, 180, 333]`，逻辑画布 `anchor = (0.6856, 0.5244)`、`visual_size = 138 × 255`、`z_index = 5`、`locked = false`；14% 屏幕混合，仅用于第三态并受玻璃硬遮罩限制。
+- 像素约束：评审对照的授权遮罩外差异为 0 像素，三张已确认 v002 状态哈希不变；production 实帧有无对照改变 4,738 像素，逻辑玻璃外差异为 0。
 
 ## 5. 场景对象与布局
 
@@ -306,6 +313,7 @@ v001 四张评审图状态为 `rejected_review`：它们使用 720 × 1280 运�
 | `vehicle_glass_rain` | `fx_vehicle_glass_rain_v001.png` | `(0.6791, 0.4228)` | `268 × 168` | 3 | 车辆上方玻璃雨纹，覆盖车身和车灯/车牌状态层，保持可人工校正 |
 | `adult_commuter_down` | 默认低头图；状态映射含抬头图 | `(0.2758, 0.6770)` | `440 × 796` | 4 | 两种人物状态共用落位，已锁定 |
 | `child_reflection` | `char_child_reflection_curious_v001.png` | `(0.7662, 0.6944)` | `225 × 438` | 4 | 0% / 11% / 22% 三档；玻璃硬遮罩；保持可人工校正 |
+| `window_reflection_warm` | `fx_c01_s02_window_reflection_warm_v002.png` | `(0.6856, 0.5244)` | `138 × 255` | 5 | 0% / 14% 两档；第三态屏幕混合；玻璃硬遮罩；保持可人工校正 |
 | `front_seat_occluder` | `fg_c01_s02_front_seat_occluder_v001.png` | `(0.6318, 0.9025)` | `530 × 250` | 7 | 用户确认，已锁定 |
 
 视觉层不设置命中尺寸，不参与点击判定；校准器只编辑其中心、显示尺寸、层级、资产路径和锁定状态。
@@ -347,5 +355,6 @@ v001 四张评审图状态为 `rejected_review`：它们使用 720 × 1280 运�
 7. 手机与 v005 焦点车完整场景均已确认；车辆已拆为背景、车身、接地效果和玻璃雨纹并接入正式运行时，三张车辆相关层保持可人工校正。
 8. 车灯和车牌状态层已确认并晋级 production，热点继续保留人工校正能力。
 9. 约五岁儿童倒影 v001 已确认并晋级 production；0% / 11% / 22% 三档、玻璃硬遮罩和人工校正已接入，旧玻璃边界外真实帧差异为 0 像素。
-10. 冷暖效果 v001 独立紧边界候选与三状态预览已完成；局部暖意只连接儿童倒影与焦点车辆，整体冷雨夜背景保持不变。
-11. 当前等待冷暖效果视觉确认；确认后再逐字节晋级 production、写入可人工校正的布局层并接入状态切换。
+10. 冷暖效果 v001 与错误基底三状态预览已拒绝；固定窗外 v002 三态已确认，不能再使用运行时重组帧替代整场母版。
+11. 第三态局部暖意 v002 已确认并晋级 production；14% 屏幕混合、玻璃硬裁切和人工校正均已接入，production 实帧玻璃外差异为 0。
+12. 当前进入三次观察完整运行时合成与单幕内部验收；完成前 Stage 3 保持进行中。

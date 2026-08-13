@@ -3,6 +3,7 @@ extends Control
 
 const LayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
 const LAYER_SHADER = preload("res://shaders/visual_layer_treatment.gdshader")
+const SCREEN_LAYER_SHADER = preload("res://shaders/local_screen_reflection.gdshader")
 const PREVIEW_SIZE := Vector2(360.0, 640.0)
 const DEFAULT_CANVAS_SIZE := Vector2(720.0, 1280.0)
 
@@ -147,12 +148,16 @@ class CalibrationHandle extends Control:
 			_asset_view = TextureRect.new()
 			_asset_view.name = "AssetPreview"
 			_asset_view.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			_asset_view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			_asset_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			_asset_view.show_behind_parent = true
 			add_child(_asset_view)
 		_asset_view.texture = asset_texture
 		var style: Dictionary = source.get("style", {}).duplicate(true)
+		_asset_view.stretch_mode = (
+			TextureRect.STRETCH_SCALE
+			if String(style.get("blend_mode", "mix")) == "screen"
+			else TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		)
 		var state_styles: Dictionary = source.get("state_styles", {})
 		var highest_alpha := float(style.get("alpha", 1.0))
 		for state_value in state_styles.values():
@@ -165,11 +170,12 @@ class CalibrationHandle extends Control:
 		needs_material = needs_material or not is_equal_approx(float(style.get("saturation", 1.0)), 1.0)
 		needs_material = needs_material or not is_equal_approx(float(style.get("contrast", 1.0)), 1.0)
 		needs_material = needs_material or float(style.get("blur", 0.0)) > 0.001
+		needs_material = needs_material or String(style.get("blend_mode", "mix")) == "screen"
 		_asset_view.material = null
 		if not needs_material:
 			return
 		var material := ShaderMaterial.new()
-		material.shader = LAYER_SHADER
+		material.shader = SCREEN_LAYER_SHADER if String(style.get("blend_mode", "mix")) == "screen" else LAYER_SHADER
 		material.set_shader_parameter("saturation", float(style.get("saturation", 1.0)))
 		material.set_shader_parameter("contrast", float(style.get("contrast", 1.0)))
 		material.set_shader_parameter("blur_amount", float(style.get("blur", 0.0)))

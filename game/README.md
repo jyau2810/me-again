@@ -9,7 +9,7 @@
 - Stage 3 已重新启动，先精细化 `c01_s02_commute_window`，再逐幕迁移；现有 7 张背景和 4 张物件图集只作历史对照，不算新一轮正式资产。
 - 已迁移场景优先读取 `data/scene_layouts/<scene_id>.json`；未迁移场景逐目标回退到旧 GDScript 布局表。
 - 交互目标和非交互视觉层分别记录；独立资产的中心、视觉尺寸、层级、路径和锁定状态可以由 Godot 校准工具人工调整，命中尺寸与显示模式只属于交互目标。
-- `c01_s02_commute_window` 的视觉方向、背景构图 v003 与首个正式无人物背景均已确认；全画布前景提取图已拆为两张紧边界 production 遮挡层并接入校准器，人物与交互物件尚未开始生产。
+- `c01_s02_commute_window` 已完成背景、前景、成年人物、手机、车辆状态、儿童倒影和第三次观察局部暖意的分层接入；可调整层继续通过校准器人工修正，Stage 3 正在进行三次观察完整合成验收。
 
 ## 启动
 
@@ -85,7 +85,7 @@ HOME=/tmp/me-again-godot-home \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-预期结果包含 `251 assertions` 和 `17 renderer contracts`。
+预期结果包含 `265 assertions` 和 `17 renderer contracts`。
 
 ## 导出边界
 

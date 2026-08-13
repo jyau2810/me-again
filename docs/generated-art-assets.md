@@ -87,7 +87,10 @@
 | `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_cool_v001_candidate.png` | `rejected` | `exec-47e49ab2-04bd-4b05-875b-9ae0b66ce10b.png` + 洋红色键去除/紧裁 | 所属 v001 整场评审被拒绝，不进入 production 或运行时 |
 | `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v001_candidate.png` | `rejected` | `exec-f17ea0ec-4ff4-441b-8f2a-9ce6e997f390.png` + 洋红色键去除/紧裁 | 所属 v001 整场评审被拒绝，不进入 production 或运行时 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_states_v001.png` | `rejected_review` | 720 × 1280 运行时分层重组 + 确定性局部屏幕混合 | 用户指出窗外场景整体错乱；错误基底反例 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_states_v002.png` | `candidate_review` | 已确认 941 × 1672 v005 整场母版 + 授权状态差分 | 窗外固定、只改变成人状态/儿童倒影/车辆提示的三态横向对照 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_states_v002.png` | `approved_review` | 已确认 941 × 1672 v005 整场母版 + 授权状态差分 | 用户确认的窗外固定三态；只改变成人状态/儿童倒影/车辆提示 |
+| `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v002_candidate.png` | `approved_reference` | `exec-2fdd5da0-3def-4df0-b0a2-a3c1e9bdb5d2.png` + 洋红色键去除/紧裁/暖灰校色 | 用户确认的 490 × 860 独立暖意生产来源 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_state_03_warm_comparison_v002.png` | `approved_review` | 已确认第三态 + 14% 局部屏幕混合 | 用户确认的有无对照；窗外基底不变 |
+| `game/assets/art/production/c01_s02_commute_window/effects/fx_c01_s02_window_reflection_warm_v002.png` | `production_adjustable` | 上述候选逐字节复制 | 第三次观察 14% 屏幕混合，玻璃硬裁切，`locked = false` |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -285,7 +288,29 @@ Avoid: scene reconstruction, photorealism, glossy lens flare, strong bloom, fier
 - `preview_c01_s02_observation_state_03_visible_v002.png`：逐像素复用已确认的 22% 儿童倒影整场预览，包含已确认车灯/车牌提示。
 - `preview_c01_s02_observation_states_v002.png`：三张 941 × 1672 状态的等比例横向评审图。
 
-三张输出相对 v005 母版的授权遮罩外差异均为 `0 pixels`；道路、车道线、焦点车车身与接地、右侧红车、远景交通、树木、路灯、雨纹及其反射均不允许变化。v002 当前状态为 `candidate_review`，确认前不改变 production、布局 JSON 或运行时；局部暖意在该固定场景关系确认后另开单项 Gate。
+三张输出相对 v005 母版的授权遮罩外差异均为 `0 pixels`；道路、车道线、焦点车车身与接地、右侧红车、远景交通、树木、路灯、雨纹及其反射均不允许变化。用户于 2026-08-13 确认 v002，状态改为 `approved_review`；该确认不改变 production、布局 JSON 或运行时。下一道 Gate 为只作用于第三态的独立局部暖意候选。
+
+### 第三态局部暖意 v002
+
+候选使用内置 `image_gen` 生成；调用前单独载入已确认的 `preview_c01_s02_observation_state_03_visible_v002.png`，并只把该图作为位置、比例、色彩与手绘纹理参考。生成源为 `exec-2fdd5da0-3def-4df0-b0a2-a3c1e9bdb5d2.png`，完整提示词如下：
+
+```text
+Use case: stylized-concept
+Asset type: isolated adjustable local warm-reflection accent layer for the third observation state of a portrait 2D narrative game
+Input image: Image 1 is the approved third-state scene and is placement, scale, palette, and hand-painted texture reference only. Do not reproduce any person, child, car, road, lane line, street, tree, lamp, bus interior, seat, rail, window frame, phone, or full scene.
+Primary request: create a very small, restrained patch of ordinary warm light caught in rain-streaked bus glass, intended to sit between the faint child reflection and the focus car. It should feel like existing headlight and street-lamp light has become just slightly kinder, not like a new object or magical event.
+Subject: two or three short broken muted-amber wet-glass glints, one very thin softened vertical rain smear, and a faint irregular warm-gray watercolor glaze that mostly dissolves into transparency. Sparse marks only, with large empty gaps.
+Style/medium: original hand-painted 2D animation texture, matte watercolor and gouache glaze, subtle dry-brush grain, simplified irregular edges; no imitation of any named artist, studio, film, character, shot, or signature design.
+Composition/framing: one compact irregular cluster, roughly vertical but not column-shaped, centered with generous clear padding. Keep visible marks within the middle third and make the outer boundary fragmented and sparse for tight cropping.
+Color palette: low-saturation muted amber, warm gray, tiny dull-gold accents. No peach, pink, red, orange flood, cyan, purple, or bright white.
+Backdrop: perfectly flat solid #ff00ff chroma-key, completely uniform and shadowless. Do not use #ff00ff in the effect.
+Constraints: effect only; no recognizable object or silhouette; no literal reflection of the scene; no people, faces, bodies, vehicles, roads, lane geometry, architecture, bus structure, text, logo, watermark, UI, halo, orb, rays, bokeh circles, lens flare, portal, fire, or full-canvas tint. No cast shadow or floor plane. Keep the sparse source marks opaque enough for reliable chroma-key removal; final subtlety will be controlled during compositing.
+Avoid: a large vertical glowing puddle, dense gray fog, pink-apricot mass, broad warm wash, symmetrical light column, magical glow, photorealism, solid rectangular patch, hard border, scene reconstruction.
+```
+
+内置工具输出与参考一致的 941 × 1672 RGB 洋红色键图。使用 imagegen 技能的 `remove_chroma_key.py` 以 border 自动取色、soft matte 和 despill 去键后，按实际 Alpha 加 16 px 安全边紧裁为 490 × 860 RGBA。视觉复核后只保留生成笔触的亮度与 Alpha 形状，将 RGB 统一约束到低饱和暖灰/暗琥珀色阶；最终四角透明、可见紫粉色为 0，SHA-256 为 `3dff58b78c61a10ea9c729eb049b6e7836e9ede39631fce1571f9d62e157d0d6`。
+
+`game/scripts/tools/build_c01_s02_observation_previews.gd` 将候选缩放到母版 `rect = [555, 710, 180, 333]`，对应逻辑画布约 `anchor = (0.6856, 0.5244)`、`visual_size = 138 × 255`；以 14% 强度做屏幕混合并继续受玻璃多边形硬裁切。输出 `preview_c01_s02_observation_state_03_warm_v002_candidate.png` 和“原第三态 / 暖意候选”横向对照 `preview_c01_s02_observation_state_03_warm_comparison_v002.png`。暖意授权遮罩含 11,826 个像素，遮罩外差异为 `0 pixels`；前三张已确认 v002 输出 SHA-256 均保持不变。用户于 2026-08-13 确认该候选；同哈希文件已晋级 production，并以独立、未锁定的布局层接入第三次观察 14% 屏幕混合。production 实帧有无对照改变 4,738 像素，逻辑玻璃边界外差异为 0。
 
 ### 无人物背景构图灰稿
 
