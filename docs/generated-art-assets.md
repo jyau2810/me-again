@@ -70,13 +70,19 @@
 | `game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_grounding_v001.png` | `production_adjustable` | v005 确定性紧边界提取 | 独立接地阴影和破碎湿反射，`locked = false` |
 | `game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_glass_rain_v001.png` | `production_adjustable` | v005 与无车 donor 的局部高频差分 | 独立玻璃雨纹，`locked = false` |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_layers_v001.png` | `approved_technical_review` | 四张 production 资产本地确定性回组 | 初始分层合成检查图 |
-| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png` | `candidate_review` | v005 production 车身确定性裁切 | 两只中性灯罩，205 × 59 RGBA |
-| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_blink_v001.png` | `candidate_review` | 中性灯罩局部亮度/遮光处理 | 同裁切轻微收暗态，不画眼睛 |
-| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png` | `candidate_review` | v005 production 车身确定性裁切 | 不可读前牌，93 × 35 RGBA |
-| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_plate_mouth_hint_v001.png` | `candidate_review` | 中性前牌局部阴影处理 | 同裁切下缘轻弧阴影，不画嘴巴 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_state_candidates_v001.png` | `candidate_review` | 本地确定性合成 | 单项透明边界和放大状态对照 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_neutral_v001.png` | `candidate_review` | 本地确定性合成 | 中性状态完整场景关系 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_hint_v001.png` | `candidate_review` | 本地确定性合成 | 收暗车灯与轻弧车牌完整场景关系 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png` | `approved_reference` | v005 production 车身确定性裁切 | 两只中性灯罩，205 × 59 RGBA；保留为生产来源 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_blink_v001.png` | `approved_reference` | 中性灯罩局部亮度/遮光处理 | 同裁切轻微收暗态，不画眼睛；保留为生产来源 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png` | `approved_reference` | v005 production 车身确定性裁切 | 不可读前牌，93 × 35 RGBA；保留为生产来源 |
+| `game/assets/art/style-studies/c01_s02/props/prop_vehicle_plate_mouth_hint_v001.png` | `approved_reference` | 中性前牌局部阴影处理 | 同裁切下缘轻弧阴影，不画嘴巴；保留为生产来源 |
+| `game/assets/art/production/c01_s02_commute_window/props/prop_vehicle_headlights_neutral_v001.png` | `production_adjustable` | 上述候选逐字节复制 | 中性车灯正式状态，`locked = false` |
+| `game/assets/art/production/c01_s02_commute_window/props/prop_vehicle_headlights_blink_v001.png` | `production_adjustable` | 上述候选逐字节复制 | 收暗车灯正式状态，`locked = false` |
+| `game/assets/art/production/c01_s02_commute_window/props/prop_vehicle_plate_neutral_v001.png` | `production_adjustable` | 上述候选逐字节复制 | 中性前牌正式状态，`locked = false` |
+| `game/assets/art/production/c01_s02_commute_window/props/prop_vehicle_plate_mouth_hint_v001.png` | `production_adjustable` | 上述候选逐字节复制 | 轻弧阴影前牌正式状态，`locked = false` |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_state_candidates_v001.png` | `approved_review` | 本地确定性合成 | 单项透明边界和放大状态对照 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_neutral_v001.png` | `approved_review` | 本地确定性合成 | 中性状态完整场景关系 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_hint_v001.png` | `approved_review` | 本地确定性合成 | 收暗车灯与轻弧车牌完整场景关系 |
+| `game/assets/art/style-studies/c01_s02/characters/char_child_reflection_curious_v001_candidate.png` | `candidate_review` | `exec-75f591da-2265-4938-9d2f-b52eb24da649.png` + 色键去除/紧裁 | 约五岁儿童正常不透明度 RGBA 底图，正面身体、头转画面左侧、空手 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_child_reflection_v001.png` | `candidate_review` | 本地确定性合成 | 22% 弱反射、低饱和/对比、玻璃硬遮罩的完整场景预览 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -202,6 +208,26 @@ Required invariants: preserve the adult exactly, including identity, pose, expre
 
 Avoid: photorealistic child, realistic aged-down adult face, skin pores, photographic rendering, mature seven-to-ten-year-old proportions, stiff expression, any smile or upward mouth corners, pursed lips, perfect symmetry, direct camera gaze; oversized anime eyes, chibi, mascot, doll, baby caricature; reflection too visible or solid; child outside glass; phone or prop; any changes to adult, traffic, bus, crop, perspective, road or lighting; logos, readable plate, text, UI, watermark. Do not imitate any named artist, studio, film, character, shot, or signature design.
 ```
+
+### 儿童倒影独立候选
+
+`char_child_reflection_curious_v001_candidate.png` 使用内置 `image_gen` 生成。输入参考为已确认 `direction_selected_v009.png` 与 production 抬头成人角色；首张生成源 `exec-189a8a9e-b179-405c-a5d9-b788cd09f216.png` 的年龄、衣着、表情和空手动作可用，但头部错误朝画面右侧，未入库。第二次仅纠正头颈和视线方向，生成源为 `exec-75f591da-2265-4938-9d2f-b52eb24da649.png`，SHA-256 为 `ea80566701cc5721521e9fcff83dc485ce11a237752521da472e8781112baf7a`。最终纠正提示词如下：
+
+```text
+Use case: precise-object-edit
+Asset type: corrected isolated seated child character layer for later bus-window reflection compositing
+Input images: Image 1 is the edit target and must be preserved except for head/neck/eye direction; Image 2 is the approved scene relationship reference and shows the required child head direction toward the adult
+Primary request: change only the child's head, neck transition, and gaze so the head turns naturally toward IMAGE-LEFT and the eyes look toward IMAGE-LEFT, back toward the adult. This must be unambiguous: the child's nose points diagonally to the LEFT side of the output. Do not mirror or rotate the whole body.
+Preserve exactly: about-five-year-old age, same identity, black short hair, quiet curious expression, neutral/slightly parted lips with no smile, simple blue-gray crewneck sweatshirt, frontal pelvis/torso/chest/shoulders facing image front, seated posture, both empty asymmetrical hands resting low, trousers, full framing, hand-painted 2D texture, proportions, and uniform green backdrop
+Anatomy: make only the minimum believable neck and upper-shoulder transition required by the corrected leftward head turn; the chest and both shoulders remain frontal and must not become a left-facing profile
+Backdrop: perfectly flat solid #00ff00 chroma-key, uniform and shadowless; do not use #00ff00 on the child
+Constraints: one child only; opaque art; full body through knees; generous clear padding; no phone, prop, chair, bus, glass, rain, text, logo, watermark
+Avoid: head or eyes toward image-right, direct camera gaze, body turned left, smile, raised mouth corners, pursed lips, older child, photorealism, large anime eyes, chibi, changes to hands or clothing
+```
+
+内置工具输出 1023 × 1537 RGB 色键图。使用 imagegen 技能自带 `remove_chroma_key.py` 的 border 自动取色、soft matte 和 despill 后，按 Alpha 实际内容加 16 px 安全边紧裁为 762 × 1484 RGBA；候选 SHA-256 为 `34881d7addb179e1c01c837c6c540ee006feaeca1a743a3197d92e481d8239f1`。四角 Alpha 为 0，可见绿边像素为 0，部分透明边缘像素为 8,362。
+
+`preview_c01_s02_child_reflection_v001.png` 在已确认中性/变化车辆场景上按原始画布 `rect = [574, 875, 294, 572]` 放置候选，对应逻辑建议 `anchor = (0.7662, 0.6944)`、`visual_size = 225 × 438`。预览仅在合成时使用 22% Alpha、38% 色彩强度、68% 局部对比和 0.65 px 柔化，并用玻璃内轮廓多边形 `[(374, 8), (933, 8), (933, 1380), (367, 1014)]` 硬裁切；候选本身保持正常不透明度。预览 SHA-256 为 `3fcba92e1a7d3ab4ab9d01757f25e6f64ee12b7b5194a4cba38c1859ae333974`，与基准图差异只位于 `(604, 881)–(862, 1323)`，玻璃遮罩外差异像素为 0。当前两文件均为 `candidate_review`，确认前不进入 production、布局 JSON 或冷暖状态制作。
 
 ### 无人物背景构图灰稿
 
@@ -482,6 +508,8 @@ v005 的中心轴相对端点直线最大叉积误差约 `7.28e-11`，只存在�
 | `props/prop_vehicle_plate_mouth_hint_v001.png` | `e5b5ed9eef44a17dd3f6a2e999786d63e0676cd841f8687c5725be4de170fe64` |
 
 `preview_c01_s02_vehicle_state_candidates_v001.png` 提供放大状态与 Alpha 边界对照；`preview_c01_s02_vehicle_states_neutral_v001.png` 和 `preview_c01_s02_vehicle_states_hint_v001.png` 提供完整场景关系。初始校正值为：车灯 `(0.7062, 0.4333)`、视觉 `157 × 45`、命中 `176 × 72`；车牌 `(0.7242, 0.4542)`、视觉 `71 × 27`、命中 `96 × 56`。二者保持 `locked = false` 并以 `style-studies` 路径接入评审状态，用户确认前不进入 production。Godot 4.7.1 已正常导入 7 张候选与预览；状态与存档 138 条断言、内容目录 5 章 30 幕 9 件收集物、交互系统 235 条断言与 17 类契约通过，主场景和校准器 smoke test 正常。
+
+用户于 2026-08-13 确认继续采用上述 v001 状态幅度。四张候选逐字节复制到 `game/assets/art/production/c01_s02_commute_window/props/`，SHA-256 与表中记录一致；布局的默认路径及 `neutral` / `blink` / `mouth_hint` 状态路径全部切换到 production。车灯和车牌继续使用已校正锚点、视觉尺寸、命中尺寸与 `z_index = 2`，保持 `locked = false`；`fx_vehicle_glass_rain_v001.png` 仍以 `z_index = 3` 覆盖两组状态。style-studies 原文件继续作为评审来源保留。
 
 ## 资产清单
 

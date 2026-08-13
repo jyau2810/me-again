@@ -98,10 +98,12 @@
 - `../game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_grounding_v001.png`：独立车底阴影与湿路反射。
 - `../game/assets/art/production/c01_s02_commute_window/effects/fx_vehicle_glass_rain_v001.png`：车辆上方独立玻璃雨纹。
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_layers_v001.png`：四层按初始坐标确定性回组的视觉检查图。
-- `../game/assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png` 与 `prop_vehicle_headlights_blink_v001.png`：从已确认车身原像素派生、共用裁切与锚点的中性/收暗车灯评审候选。
-- `../game/assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png` 与 `prop_vehicle_plate_mouth_hint_v001.png`：不可读前牌的中性/下缘轻弧阴影评审候选。
+- `../game/assets/art/production/c01_s02_commute_window/props/prop_vehicle_headlights_neutral_v001.png` 与 `prop_vehicle_headlights_blink_v001.png`：从已确认车身原像素派生、共用裁切与锚点的中性/收暗正式车灯状态。
+- `../game/assets/art/production/c01_s02_commute_window/props/prop_vehicle_plate_neutral_v001.png` 与 `prop_vehicle_plate_mouth_hint_v001.png`：不可读前牌的中性/下缘轻弧阴影正式状态。
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_state_candidates_v001.png`：两组状态的放大透明边界和场景差异对照。
 - `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_neutral_v001.png` 与 `preview_c01_s02_vehicle_states_hint_v001.png`：保留 v005 全部构图、人物、道路和雨纹层级的完整场景评审图。
+- `../game/assets/art/style-studies/c01_s02/characters/char_child_reflection_curious_v001_candidate.png`：约五岁儿童倒影的正常不透明度紧边界 RGBA 候选，供后续单独落位、调色和透明度控制。
+- `../game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_child_reflection_v001.png`：候选按 22% 反射强度、低饱和与玻璃硬遮罩合成的完整场景评审图。
 - `../game/scripts/interactions/scene_visual_composer.gd`：正式运行时非交互视觉层合成器。
 
 ### 2026-08-07 当前检查点
@@ -183,11 +185,15 @@
 - 分层检查点实帧通过：正式主场景显示 v002 背景、车辆三层、人物、手机和两张结构层，车辆尺度/角度、直线车道和人物落位没有漂移；手机视觉由合成器按 z3 绘制，确实位于 z4 人物手指下方，Board 只保留命中区。校正器同时显示 6 个视觉层与 4 个交互目标，三张车辆相关层保持可拖动。交互自检扩展为 217 条断言、17 类契约。
 - 成年主角低头 v002 检查点回归通过：Godot 4.7.1 正常导入候选和评审预览；状态与存档 138 条断言；内容目录 5 章、30 幕、9 件收集物；交互系统 186 条断言、17 类契约；主场景与校准器 smoke test 正常。
 - v001 检查点的技术回归曾通过，但随后因年龄与手势视觉问题被用户拒绝；技术通过不替代单项视觉确认。
-- Stage 3 继续保持“进行中”；车辆完整场景与初始分层 Gate 已关闭。当前下一道 Gate 为独立车灯、车牌状态资产及其热点校正；其后才生成五岁儿童倒影、冷暖状态并接入三次观察完整变化。
+- Stage 3 继续保持“进行中”；车辆完整场景、初始分层和车灯/车牌状态 Gate 已关闭。当前下一道 Gate 为约五岁儿童倒影独立候选；确认后再制作冷暖状态并接入三次观察完整变化。
 - 2026-08-12 完成车灯/车牌首轮评审候选：不重新生成车辆，只从 production 车身的确认像素裁出 `205 × 59` 车灯层和 `93 × 35` 前牌层；中性态保留原画，变化态只在灯罩内收暗、只在牌面下缘加入极浅弧形阴影。四张 RGBA 均为透明紧边界、状态间同尺寸同锚点，候选继续留在 `style-studies` 等待视觉确认。
 - `headlight` 已从临时 `(0.7100, 0.4400) / 220 × 120` 校正为实际灯罩中心 `(0.7062, 0.4333)`，视觉 `157 × 45`、命中 `176 × 72`；`plate` 从 `(0.7160, 0.4840) / 120 × 80` 校正为实际前牌中心 `(0.7242, 0.4542)`，视觉 `71 × 27`、命中 `96 × 56`。二者保持 `locked = false`，视觉和命中尺寸相互独立，可在校正器继续人工调整。
 - 运行时与布局存储已支持交互目标的 `state_asset_paths`；第三次车窗观察把车灯切到 `blink`、车牌切到 `mouth_hint`，其余次数保持 `neutral`。车辆雨纹提升到 `z_index = 3`，继续覆盖车身和两张状态层。候选确认前 JSON 仍引用 `style-studies`，不晋级 production。
 - 车灯/车牌候选检查点回归通过：Godot 4.7.1 正常导入 7 张候选与预览；状态与存档 138 条断言，内容目录 5 章 30 幕 9 件收集物，交互系统 235 条断言与 17 类契约通过，主场景与校正器 smoke test 正常。Stage 3 继续保持“进行中”，当前等待视觉确认，不提前生成儿童倒影或冷暖状态。
+- 2026-08-13 用户确认继续采用车灯/车牌 v001 的轻微变化幅度与完整场景关系；四张候选逐字节晋级 `production/c01_s02_commute_window/props/`，布局的默认路径和两组 `state_asset_paths` 均切换到 production。锚点、视觉尺寸、命中尺寸和层级不变，`headlight` 与 `plate` 继续保持 `locked = false` 供人工校正。下一道 Gate 为约五岁儿童倒影独立候选，尚不提前晋级倒影或冷暖效果。
+- 2026-08-13 生成儿童倒影独立候选 v001：首张生成的头部误朝画面右侧，未入库；第二张只修正头颈与视线到画面左侧，保留正面躯干、五岁比例、无笑容自然关注、童装和空手坐姿。色键去除后紧裁为 `762 × 1484` RGBA，四角透明且无可见绿边；评审预览按原始画布 `rect = [574, 875, 294, 572]` 合成，对应逻辑建议 `anchor = (0.7662, 0.6944)`、`visual_size = 225 × 438`。
+- 倒影 v001 预览使用 22% Alpha、低饱和、低对比和轻微柔化，并以玻璃内轮廓多边形为硬遮罩；与基准图的差异只位于 `(604, 881)–(862, 1323)`，玻璃遮罩外差异像素为 0。当前只进入视觉确认，不复制到 production、不写布局 JSON，也不提前制作暖色效果。
+- 本检查点回归通过：Godot 4.7.1 正常导入四张 production 车辆状态、儿童候选和整场预览；状态与存档 138 条断言，内容目录 5 章 30 幕 9 件收集物，交互系统 237 条断言与 17 类契约通过，主场景和校正器 smoke test 正常。Stage 3 继续保持“进行中”。
 
 ### 验收标准
 
@@ -386,7 +392,7 @@
 
 ## 当前下一步
 
-执行 Stage 3：车灯与车牌 v001 评审候选已经从已确认车身确定性派生，并以可人工校正的独立目标状态接入第三次观察；当前先确认 `preview_c01_s02_vehicle_state_candidates_v001.png`、中性完整场景与轻微变化完整场景。确认后才将四张状态资产晋级 production；随后生产约五岁儿童倒影和局部冷暖状态，接入三次车窗观察并做单幕完整验收。Stage 3 在这些交互和状态完成前保持“进行中”。
+执行 Stage 3：车灯与车牌 v001 已确认并晋级 production，仍可在校正器中人工调整。当前确认 `char_child_reflection_curious_v001_candidate.png` 与 `preview_c01_s02_child_reflection_v001.png` 的五岁造型、镜像朝向、自然表情、22% 反射强度、落位和玻璃裁切；确认后才晋级 production、接入人工校正，并制作局部冷暖状态与三次车窗观察完整变化。Stage 3 在这些交互和状态完成前保持“进行中”。
 
 ### 方向重置记录
 
@@ -427,3 +433,5 @@
 - 2026-08-12：生成 v005 直线车道候选；以标注首尾和大致通道建立严格直线，只让宽度随纵深渐增、质感随雨水磨损，等待道路 Gate 确认。
 - 2026-08-12：用户确认 v005 可以采用；关闭车辆完整场景 Gate，确定性拆为直线车道背景、紧边界车身、接地效果和玻璃雨纹，接入同一 JSON 布局与正式运行时。下一道 Gate 更新为车灯/车牌状态和热点校正。
 - 2026-08-12：从已确认车身原像素派生车灯与车牌 v001 中性/轻微变化候选；热点收紧到真实灯罩和前牌，状态映射接入第三次观察，雨纹保持在其上方。候选仍在 `style-studies`，等待视觉确认后再晋级 production。
+- 2026-08-13：用户确认继续采用车灯/车牌 v001；四张状态图晋级 production，运行时路径完成切换，锚点与命中区继续开放人工校正。Stage 3 转入约五岁儿童倒影独立候选 Gate。
+- 2026-08-13：儿童倒影 v001 独立候选与整场评审预览完成；首张反向生成未入库，当前候选为正面身体、左转头颈、空手童装和无笑容自然关注。22% 弱反射与玻璃硬裁切通过像素检查，等待视觉确认。

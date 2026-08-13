@@ -82,10 +82,10 @@
 			"hit_size": [176, 72],
 			"z_index": 2,
 			"mode": "sprite",
-			"asset_path": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png",
+			"asset_path": "res://assets/art/production/c01_s02_commute_window/props/prop_vehicle_headlights_neutral_v001.png",
 			"state_asset_paths": {
-				"neutral": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_neutral_v001.png",
-				"blink": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_headlights_blink_v001.png"
+				"neutral": "res://assets/art/production/c01_s02_commute_window/props/prop_vehicle_headlights_neutral_v001.png",
+				"blink": "res://assets/art/production/c01_s02_commute_window/props/prop_vehicle_headlights_blink_v001.png"
 			},
 			"source_rect": [562, 695, 205, 59],
 			"locked": false
@@ -96,14 +96,14 @@
 			"hit_size": [96, 56],
 			"z_index": 2,
 			"mode": "sprite",
-			"asset_path": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png",
+			"asset_path": "res://assets/art/production/c01_s02_commute_window/props/prop_vehicle_plate_neutral_v001.png",
 			"state_asset_paths": {
-				"neutral": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_plate_neutral_v001.png",
-				"mouth_hint": "res://assets/art/style-studies/c01_s02/props/prop_vehicle_plate_mouth_hint_v001.png"
+				"neutral": "res://assets/art/production/c01_s02_commute_window/props/prop_vehicle_plate_neutral_v001.png",
+				"mouth_hint": "res://assets/art/production/c01_s02_commute_window/props/prop_vehicle_plate_mouth_hint_v001.png"
 			},
 			"source_rect": [635, 742, 93, 35],
 			"locked": false
 		}
 	},
-	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. The lane marking belongs only to the background. Headlight and plate review candidates use exact source-derived crops, share one placement across states, remain unlocked for manual correction, and keep hit rectangles larger than their visuals. The glass-rain layer renders above both state overlays. Candidate paths stay under style-studies until visual approval."
+	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. The lane marking belongs only to the background. The approved headlight and plate production states use exact source-derived crops, share one placement across states, remain unlocked for manual correction, and keep hit rectangles larger than their visuals. The glass-rain layer renders above both state overlays."
 }
