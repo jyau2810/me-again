@@ -84,9 +84,10 @@
 | `game/assets/art/style-studies/c01_s02/characters/char_child_reflection_curious_v001_candidate.png` | `approved_reference` | `exec-75f591da-2265-4938-9d2f-b52eb24da649.png` + 色键去除/紧裁 | 约五岁儿童正常不透明度 RGBA 底图，正面身体、头转画面左侧、空手；保留为生产来源 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_child_reflection_v001.png` | `approved_review` | 本地确定性合成 | 用户确认的 22% 弱反射、低饱和/对比、玻璃硬遮罩完整场景预览 |
 | `game/assets/art/production/c01_s02_commute_window/characters/char_child_reflection_curious_v001.png` | `production_adjustable` | 上述候选逐字节复制 | 0% / 11% / 22% 状态由运行时处理，玻璃硬遮罩，`locked = false` |
-| `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_cool_v001_candidate.png` | `candidate_review` | `exec-47e49ab2-04bd-4b05-875b-9ae0b66ce10b.png` + 洋红色键去除/紧裁 | 冷雨玻璃局部反光，620 × 1424 RGBA |
-| `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v001_candidate.png` | `candidate_review` | `exec-f17ea0ec-4ff4-441b-8f2a-9ce6e997f390.png` + 洋红色键去除/紧裁 | 儿童与焦点车之间的局部暖反光，702 × 1422 RGBA |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_states_v001.png` | `candidate_review` | 三张真实运行时基础帧 + 确定性局部屏幕混合 | 客观冷态、11% 倒影过渡态、22% 倒影与局部暖态横向对照 |
+| `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_cool_v001_candidate.png` | `rejected` | `exec-47e49ab2-04bd-4b05-875b-9ae0b66ce10b.png` + 洋红色键去除/紧裁 | 所属 v001 整场评审被拒绝，不进入 production 或运行时 |
+| `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v001_candidate.png` | `rejected` | `exec-f17ea0ec-4ff4-441b-8f2a-9ce6e997f390.png` + 洋红色键去除/紧裁 | 所属 v001 整场评审被拒绝，不进入 production 或运行时 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_states_v001.png` | `rejected_review` | 720 × 1280 运行时分层重组 + 确定性局部屏幕混合 | 用户指出窗外场景整体错乱；错误基底反例 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_states_v002.png` | `candidate_review` | 已确认 941 × 1672 v005 整场母版 + 授权状态差分 | 窗外固定、只改变成人状态/儿童倒影/车辆提示的三态横向对照 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -235,7 +236,7 @@ Avoid: head or eyes toward image-right, direct camera gaze, body turned left, sm
 
 用户于 2026-08-13 确认 v001；候选逐字节晋级为 `production/c01_s02_commute_window/characters/char_child_reflection_curious_v001.png`，SHA-256 保持不变。运行时把反射处理留在独立状态样式中：0% 隐藏、11% 初现、22% 可见，共用 38% 饱和度、68% 对比度和轻微柔化；玻璃多边形在逻辑 720 × 1280 画布内收为 `[(287, 7), (713, 7), (713, 1055), (282, 775)]`。Godot 正常渲染帧相对旧玻璃边界的差异为 `outside = 0 pixels`；校正器与运行时共用相同处理，图层保持未锁定供人工修正。下一步只制作局部冷暖效果候选，不整幅重绘或改色。
 
-### 冷暖玻璃效果独立候选
+### 已拒绝的冷暖玻璃效果独立候选
 
 两张效果均使用内置 `image_gen` 生成，以已确认的真实 720 × 1280 状态帧仅作位置、比例、色彩和媒介参考；提示词明确禁止复现人物、车辆、道路、车厢结构或整场背景。由于效果包含灰蓝和琥珀色，统一采用平坦 `#ff00ff` 色键，之后使用技能自带 `remove_chroma_key.py` 的 border 自动取色、soft matte 与 despill，再将 Alpha 小于 12 的碎点清零并按实际内容加 16 px 安全边紧裁。两张候选四角透明，可见洋红残留为 0。
 
@@ -271,7 +272,20 @@ Constraints: effect only; no person, face, child, adult, body, vehicle, road, la
 Avoid: scene reconstruction, photorealism, glossy lens flare, strong bloom, fiery orange, dramatic magic, symmetrical aura, solid rectangular patch, hard border, dense coverage.
 ```
 
-冷态候选 SHA-256 为 `91c28c5ec66d719ab34b73799b6e6da013847886bf6f191822c2ea0f37b40fed`，建议逻辑矩形为 `(392, 278, 226, 520)`；暖态候选 SHA-256 为 `efa6c80621b0a906befa2ee9f40de930f66a96e8d52c189e3fa61bb5ee4594d2`，建议矩形为 `(390, 380, 257, 520)`。三状态预览分别以 5% 冷、3% 冷和 5% 暖的确定性屏幕混合生成，并继续受玻璃硬遮罩限制；相对各自基础帧的最大单通道差为 12 / 7 / 13，旧玻璃边界外差异均为 0。当前全部文件为 `candidate_review`，确认前不进入 production、布局 JSON 或运行时。
+冷态候选 SHA-256 为 `91c28c5ec66d719ab34b73799b6e6da013847886bf6f191822c2ea0f37b40fed`，原建议逻辑矩形为 `(392, 278, 226, 520)`；暖态候选 SHA-256 为 `efa6c80621b0a906befa2ee9f40de930f66a96e8d52c189e3fa61bb5ee4594d2`，原建议矩形为 `(390, 380, 257, 520)`。三状态 v001 预览分别以 5% 冷、3% 冷和 5% 暖的确定性屏幕混合生成，并受玻璃硬遮罩限制。
+
+用户于 2026-08-13 拒绝 v001 横向预览，指出窗外场景整体错乱。复核确认 v001 使用 720 × 1280 运行时分层重组帧，而不是已经确认的 941 × 1672 v005 整场母版；焦点车、道路反射和远景因此不再是视觉确认时的固定整场像素。两张效果候选及四张 v001 预览全部改为 `rejected` / `rejected_review`，不进入 production、布局 JSON 或运行时。该问题不影响此前已确认并接入的儿童、车辆及状态 production 资产。
+
+### 锁定 v005 窗外像素的三态预览
+
+修正版不调用图像生成，也不使用已拒绝的冷暖候选。`game/scripts/tools/build_c01_s02_observation_previews.gd` 将 SHA-256 为 `56821c1ff82eebcab880a931ec568532d25d3fc4dfb6f87e2353dc08223a47b6` 的 `preview_c01_s02_vehicle_focus_context_look_up_v005.png` 锁定为唯一整场母版，只从已确认评审图提取四类授权差分：成人低头/抬头、车辆中性覆盖、车灯/车牌提示、儿童倒影。脚本在写文件前逐像素断言所有授权遮罩外的输出与母版完全相等。
+
+- `preview_c01_s02_observation_state_01_locked_v002.png`：中性车辆状态与已确认低头成年人；无额外冷色效果。
+- `preview_c01_s02_observation_state_02_faint_v002.png`：中性车辆状态、抬头成年人和约 11% 儿童倒影。
+- `preview_c01_s02_observation_state_03_visible_v002.png`：逐像素复用已确认的 22% 儿童倒影整场预览，包含已确认车灯/车牌提示。
+- `preview_c01_s02_observation_states_v002.png`：三张 941 × 1672 状态的等比例横向评审图。
+
+三张输出相对 v005 母版的授权遮罩外差异均为 `0 pixels`；道路、车道线、焦点车车身与接地、右侧红车、远景交通、树木、路灯、雨纹及其反射均不允许变化。v002 当前状态为 `candidate_review`，确认前不改变 production、布局 JSON 或运行时；局部暖意在该固定场景关系确认后另开单项 Gate。
 
 ### 无人物背景构图灰稿
 

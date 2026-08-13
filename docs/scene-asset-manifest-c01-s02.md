@@ -275,17 +275,17 @@
 
 #### `fx_c01_s02_window_reflection_cool_v001.png`
 
-- 状态：`candidate_review`；工程候选为 `style-studies/c01_s02/effects/fx_c01_s02_window_reflection_cool_v001_candidate.png`，确认前不进入 production。
+- 状态：`rejected`；工程候选保留在 `style-studies/c01_s02/effects/fx_c01_s02_window_reflection_cool_v001_candidate.png` 作为所属 v001 评审轮次记录，不进入 production。
 - 内容：冷色车窗反光和细雨纹理，不包含人物、车辆、道路或车厢结构；`620 × 1424` 紧边界 RGBA，四角透明、无可见洋红残留。
-- 评审建议：逻辑矩形 `(392, 278, 226, 520)`；State 1 使用 5% 强度，State 2 收到 3%，并继续使用玻璃硬遮罩。
+- 拒绝原因：其 v001 整场预览没有使用已确认的 v005 整场母版，无法作为可靠视觉 Gate；本轮停止独立冷色效果。
 
 #### `fx_c01_s02_window_reflection_warm_v001.png`
 
-- 状态：`candidate_review`；工程候选为 `style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v001_candidate.png`，确认前不进入 production。
+- 状态：`rejected`；工程候选保留在 `style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v001_candidate.png` 作为所属 v001 评审轮次记录，不进入 production。
 - 内容：与冷色状态独立的局部暖化效果，范围集中在儿童倒影与焦点车辆之间；`702 × 1422` 紧边界 RGBA，不包含人物、车辆或整场色层。
-- 评审建议：逻辑矩形 `(390, 380, 257, 520)`；State 3 使用 5% 强度并受玻璃硬遮罩限制。最大单通道差 13，整体冷雨夜仍占主导。
+- 拒绝原因：随同 v001 整场预览退回；局部暖意需在 v005 固定母版的三态关系重新确认后单独设计。
 
-评审图：`preview_c01_s02_observation_state_01_cool_v001.png`、`preview_c01_s02_observation_state_02_faint_v001.png`、`preview_c01_s02_observation_state_03_warm_v001.png` 分别对应三次观察；`preview_c01_s02_observation_states_v001.png` 为横向关系对照。三张状态相对各自无效果基础帧的变化均只发生在旧玻璃边界内，`outside = 0 pixels`。当前只确认效果强度、位置和状态关系，不据此提前接入运行时。
+v001 四张评审图状态为 `rejected_review`：它们使用 720 × 1280 运行时分层重组帧，导致窗外场景不再保持用户确认的 v005 整场像素。修正版 `preview_c01_s02_observation_state_01_locked_v002.png`、`preview_c01_s02_observation_state_02_faint_v002.png`、`preview_c01_s02_observation_state_03_visible_v002.png` 和横向 `preview_c01_s02_observation_states_v002.png` 均以 941 × 1672 v005 整场母版构建，不使用冷暖候选。`game/scripts/tools/build_c01_s02_observation_previews.gd` 断言成人状态、儿童倒影和车辆状态的授权遮罩之外差异为 0 像素；当前只评审固定窗外场景下的三态关系。
 
 ## 5. 场景对象与布局
 
