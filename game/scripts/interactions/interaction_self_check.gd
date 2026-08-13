@@ -52,7 +52,7 @@ func _test_scene_layout_store() -> void:
 	_expect(not sample.is_empty(), "sample scene layout JSON parses")
 	_expect(sample.get("scene_id") == "c01_s02_commute_window", "sample scene ID matches its file")
 	_expect(sample.get("targets", {}).size() == 4, "sample scene exposes four calibrated targets")
-	_expect(sample.get("layers", {}).size() == 6, "sample scene exposes six independent visual layers")
+	_expect(sample.get("layers", {}).size() == 7, "sample scene exposes seven independent visual layers")
 	_expect(LayoutStore.canvas_size("c01_s02_commute_window") == Vector2(720.0, 1280.0), "runtime resolves the authored logical canvas")
 	_expect(LayoutStore.reference_background_path("c01_s02_commute_window").ends_with("bg_c01_s02_bus_night_lane_v002.png"), "runtime resolves the approved straight-lane production background")
 
@@ -111,6 +111,14 @@ func _test_scene_layout_store() -> void:
 	var glass_rain := LayoutStore.layer("c01_s02_commute_window", "vehicle_glass_rain")
 	_expect(glass_rain.get("z_index") == 3, "vehicle glass rain renders over the vehicle body and its state overlays")
 	_expect(glass_rain.get("locked") == false, "vehicle glass rain remains independently adjustable")
+	var child := LayoutStore.layer("c01_s02_commute_window", "child_reflection")
+	_expect(child.get("anchor", Vector2.ZERO).is_equal_approx(Vector2(0.7662, 0.6944)), "child reflection keeps its confirmed review placement")
+	_expect(child.get("visual_size", Vector2.ZERO) == Vector2(225.0, 438.0), "child reflection uses its confirmed tight-crop display size")
+	_expect(child.get("locked") == false, "child reflection remains available for manual placement correction")
+	_expect(child.get("clip_polygon", []).size() == 4, "child reflection carries a four-point hard glass mask")
+	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "child_reflection", "hidden").get("alpha", -1.0)), 0.0), "child reflection is hidden before the second observation")
+	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "child_reflection", "faint").get("alpha", -1.0)), 0.11), "second observation uses the faint child reflection state")
+	_expect(is_equal_approx(float(LayoutStore.layer_style("c01_s02_commute_window", "child_reflection", "visible").get("alpha", -1.0)), 0.22), "third observation uses the confirmed child reflection strength")
 	_expect(LayoutStore.layer("c01_s02_commute_window", "missing_layer").is_empty(), "unknown visual layer resolves empty")
 
 	var fallback := LayoutStore.target("c01_s01_room_morning", "alarm")
@@ -133,7 +141,7 @@ func _test_scene_visual_composer() -> void:
 	root.add_child(composer)
 	composer.configure("c01_s02_commute_window", true)
 	await process_frame
-	_expect(composer.layer_ids().size() == 6, "runtime composer instantiates every authored visual layer")
+	_expect(composer.layer_ids().size() == 7, "runtime composer instantiates every authored visual layer")
 	var vehicle_view: TextureRect = composer.layer_view("vehicle_focus_base")
 	_expect(vehicle_view != null, "runtime composer creates the vehicle body view")
 	_expect(vehicle_view.size.is_equal_approx(Vector2(281.0, 173.0)), "runtime vehicle view uses the calibrator visual size")
@@ -153,6 +161,14 @@ func _test_scene_visual_composer() -> void:
 	_expect(composer.layer_asset_path("adult_commuter_down").ends_with("char_adult_commuter_seated_look_up_v001.png"), "runtime composer records the active state asset")
 	_expect(composer.set_layer_state("adult_commuter_down", "missing"), "unknown adult state falls back to its confirmed default asset")
 	_expect(composer.layer_asset_path("adult_commuter_down").ends_with("char_adult_commuter_seated_down_v001.png"), "runtime composer records the default asset after state fallback")
+	var child_view: TextureRect = composer.layer_view("child_reflection")
+	_expect(child_view != null, "runtime composer instantiates the independent child reflection")
+	_expect(is_equal_approx(child_view.modulate.a, 0.0), "child reflection starts hidden")
+	_expect(child_view.material is ShaderMaterial, "child reflection receives its glass mask and reflection treatment")
+	_expect(composer.set_layer_state("child_reflection", "faint"), "runtime switches the child to the second-observation reflection state")
+	_expect(is_equal_approx(child_view.modulate.a, 0.11), "second-observation child reflection is very faint")
+	_expect(composer.set_layer_state("child_reflection", "visible"), "runtime switches the child to the third-observation reflection state")
+	_expect(is_equal_approx(child_view.modulate.a, 0.22), "third-observation child reflection keeps the confirmed visual strength")
 	composer.queue_free()
 
 

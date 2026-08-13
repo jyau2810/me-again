@@ -19,7 +19,7 @@
 
 在编辑器中运行 `project.godot` 即可从标题页开始。键鼠与触屏均可使用；双指交互另有鼠标/键盘替代输入。
 
-人工校准 `c01_s02_commute_window` 时，在编辑器中打开并运行 `scenes/tools/scene_layout_calibrator.tscn`。工具左侧显示参考背景、交互目标和非交互视觉层，右侧可编辑中心、视觉尺寸、层级、资产路径和锁定状态；交互目标另有命中尺寸与模式。保存写回仓库内 JSON。
+人工校准 `c01_s02_commute_window` 时，在编辑器中打开并运行 `scenes/tools/scene_layout_calibrator.tscn`。工具左侧显示参考背景、交互目标和非交互视觉层，带样式的倒影层会按实际透明度、调色、柔化与玻璃遮罩预览；右侧可编辑中心、视觉尺寸、层级、资产路径和锁定状态，交互目标另有命中尺寸与模式。保存写回仓库内 JSON。
 
 ## 目录职责
 
@@ -85,7 +85,7 @@ HOME=/tmp/me-again-godot-home \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-预期结果包含 `237 assertions` 和 `17 renderer contracts`。
+预期结果包含 `251 assertions` 和 `17 renderer contracts`。
 
 ## 导出边界
 

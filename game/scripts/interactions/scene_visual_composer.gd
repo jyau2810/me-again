@@ -5,6 +5,7 @@ extends Control
 ## The calibrator and the game therefore share one full-canvas coordinate space.
 
 const LayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
+const LAYER_SHADER = preload("res://shaders/visual_layer_treatment.gdshader")
 
 var _scene_id := ""
 var _layer_views: Dictionary = {}
@@ -53,6 +54,7 @@ func set_layer_state(layer_id: String, state_id: String) -> bool:
 		return false
 	view.texture = texture
 	_layer_asset_paths[layer_id] = path
+	_apply_layer_style(view, LayoutStore.layer(_scene_id, layer_id), state_id)
 	return true
 
 
@@ -101,6 +103,7 @@ func _add_layer(layer_id: String, layer: Dictionary) -> void:
 		return
 	_layer_views[layer_id] = view
 	_layer_asset_paths[layer_id] = String(layer.get("asset_path", ""))
+	_apply_layer_style(view, layer)
 
 
 func _add_target_visuals(scene_id: String) -> void:
@@ -143,3 +146,36 @@ func _add_view(view_name: String, source: Dictionary) -> TextureRect:
 	view.z_index = int(source.get("z_index", 0))
 	add_child(view)
 	return view
+
+
+func _apply_layer_style(view: TextureRect, source: Dictionary, state_id := "") -> void:
+	var style := LayoutStore.layer_style(_scene_id, String(view.name).trim_prefix("Layer_"), state_id)
+	if style.is_empty():
+		style = source.get("style", {})
+	view.modulate = Color(1.0, 1.0, 1.0, float(style.get("alpha", 1.0)))
+	var clip_polygon: Array[Vector2] = source.get("clip_polygon", [])
+	var needs_material := not clip_polygon.is_empty()
+	needs_material = needs_material or not is_equal_approx(float(style.get("saturation", 1.0)), 1.0)
+	needs_material = needs_material or not is_equal_approx(float(style.get("contrast", 1.0)), 1.0)
+	needs_material = needs_material or float(style.get("blur", 0.0)) > 0.001
+	if not needs_material:
+		view.material = null
+		return
+	var material := view.material as ShaderMaterial
+	if material == null:
+		material = ShaderMaterial.new()
+		material.shader = LAYER_SHADER
+		view.material = material
+	material.set_shader_parameter("saturation", float(style.get("saturation", 1.0)))
+	material.set_shader_parameter("contrast", float(style.get("contrast", 1.0)))
+	material.set_shader_parameter("blur_amount", float(style.get("blur", 0.0)))
+	material.set_shader_parameter("use_clip", clip_polygon.size() == 4)
+	if clip_polygon.size() != 4:
+		return
+	var anchor: Vector2 = source.get("anchor", Vector2(0.5, 0.5))
+	var visual_size: Vector2 = source.get("visual_size", Vector2.ONE)
+	var canvas_size := size
+	var top_left := anchor * canvas_size - visual_size * 0.5
+	for index in 4:
+		var local_point: Vector2 = (clip_polygon[index] - top_left) / visual_size
+		material.set_shader_parameter(["clip_a", "clip_b", "clip_c", "clip_d"][index], local_point)

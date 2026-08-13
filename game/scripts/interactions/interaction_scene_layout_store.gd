@@ -86,6 +86,17 @@ static func layer_asset_path(scene_id: String, layer_id: String, state_id := "")
 	return String(authored.get("asset_path", ""))
 
 
+static func layer_style(scene_id: String, layer_id: String, state_id := "") -> Dictionary:
+	var authored := layer(scene_id, layer_id)
+	if authored.is_empty():
+		return {}
+	var style: Dictionary = authored.get("style", {}).duplicate(true)
+	var state_styles: Dictionary = authored.get("state_styles", {})
+	if not state_id.is_empty() and state_styles.has(state_id):
+		style.merge(state_styles[state_id], true)
+	return style
+
+
 static func target_asset_path(scene_id: String, target_id: String, state_id := "") -> String:
 	var authored := target(scene_id, target_id)
 	if authored.is_empty():
@@ -142,12 +153,24 @@ static func normalize_layer(source: Dictionary) -> Dictionary:
 			var state_path := String(authored_states[state_value])
 			if not state_id.is_empty() and not state_path.is_empty():
 				state_asset_paths[state_id] = state_path
+	var style := _normalize_style(source.get("style", {}))
+	var state_styles := {}
+	var authored_styles: Variant = source.get("state_styles", {})
+	if authored_styles is Dictionary:
+		for state_value in authored_styles.keys():
+			var state_id := String(state_value)
+			var state_style := _normalize_style(authored_styles[state_value])
+			if not state_id.is_empty() and not state_style.is_empty():
+				state_styles[state_id] = state_style
 	return {
 		"anchor": anchor,
 		"visual_size": visual_size,
 		"z_index": int(source.get("z_index", 1)),
 		"asset_path": asset_path,
 		"state_asset_paths": state_asset_paths,
+		"style": style,
+		"state_styles": state_styles,
+		"clip_polygon": _polygon(source.get("clip_polygon")),
 		"locked": bool(source.get("locked", false)),
 		"source_rect": source_rect,
 	}
@@ -185,3 +208,31 @@ static func _rect4(value: Variant) -> Array[int]:
 	if value is Array and value.size() >= 4:
 		return [int(value[0]), int(value[1]), int(value[2]), int(value[3])]
 	return []
+
+
+static func _polygon(value: Variant) -> Array[Vector2]:
+	var points: Array[Vector2] = []
+	if not value is Array:
+		return points
+	for point_value in value:
+		var point := _vector2(point_value, Vector2(-1.0, -1.0))
+		if point.x < 0.0 or point.y < 0.0:
+			return []
+		points.append(point)
+	return points if points.size() == 4 else []
+
+
+static func _normalize_style(value: Variant) -> Dictionary:
+	if not value is Dictionary:
+		return {}
+	var source: Dictionary = value
+	var style := {}
+	if source.has("alpha"):
+		style["alpha"] = clampf(float(source["alpha"]), 0.0, 1.0)
+	if source.has("saturation"):
+		style["saturation"] = clampf(float(source["saturation"]), 0.0, 2.0)
+	if source.has("contrast"):
+		style["contrast"] = clampf(float(source["contrast"]), 0.0, 2.0)
+	if source.has("blur"):
+		style["blur"] = clampf(float(source["blur"]), 0.0, 8.0)
+	return style

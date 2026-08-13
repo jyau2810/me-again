@@ -34,7 +34,8 @@ loads `res://data/scene_layouts/<scene_id>.json` and normalizes `anchor`,
 `visual_size`, `hit_size`, `z_index`, `mode`, `asset_path`, optional
 `state_asset_paths` / `source_rect`, and `locked` for
 interactive targets. The same JSON can contain non-interactive `layers` with
-`source_rect`, `anchor`, `visual_size`, `z_index`, `asset_path` and `locked`;
+`source_rect`, `anchor`, `visual_size`, `z_index`, `asset_path`, optional
+`style` / `state_styles` / `clip_polygon`, and `locked`;
 the calibrator edits those layers without inventing hit areas.
 Missing files or targets fall back one target at a time to the historical
 `interaction_scene_layouts.gd` table, so scenes can migrate independently.
@@ -48,7 +49,11 @@ the full 720 x 1280 canvas, and keeps every visual layer mouse-transparent. It
 sorts by authored `z_index` and can switch `state_asset_paths` for both visual
 layers and asset-backed targets, such as the commuter's `down` / `look_up` pair,
 the headlights' `neutral` / `blink` pair, and the plate's `neutral` /
-`mouth_hint` pair, without duplicating placement. The observation field also
+`mouth_hint` pair, without duplicating placement. Layer style states can also
+change alpha while a shared shader applies saturation, contrast, blur and a
+four-point hard clip; the child reflection uses this for its hidden, faint and
+visible states. The calibrator previews the highest visible style with the same
+shader while keeping the layer manually adjustable. The observation field also
 spans the same full logical canvas, so saved calibrator anchors do not need an
 additional runtime offset.
 
@@ -80,4 +85,4 @@ non-punitive retry behavior, instantiates every board layout, validates native
 drop payloads, draws a trace with mouse events, and performs the Chapter 5 touch
 sequence with screen-touch events. It also validates canonical layout JSON,
 independent visual/hit sizes, cropped visual layers, target visual states and
-legacy fallback behavior. The expected result is 235 assertions across 17 contracts.
+legacy fallback behavior. The expected result is 251 assertions across 17 contracts.

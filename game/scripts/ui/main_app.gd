@@ -544,6 +544,12 @@ func _on_interaction_state_changed(state: Dictionary) -> void:
 	var sequence_index := int(state.get("sequence_index", 0))
 	var adult_state := "look_up" if sequence_index >= 2 else "down"
 	_scene_visuals.set_layer_state("adult_commuter_down", adult_state)
+	var child_state := "hidden"
+	if sequence_index == 2:
+		child_state = "faint"
+	elif sequence_index >= 3:
+		child_state = "visible"
+	_scene_visuals.set_layer_state("child_reflection", child_state)
 	_scene_visuals.set_target_state("headlight", "blink" if sequence_index >= 3 else "neutral")
 	_scene_visuals.set_target_state("plate", "mouth_hint" if sequence_index >= 3 else "neutral")
 

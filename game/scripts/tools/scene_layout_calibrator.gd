@@ -2,6 +2,7 @@ class_name SceneLayoutCalibrator
 extends Control
 
 const LayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
+const LAYER_SHADER = preload("res://shaders/visual_layer_treatment.gdshader")
 const PREVIEW_SIZE := Vector2(360.0, 640.0)
 const DEFAULT_CANVAS_SIZE := Vector2(720.0, 1280.0)
 
@@ -50,6 +51,7 @@ class CalibrationHandle extends Control:
 	var _drag_origin_anchor := Vector2.ZERO
 	var _hit_rect := Rect2()
 	var _visual_rect := Rect2()
+	var _asset_view: TextureRect
 
 
 	func configure(id: String, source: Dictionary, canvas_size: Vector2) -> void:
@@ -65,6 +67,7 @@ class CalibrationHandle extends Control:
 		var asset_path := String(source.get("asset_path", ""))
 		if not asset_path.is_empty() and ResourceLoader.exists(asset_path):
 			asset_texture = load(asset_path) as Texture2D
+		_configure_asset_view(source)
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		focus_mode = Control.FOCUS_ALL
 		tooltip_text = "%s%s" % [display_label, "（已锁定）" if locked else ""]
@@ -91,6 +94,7 @@ class CalibrationHandle extends Control:
 		position = anchor * canvas_size - display_size * 0.5
 		_hit_rect = Rect2((display_size - scaled_hit) * 0.5, scaled_hit)
 		_visual_rect = Rect2((display_size - scaled_visual) * 0.5, scaled_visual)
+		_sync_asset_view_geometry()
 		queue_redraw()
 
 
@@ -124,8 +128,6 @@ class CalibrationHandle extends Control:
 		var visual_color := Color(0.96, 0.56, 0.36, 0.92)
 		if mode == "region":
 			draw_rect(_hit_rect, Color(0.32, 0.76, 0.72, 0.12), true)
-		elif asset_texture != null and _visual_rect.size.x > 0.0 and _visual_rect.size.y > 0.0:
-			draw_texture_rect(asset_texture, _visual_rect, false)
 		if _visual_rect.size.x > 0.0 and _visual_rect.size.y > 0.0:
 			draw_rect(_visual_rect, visual_color, false, 1.5)
 		if mode != "layer":
@@ -138,6 +140,54 @@ class CalibrationHandle extends Control:
 		draw_string(ThemeDB.fallback_font, Vector2(5.0, 15.0), display_label, HORIZONTAL_ALIGNMENT_LEFT, label_width - 10.0, 12, Color.WHITE)
 		if locked:
 			draw_circle(Vector2(size.x - 9.0, 9.0), 4.0, Color(0.95, 0.72, 0.3, 0.95))
+
+
+	func _configure_asset_view(source: Dictionary) -> void:
+		if _asset_view == null:
+			_asset_view = TextureRect.new()
+			_asset_view.name = "AssetPreview"
+			_asset_view.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			_asset_view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			_asset_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_asset_view.show_behind_parent = true
+			add_child(_asset_view)
+		_asset_view.texture = asset_texture
+		var style: Dictionary = source.get("style", {}).duplicate(true)
+		var state_styles: Dictionary = source.get("state_styles", {})
+		var highest_alpha := float(style.get("alpha", 1.0))
+		for state_value in state_styles.values():
+			if state_value is Dictionary and float(state_value.get("alpha", highest_alpha)) >= highest_alpha:
+				highest_alpha = float(state_value.get("alpha", highest_alpha))
+				style.merge(state_value, true)
+		_asset_view.modulate = Color(1.0, 1.0, 1.0, highest_alpha)
+		var clip_polygon: Array = source.get("clip_polygon", [])
+		var needs_material := not clip_polygon.is_empty()
+		needs_material = needs_material or not is_equal_approx(float(style.get("saturation", 1.0)), 1.0)
+		needs_material = needs_material or not is_equal_approx(float(style.get("contrast", 1.0)), 1.0)
+		needs_material = needs_material or float(style.get("blur", 0.0)) > 0.001
+		_asset_view.material = null
+		if not needs_material:
+			return
+		var material := ShaderMaterial.new()
+		material.shader = LAYER_SHADER
+		material.set_shader_parameter("saturation", float(style.get("saturation", 1.0)))
+		material.set_shader_parameter("contrast", float(style.get("contrast", 1.0)))
+		material.set_shader_parameter("blur_amount", float(style.get("blur", 0.0)))
+		material.set_shader_parameter("use_clip", clip_polygon.size() == 4)
+		if clip_polygon.size() == 4:
+			var top_left := anchor * logical_size - visual_size * 0.5
+			for index in 4:
+				var clip_point: Vector2 = clip_polygon[index]
+				var local_point: Vector2 = (clip_point - top_left) / visual_size
+				material.set_shader_parameter(["clip_a", "clip_b", "clip_c", "clip_d"][index], local_point)
+		_asset_view.material = material
+
+
+	func _sync_asset_view_geometry() -> void:
+		if _asset_view == null:
+			return
+		_asset_view.position = _visual_rect.position
+		_asset_view.size = _visual_rect.size
 
 
 func _ready() -> void:

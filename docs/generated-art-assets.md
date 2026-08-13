@@ -81,8 +81,9 @@
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_state_candidates_v001.png` | `approved_review` | 本地确定性合成 | 单项透明边界和放大状态对照 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_neutral_v001.png` | `approved_review` | 本地确定性合成 | 中性状态完整场景关系 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_vehicle_states_hint_v001.png` | `approved_review` | 本地确定性合成 | 收暗车灯与轻弧车牌完整场景关系 |
-| `game/assets/art/style-studies/c01_s02/characters/char_child_reflection_curious_v001_candidate.png` | `candidate_review` | `exec-75f591da-2265-4938-9d2f-b52eb24da649.png` + 色键去除/紧裁 | 约五岁儿童正常不透明度 RGBA 底图，正面身体、头转画面左侧、空手 |
-| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_child_reflection_v001.png` | `candidate_review` | 本地确定性合成 | 22% 弱反射、低饱和/对比、玻璃硬遮罩的完整场景预览 |
+| `game/assets/art/style-studies/c01_s02/characters/char_child_reflection_curious_v001_candidate.png` | `approved_reference` | `exec-75f591da-2265-4938-9d2f-b52eb24da649.png` + 色键去除/紧裁 | 约五岁儿童正常不透明度 RGBA 底图，正面身体、头转画面左侧、空手；保留为生产来源 |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_child_reflection_v001.png` | `approved_review` | 本地确定性合成 | 用户确认的 22% 弱反射、低饱和/对比、玻璃硬遮罩完整场景预览 |
+| `game/assets/art/production/c01_s02_commute_window/characters/char_child_reflection_curious_v001.png` | `production_adjustable` | 上述候选逐字节复制 | 0% / 11% / 22% 状态由运行时处理，玻璃硬遮罩，`locked = false` |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -227,7 +228,9 @@ Avoid: head or eyes toward image-right, direct camera gaze, body turned left, sm
 
 内置工具输出 1023 × 1537 RGB 色键图。使用 imagegen 技能自带 `remove_chroma_key.py` 的 border 自动取色、soft matte 和 despill 后，按 Alpha 实际内容加 16 px 安全边紧裁为 762 × 1484 RGBA；候选 SHA-256 为 `34881d7addb179e1c01c837c6c540ee006feaeca1a743a3197d92e481d8239f1`。四角 Alpha 为 0，可见绿边像素为 0，部分透明边缘像素为 8,362。
 
-`preview_c01_s02_child_reflection_v001.png` 在已确认中性/变化车辆场景上按原始画布 `rect = [574, 875, 294, 572]` 放置候选，对应逻辑建议 `anchor = (0.7662, 0.6944)`、`visual_size = 225 × 438`。预览仅在合成时使用 22% Alpha、38% 色彩强度、68% 局部对比和 0.65 px 柔化，并用玻璃内轮廓多边形 `[(374, 8), (933, 8), (933, 1380), (367, 1014)]` 硬裁切；候选本身保持正常不透明度。预览 SHA-256 为 `3fcba92e1a7d3ab4ab9d01757f25e6f64ee12b7b5194a4cba38c1859ae333974`，与基准图差异只位于 `(604, 881)–(862, 1323)`，玻璃遮罩外差异像素为 0。当前两文件均为 `candidate_review`，确认前不进入 production、布局 JSON 或冷暖状态制作。
+`preview_c01_s02_child_reflection_v001.png` 在已确认中性/变化车辆场景上按原始画布 `rect = [574, 875, 294, 572]` 放置候选，对应逻辑 `anchor = (0.7662, 0.6944)`、`visual_size = 225 × 438`。预览仅在合成时使用 22% Alpha、38% 色彩强度、68% 局部对比和 0.65 px 柔化，并用玻璃内轮廓多边形 `[(374, 8), (933, 8), (933, 1380), (367, 1014)]` 硬裁切；候选本身保持正常不透明度。预览 SHA-256 为 `3fcba92e1a7d3ab4ab9d01757f25e6f64ee12b7b5194a4cba38c1859ae333974`，与基准图差异只位于 `(604, 881)–(862, 1323)`，玻璃遮罩外差异像素为 0。
+
+用户于 2026-08-13 确认 v001；候选逐字节晋级为 `production/c01_s02_commute_window/characters/char_child_reflection_curious_v001.png`，SHA-256 保持不变。运行时把反射处理留在独立状态样式中：0% 隐藏、11% 初现、22% 可见，共用 38% 饱和度、68% 对比度和轻微柔化；玻璃多边形在逻辑 720 × 1280 画布内收为 `[(287, 7), (713, 7), (713, 1055), (282, 775)]`。Godot 正常渲染帧相对旧玻璃边界的差异为 `outside = 0 pixels`；校正器与运行时共用相同处理，图层保持未锁定供人工修正。下一步只制作局部冷暖效果候选，不整幅重绘或改色。
 
 ### 无人物背景构图灰稿
 

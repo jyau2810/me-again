@@ -48,6 +48,26 @@
 			"source_rect": [181, 99, 732, 1349],
 			"locked": true
 		},
+		"child_reflection": {
+			"anchor": [0.7662, 0.6944],
+			"visual_size": [225, 438],
+			"z_index": 4,
+			"asset_path": "res://assets/art/production/c01_s02_commute_window/characters/char_child_reflection_curious_v001.png",
+			"style": {
+				"alpha": 0.0,
+				"saturation": 0.38,
+				"contrast": 0.68,
+				"blur": 1.7
+			},
+			"state_styles": {
+				"hidden": {"alpha": 0.0},
+				"faint": {"alpha": 0.11},
+				"visible": {"alpha": 0.22}
+			},
+			"clip_polygon": [[287, 7], [713, 7], [713, 1055], [282, 775]],
+			"source_rect": [111, 53, 762, 1484],
+			"locked": false
+		},
 		"front_seat_occluder": {
 			"anchor": [0.6318, 0.9025],
 			"visual_size": [530, 250],
@@ -105,5 +125,5 @@
 			"locked": false
 		}
 	},
-	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. The lane marking belongs only to the background. The approved headlight and plate production states use exact source-derived crops, share one placement across states, remain unlocked for manual correction, and keep hit rectangles larger than their visuals. The glass-rain layer renders above both state overlays."
+	"notes": "The approved v005 straight-lane scene is split into a production background plus independently adjustable vehicle grounding, body and glass-rain layers. The lane marking belongs only to the background. The approved headlight and plate production states use exact source-derived crops, share one placement across states, remain unlocked for manual correction, and keep hit rectangles larger than their visuals. The approved child reflection is a separate adjustable production layer: it stays hidden before the second observation, uses 11 percent alpha for the second observation and 22 percent for the third, and is always clipped to the authored glass polygon."
 }

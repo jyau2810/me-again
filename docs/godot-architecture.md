@@ -63,7 +63,7 @@ AudioDirector（Music / Ambience / SFX）贯穿场景阶段
 
 交互层覆盖完整 720 × 1280 逻辑画布，保持透明；视觉层统一使用 `MOUSE_FILTER_IGNORE`，底部叙事也是鼠标穿透的渐变字幕层，不会切断校门、桌沿、手机或化石台的命中。全局导航按钮只存在于标题、章节选择、收集册、制作信息和必要的暂停/返回位置；它们不代替场景动作。
 
-`interaction_scene_layout_store.gd` 是正式运行时、`SceneVisualComposer` 与校准工具的共同数据边界。运行时交互目标先读取 JSON 并规范化为 Godot `Vector2`；文件缺失、目标尚未迁移或 JSON 目标无效时，再逐目标读取历史布局。非交互视觉层不回退到旧表，按紧边界资产和 `source_rect` 独立记录；人物视觉层与带图片的交互目标均可由 `state_asset_paths` 切换状态而不复制落位，例如通勤人物的 `down` / `look_up`、车灯的 `neutral` / `blink` 和车牌的 `neutral` / `mouth_hint`。`scene_layout_calibrator.tscn` 可直接拖动交互目标或视觉层，按对象类型调整字段并保存/重新载入同一份 JSON，不需要修改 GDScript 常量。
+`interaction_scene_layout_store.gd` 是正式运行时、`SceneVisualComposer` 与校准工具的共同数据边界。运行时交互目标先读取 JSON 并规范化为 Godot `Vector2`；文件缺失、目标尚未迁移或 JSON 目标无效时，再逐目标读取历史布局。非交互视觉层不回退到旧表，按紧边界资产和 `source_rect` 独立记录；人物视觉层与带图片的交互目标均可由 `state_asset_paths` 切换状态而不复制落位，例如通勤人物的 `down` / `look_up`、车灯的 `neutral` / `blink` 和车牌的 `neutral` / `mouth_hint`。视觉层还可使用基础 `style`、逐状态 `state_styles` 与四点 `clip_polygon`，儿童倒影因此能共用一张正常不透明度源图实现 0% / 11% / 22% 三档和严格玻璃遮罩。运行时与校正器共用 `visual_layer_treatment.gdshader`；校正器以最高可见状态预览实际透明度、调色、柔化和裁切，同时继续允许拖动、缩放、调层级和保存同一份 JSON。
 
 ## 5. 内容与资源映射
 
@@ -104,7 +104,7 @@ HOME=/tmp/me-again-godot-home /Applications/Godot.app/Contents/MacOS/Godot \
   --headless --path game --script res://scripts/interactions/interaction_self_check.gd
 ```
 
-结果：217 条断言、17 类交互契约通过；覆盖 JSON 背景与画布解析、六张视觉层和手机目标视觉的运行时实例化、跨视觉/交互层级与鼠标穿透、人物状态切换、车辆分层与未锁定状态、裁切坐标、视觉/命中尺寸分离和旧布局回退检查。
+结果：251 条断言、17 类交互契约通过；覆盖 JSON 背景与画布解析、七张视觉层和手机目标视觉的运行时实例化、跨视觉/交互层级与鼠标穿透、人物/车灯/车牌/儿童状态切换、图层样式、玻璃遮罩、车辆分层与未锁定状态、裁切坐标、视觉/命中尺寸分离和旧布局回退检查。
 
 ## 8. 发布边界
 
