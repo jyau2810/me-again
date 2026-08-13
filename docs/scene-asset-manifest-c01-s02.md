@@ -275,13 +275,17 @@
 
 #### `fx_c01_s02_window_reflection_cool_v001.png`
 
-- 状态：`planned`
-- 内容：冷色车窗反光和细雨纹理，不包含人物。
+- 状态：`candidate_review`；工程候选为 `style-studies/c01_s02/effects/fx_c01_s02_window_reflection_cool_v001_candidate.png`，确认前不进入 production。
+- 内容：冷色车窗反光和细雨纹理，不包含人物、车辆、道路或车厢结构；`620 × 1424` 紧边界 RGBA，四角透明、无可见洋红残留。
+- 评审建议：逻辑矩形 `(392, 278, 226, 520)`；State 1 使用 5% 强度，State 2 收到 3%，并继续使用玻璃硬遮罩。
 
 #### `fx_c01_s02_window_reflection_warm_v001.png`
 
-- 状态：`planned`
-- 内容：与冷色状态同画布的局部暖化效果，范围集中在儿童倒影与焦点车辆之间。
+- 状态：`candidate_review`；工程候选为 `style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v001_candidate.png`，确认前不进入 production。
+- 内容：与冷色状态独立的局部暖化效果，范围集中在儿童倒影与焦点车辆之间；`702 × 1422` 紧边界 RGBA，不包含人物、车辆或整场色层。
+- 评审建议：逻辑矩形 `(390, 380, 257, 520)`；State 3 使用 5% 强度并受玻璃硬遮罩限制。最大单通道差 13，整体冷雨夜仍占主导。
+
+评审图：`preview_c01_s02_observation_state_01_cool_v001.png`、`preview_c01_s02_observation_state_02_faint_v001.png`、`preview_c01_s02_observation_state_03_warm_v001.png` 分别对应三次观察；`preview_c01_s02_observation_states_v001.png` 为横向关系对照。三张状态相对各自无效果基础帧的变化均只发生在旧玻璃边界内，`outside = 0 pixels`。当前只确认效果强度、位置和状态关系，不据此提前接入运行时。
 
 ## 5. 场景对象与布局
 
@@ -343,4 +347,5 @@
 7. 手机与 v005 焦点车完整场景均已确认；车辆已拆为背景、车身、接地效果和玻璃雨纹并接入正式运行时，三张车辆相关层保持可人工校正。
 8. 车灯和车牌状态层已确认并晋级 production，热点继续保留人工校正能力。
 9. 约五岁儿童倒影 v001 已确认并晋级 production；0% / 11% / 22% 三档、玻璃硬遮罩和人工校正已接入，旧玻璃边界外真实帧差异为 0 像素。
-10. 下一步生成独立紧边界冷暖效果候选和三状态整场预览；局部暖意只连接儿童倒影与焦点车辆，整体冷雨夜背景保持不变，视觉确认后才接入运行时。
+10. 冷暖效果 v001 独立紧边界候选与三状态预览已完成；局部暖意只连接儿童倒影与焦点车辆，整体冷雨夜背景保持不变。
+11. 当前等待冷暖效果视觉确认；确认后再逐字节晋级 production、写入可人工校正的布局层并接入状态切换。

@@ -84,6 +84,9 @@
 | `game/assets/art/style-studies/c01_s02/characters/char_child_reflection_curious_v001_candidate.png` | `approved_reference` | `exec-75f591da-2265-4938-9d2f-b52eb24da649.png` + 色键去除/紧裁 | 约五岁儿童正常不透明度 RGBA 底图，正面身体、头转画面左侧、空手；保留为生产来源 |
 | `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_child_reflection_v001.png` | `approved_review` | 本地确定性合成 | 用户确认的 22% 弱反射、低饱和/对比、玻璃硬遮罩完整场景预览 |
 | `game/assets/art/production/c01_s02_commute_window/characters/char_child_reflection_curious_v001.png` | `production_adjustable` | 上述候选逐字节复制 | 0% / 11% / 22% 状态由运行时处理，玻璃硬遮罩，`locked = false` |
+| `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_cool_v001_candidate.png` | `candidate_review` | `exec-47e49ab2-04bd-4b05-875b-9ae0b66ce10b.png` + 洋红色键去除/紧裁 | 冷雨玻璃局部反光，620 × 1424 RGBA |
+| `game/assets/art/style-studies/c01_s02/effects/fx_c01_s02_window_reflection_warm_v001_candidate.png` | `candidate_review` | `exec-f17ea0ec-4ff4-441b-8f2a-9ce6e997f390.png` + 洋红色键去除/紧裁 | 儿童与焦点车之间的局部暖反光，702 × 1422 RGBA |
+| `game/assets/art/style-studies/c01_s02/previews/preview_c01_s02_observation_states_v001.png` | `candidate_review` | 三张真实运行时基础帧 + 确定性局部屏幕混合 | 客观冷态、11% 倒影过渡态、22% 倒影与局部暖态横向对照 |
 
 v002 共用提示词如下，三个方向只替换最后的 `Style/medium`：
 
@@ -231,6 +234,44 @@ Avoid: head or eyes toward image-right, direct camera gaze, body turned left, sm
 `preview_c01_s02_child_reflection_v001.png` 在已确认中性/变化车辆场景上按原始画布 `rect = [574, 875, 294, 572]` 放置候选，对应逻辑 `anchor = (0.7662, 0.6944)`、`visual_size = 225 × 438`。预览仅在合成时使用 22% Alpha、38% 色彩强度、68% 局部对比和 0.65 px 柔化，并用玻璃内轮廓多边形 `[(374, 8), (933, 8), (933, 1380), (367, 1014)]` 硬裁切；候选本身保持正常不透明度。预览 SHA-256 为 `3fcba92e1a7d3ab4ab9d01757f25e6f64ee12b7b5194a4cba38c1859ae333974`，与基准图差异只位于 `(604, 881)–(862, 1323)`，玻璃遮罩外差异像素为 0。
 
 用户于 2026-08-13 确认 v001；候选逐字节晋级为 `production/c01_s02_commute_window/characters/char_child_reflection_curious_v001.png`，SHA-256 保持不变。运行时把反射处理留在独立状态样式中：0% 隐藏、11% 初现、22% 可见，共用 38% 饱和度、68% 对比度和轻微柔化；玻璃多边形在逻辑 720 × 1280 画布内收为 `[(287, 7), (713, 7), (713, 1055), (282, 775)]`。Godot 正常渲染帧相对旧玻璃边界的差异为 `outside = 0 pixels`；校正器与运行时共用相同处理，图层保持未锁定供人工修正。下一步只制作局部冷暖效果候选，不整幅重绘或改色。
+
+### 冷暖玻璃效果独立候选
+
+两张效果均使用内置 `image_gen` 生成，以已确认的真实 720 × 1280 状态帧仅作位置、比例、色彩和媒介参考；提示词明确禁止复现人物、车辆、道路、车厢结构或整场背景。由于效果包含灰蓝和琥珀色，统一采用平坦 `#ff00ff` 色键，之后使用技能自带 `remove_chroma_key.py` 的 border 自动取色、soft matte 与 despill，再将 Alpha 小于 12 的碎点清零并按实际内容加 16 px 安全边紧裁。两张候选四角透明，可见洋红残留为 0。
+
+冷态完整提示词如下：
+
+```text
+Use case: stylized-concept
+Asset type: isolated adjustable cool bus-window reflection effect layer for a portrait 2D narrative game
+Input image: Image 1 is placement, palette, scale, and hand-painted texture reference only. Do not reproduce its adult, vehicle, road, bus, seats, rails, window frame, or other scene objects in the output.
+Primary request: create one localized, restrained cool rainy-glass reflection patch for the first objective observation state. It should make raindrops, wet glass depth, and ordinary city reflections slightly more readable without warming or broadly recoloring the scene.
+Subject: sparse irregular translucent-looking blue-gray and pale silver reflected-light strokes, a few short broken vertical rain smears, tiny soft wet-glass glints, and one faint asymmetrical wash; no literal objects or silhouettes.
+Style/medium: original hand-painted 2D animation texture, matte gouache and watercolor glaze, subtle graphite-grain edges, broad simplified marks; do not imitate any named artist, studio, film, character, shot, or signature design.
+Composition/framing: isolated compact effect patch, taller than wide, with generous clear padding. Visual mass should be sparse and concentrated around middle and lower-middle, with irregular dissolving outer edges for later tight cropping.
+Color palette: low-saturation blue-gray, dusty teal-gray, pale rainy silver, a few desaturated cold-white accents. No warm amber, no cyan neon, no purple.
+Backdrop: perfectly flat solid #ff00ff chroma-key, uniform and shadowless; do not use #ff00ff within the effect.
+Constraints: effect only; no person, face, child, adult, body, vehicle, road, lane line, bus structure, seat, rail, window frame, phone, text, logo, watermark, UI, magical portal, halo, orb, rays, bokeh circles, or full-canvas color field. No cast shadow or floor plane. Keep all effect marks opaque enough at source for reliable chroma-key removal; runtime will control final transparency.
+Avoid: scene reconstruction, photorealism, glossy lens flare, strong bloom, bright cyan, dramatic magic, symmetrical aura, solid rectangular patch, hard border, dense coverage.
+```
+
+暖态完整提示词如下：
+
+```text
+Use case: stylized-concept
+Asset type: isolated adjustable warm bus-window reflection effect layer for a portrait 2D narrative game
+Input image: Image 1 is placement, palette, scale, and hand-painted texture reference only. Do not reproduce its characters, vehicle, road, bus, or scene objects in the output.
+Primary request: create one localized, restrained warm reflection wash that can be overlaid in the glass area between the faint child reflection and the oncoming focus car during the third observation. It should suggest that ordinary headlight and street-lamp reflections have become slightly warmer, not that magic has appeared.
+Subject: a sparse cluster of irregular translucent-looking hand-painted amber and muted apricot reflected-light strokes, a few broken rain-smeared vertical highlights, and one very soft asymmetrical connecting wash; no literal objects or silhouettes.
+Style/medium: original hand-painted 2D animation texture, matte gouache and watercolor glaze, subtle graphite-grain edges, broad simplified marks; do not imitate any named artist, studio, film, character, shot, or signature design.
+Composition/framing: isolated compact effect patch, roughly taller than wide, with generous clear padding. Keep the visual mass concentrated in the middle and lower-middle. Outer edges must dissolve irregularly and remain sparse so it can be tightly cropped later.
+Color palette: restrained low-saturation amber, muted apricot, pale warm gray, tiny dull-gold accents. No orange flood, no red, no neon.
+Backdrop: perfectly flat solid #ff00ff chroma-key, uniform and shadowless; do not use #ff00ff within the effect.
+Constraints: effect only; no person, face, child, adult, body, vehicle, road, lane line, bus structure, seat, rail, window frame, phone, text, logo, watermark, UI, magical portal, halo, orb, rays, bokeh circles, or full-canvas color field. No cast shadow or floor plane. Keep all effect marks opaque enough at source for reliable chroma-key removal; runtime will control final transparency.
+Avoid: scene reconstruction, photorealism, glossy lens flare, strong bloom, fiery orange, dramatic magic, symmetrical aura, solid rectangular patch, hard border, dense coverage.
+```
+
+冷态候选 SHA-256 为 `91c28c5ec66d719ab34b73799b6e6da013847886bf6f191822c2ea0f37b40fed`，建议逻辑矩形为 `(392, 278, 226, 520)`；暖态候选 SHA-256 为 `efa6c80621b0a906befa2ee9f40de930f66a96e8d52c189e3fa61bb5ee4594d2`，建议矩形为 `(390, 380, 257, 520)`。三状态预览分别以 5% 冷、3% 冷和 5% 暖的确定性屏幕混合生成，并继续受玻璃硬遮罩限制；相对各自基础帧的最大单通道差为 12 / 7 / 13，旧玻璃边界外差异均为 0。当前全部文件为 `candidate_review`，确认前不进入 production、布局 JSON 或运行时。
 
 ### 无人物背景构图灰稿
 
