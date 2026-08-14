@@ -345,6 +345,7 @@ func _test_repeat_observe_contract() -> void:
 	_expect(plate["accepted"] and plate["feedback"] == "像一张抿起来的嘴。", "plate uses its authored optional feedback")
 	var third: Dictionary = model.dispatch("tap", "window")
 	_expect(third["just_completed"] and third["feedback"] == "前面的车灯，好像在看这边。", "third observation completes with the authored entry feedback")
+	_expect(third["sfx"] == "glass", "third observation requests the restrained glass cue before the completion reveal")
 
 
 func _test_repeat_observe_board_unlocks() -> void:
@@ -358,11 +359,13 @@ func _test_repeat_observe_board_unlocks() -> void:
 	_expect(buttons.has("phone") and buttons["phone"].visible, "phone hotspot is visible from scene start")
 	_expect(buttons.has("headlight") and not buttons["headlight"].visible, "headlight hotspot starts hidden")
 	_expect(buttons.has("plate") and not buttons["plate"].visible, "plate hotspot starts hidden")
+	_expect(buttons["phone"].get("_presentation_mode") == "region", "migrated phone hotspot does not redraw its legacy atlas visual")
 	board.submit_action("tap", "window")
 	_expect(not buttons["headlight"].visible, "headlight remains hidden after one observation")
 	board.submit_action("tap", "window")
 	_expect(buttons["headlight"].visible and not buttons["headlight"].disabled, "headlight becomes interactive after two observations")
 	_expect(buttons["plate"].visible and not buttons["plate"].disabled, "plate becomes interactive after two observations")
+	_expect(buttons["headlight"].get("_presentation_mode") == "region" and buttons["plate"].get("_presentation_mode") == "region", "migrated vehicle hotspots do not redraw legacy atlas visuals")
 	board.queue_free()
 	await process_frame
 

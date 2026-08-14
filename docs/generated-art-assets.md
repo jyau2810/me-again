@@ -778,6 +778,7 @@ Constraints: coherent road orientation, no racing, no crashes, no readable plate
 - 独立物件必须落在可信承载面：杯子和钥匙在桌面，衣服和书在架子，门锁贴门，灯与柜子贴建筑结构。
 - 手机采用第一人称手持图，只出现在画面下方偏右，并为底部故事纸保留安全区。
 - 命中范围可大于视觉物件，但不得跨入无关物体；悬停、点击、长按和拖放反馈控制在 150–300 毫秒。
+- 已迁移到 production 独立资产的目标，由 `SceneVisualComposer` 独占视觉输出；`InteractionBoard` 只保留透明命中区域，不得再回退绘制旧图集。2026-08-14 正式窗口发现并修复了旧图集手/手机与 production 手机重复显示的问题，没有修改任何美术源文件或已确认落位。
 
 ## `c01_s02` 真实运行时三态截帧
 

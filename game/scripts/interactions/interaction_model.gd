@@ -219,7 +219,7 @@ func _dispatch_repeat_observe(action: String, target_id: String) -> Dictionary:
 		else "手机屏幕又暗了一次，玻璃里的影子更清楚了。"
 	)
 	if _sequence_index >= needed:
-		return _complete(feedback)
+		return _complete(feedback, "glass")
 	return _response(
 		true,
 		feedback,
@@ -487,7 +487,7 @@ func _dispatch_ordered_gestures(
 	)
 
 
-func _complete(feedback_override := "") -> Dictionary:
+func _complete(feedback_override := "", sfx_override := "") -> Dictionary:
 	_completed = true
 	return _response(
 		true,
@@ -497,7 +497,7 @@ func _complete(feedback_override := "") -> Dictionary:
 			else String(_scene.get("completion_feedback", "四周安静下来。"))
 		),
 		"complete",
-		"complete",
+		String(sfx_override),
 		true
 	)
 

@@ -23,6 +23,16 @@ const CHAPTER_END_LINES := {
 	"05_after_forest": "没有标准答案，也还想再往前看看。",
 }
 
+const OBSERVATION_CARD_FADE_IN_SECONDS := 0.18
+const OBSERVATION_CARD_HOLD_SECONDS := 1.65
+const OBSERVATION_CARD_FADE_OUT_SECONDS := 0.18
+const COMPLETION_REVEAL_DELAY_SECONDS := (
+	OBSERVATION_CARD_FADE_IN_SECONDS
+	+ OBSERVATION_CARD_HOLD_SECONDS
+	+ OBSERVATION_CARD_FADE_OUT_SECONDS
+	+ 0.05
+)
+
 var _background: TextureRect
 var _scene_visuals: Control
 var _shade: ColorRect
@@ -529,11 +539,15 @@ func _on_interaction_completed(metrics: Dictionary = {}) -> void:
 	if _scene_complete:
 		return
 	_scene_complete = true
-	AudioDirector.play_sfx("success")
+	var completed_scene_id := _current_scene_id
 	_log_playtest(metrics)
 	if String(_current_scene["next_scene_id"]).is_empty():
 		if GameState.complete_chapter(String(_current_scene["chapter_id"])):
 			SessionState.clear_resume()
+	await get_tree().create_timer(COMPLETION_REVEAL_DELAY_SECONDS).timeout
+	if not _scene_complete or _current_scene_id != completed_scene_id or _interaction_board == null:
+		return
+	AudioDirector.play_sfx("success")
 	_show_completion_reveal()
 
 
@@ -587,11 +601,11 @@ func _show_observation_card(text: String, tone := "neutral") -> void:
 	card.modulate.a = 0.0
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_property(card, "modulate:a", 1.0, 0.18)
+	tween.tween_property(card, "modulate:a", 1.0, OBSERVATION_CARD_FADE_IN_SECONDS)
 	tween.parallel().tween_property(card, "position:y", target_y, 0.22)
-	tween.tween_interval(1.65)
+	tween.tween_interval(OBSERVATION_CARD_HOLD_SECONDS)
 	tween.set_ease(Tween.EASE_IN)
-	tween.tween_property(card, "modulate:a", 0.0, 0.18)
+	tween.tween_property(card, "modulate:a", 0.0, OBSERVATION_CARD_FADE_OUT_SECONDS)
 	tween.tween_callback(card.queue_free)
 
 

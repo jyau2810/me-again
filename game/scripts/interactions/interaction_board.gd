@@ -599,7 +599,13 @@ func _place_scene_node(
 	var anchor: Vector2 = placement.get("anchor", fallback_anchor)
 	var hit_size: Vector2 = placement.get("hit_size", fallback_size)
 	if node.has_method("set_scene_presentation"):
-		node.set_scene_presentation(String(placement.get("mode", "sprite")))
+		var presentation_mode := String(placement.get("mode", "sprite"))
+		# Migrated scenes render confirmed target art in SceneVisualComposer.
+		# Their Board nodes must remain hit regions instead of falling back to the
+		# legacy atlas and drawing a second copy of the object.
+		if not _render_target_visuals and not String(placement.get("asset_path", "")).is_empty():
+			presentation_mode = "region"
+		node.set_scene_presentation(presentation_mode)
 	if _render_target_visuals and node.has_method("set_scene_visual"):
 		node.set_scene_visual(
 			String(placement.get("asset_path", "")),
