@@ -101,7 +101,7 @@
 | 历史竖屏背景/主视觉 | 7 张：`../game/assets/art/title_key_art.png`、`../game/assets/art/backgrounds/` | 继续作为技术占位与视觉对照，不算逐幕精细化正式资产 |
 | 历史交互物件图集 | 4 张：`../game/assets/art/props/` | 继续支撑未迁移场景，不算独立透明物件验收结果 |
 | Stage 3 单幕样板 | `../game/assets/art/production/c01_s02_commute_window/`、`../game/assets/art/style-studies/c01_s02/` | 已完成：背景、结构、成人、手机、车辆状态、约五岁儿童倒影与局部暖意逐项确认并分层接入；真实运行时三态与正式窗口节奏通过 |
-| Stage 4 逐幕规划 | `./scene-resource-plan.md` | 进行中：30 幕均已登记背景、人物、独立物件、状态、光效、音频、落位和风险 Gate，下一步补人物一致性包与五个高风险构图灰稿 |
+| Stage 4 逐幕规划 | `./scene-resource-plan.md`、`./character-consistency-pack.md`、`./chapter-color-script.md` | 进行中：30 幕资源与颜色关系已登记；成年 v001 身份设定表等待确认，儿童设定表和五个高风险构图灰稿尚未开始 |
 | 音频 | 30 条 CC0：`../game/assets/audio/` | 音乐、环境声、观察与交互反馈 |
 | 字体 | `../game/assets/fonts/` | Noto Sans CJK SC，随工程打包 |
 

@@ -790,3 +790,15 @@ Constraints: coherent road orientation, no racing, no crashes, no readable plate
 - `style-studies/c01_s02/previews/preview_c01_s02_runtime_observation_states_v001.png`：三态 360 × 640 横向对照。
 
 四张输出分别使用 SHA-256 `fbd76ed819ad024809c9dca3bdfacdee523a99d562bb9ad12bb9869db9bffb7d`、`7ff1e3edde1f4e088f8825bc92e5c7b69c798839ce9ea3a5ee3894cdec2e0e8f`、`51de87ac1d3db039c688dbd6c18e9abe64eee5116a79ef67a59306ae213bd1cc`、`0151e00ee9e6c4e0ddbd98150b5fb440df912c919d4457e23442e5221edb69b0`。儿童倒影与局部暖意的正常渲染实帧玻璃外差异均为 0；该组用于运行时验收，不替代 v005 视觉母版与已确认 v002 静态评审基准。
+
+## 2026-08-14 Stage 4 成年人物一致性候选
+
+生成方式：Codex 内置 `image_gen` / imagegen 技能，非 CLI fallback。四张本地输入分别标注为成年低头身份参考、成年抬头身份参考、五岁亲缘参考和整体视觉语言参考；不是对现有图片做覆盖编辑。
+
+| 工程文件 | 状态 | 生成源文件 | 结论 |
+| --- | --- | --- | --- |
+| `game/assets/art/style-studies/character-consistency/char_adult_identity_sheet_v001_candidate.png` | `candidate` | `exec-4702c36a-c311-4d88-925b-d2b67808578e.png` | 1536 × 1024 成年主角正面、右转四分之三、右侧面和自然坐姿设定表；等待单项确认，不进入 production 或运行时 |
+
+工程候选 SHA-256 为 `dd6cbfc5b33c5774444f6e4356a14fac659917443df3b4e7eca998dd99dd09e8`。当前自检确认四视图的年龄、短发方向、紧凑脸型、体型和服装关系基本连续，可见手部没有重复肢体，图中无手机、文字、商标或水印。详细身份不变量、待确认点和最终提示词见 [人物一致性包](./character-consistency-pack.md)。
+
+本轮遵守单项 Gate：没有同时生成儿童设定表。成年 v001 获用户确认后，才以成年/儿童已确认 production 和该设定表作为输入，生成独立的约五岁儿童身份候选。
