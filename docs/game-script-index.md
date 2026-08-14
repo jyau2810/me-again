@@ -100,7 +100,8 @@
 | --- | --- | --- |
 | 历史竖屏背景/主视觉 | 7 张：`../game/assets/art/title_key_art.png`、`../game/assets/art/backgrounds/` | 继续作为技术占位与视觉对照，不算逐幕精细化正式资产 |
 | 历史交互物件图集 | 4 张：`../game/assets/art/props/` | 继续支撑未迁移场景，不算独立透明物件验收结果 |
-| Stage 3 单幕样板 | `../game/assets/art/production/c01_s02_commute_window/`、`../game/assets/art/style-studies/c01_s02/` | 背景、结构、成人、手机、车辆状态、约五岁儿童倒影与局部暖意已逐项确认并分层接入；真实运行时三态已输出，等待视觉与叙事节奏确认 |
+| Stage 3 单幕样板 | `../game/assets/art/production/c01_s02_commute_window/`、`../game/assets/art/style-studies/c01_s02/` | 已完成：背景、结构、成人、手机、车辆状态、约五岁儿童倒影与局部暖意逐项确认并分层接入；真实运行时三态与正式窗口节奏通过 |
+| Stage 4 逐幕规划 | `./scene-resource-plan.md` | 进行中：30 幕均已登记背景、人物、独立物件、状态、光效、音频、落位和风险 Gate，下一步补人物一致性包与五个高风险构图灰稿 |
 | 音频 | 30 条 CC0：`../game/assets/audio/` | 音乐、环境声、观察与交互反馈 |
 | 字体 | `../game/assets/fonts/` | Noto Sans CJK SC，随工程打包 |
 
@@ -129,7 +130,7 @@
 - `c01_s02_commute_window` 的三次观察由 `step_feedback` 驱动；手机反馈由 `optional_feedback` 驱动且始终可用，车灯和车牌由 `optional_unlock_steps = 2` 控制到第二次观察后开放。正常渲染器已导出三张 720 × 1280 状态图和一张横向图，儿童倒影与局部暖意的玻璃外差异均为 0。
 - 已迁移场景中，带 production `asset_path` 的目标只允许由 `SceneVisualComposer` 绘制，`InteractionBoard` 仅保留透明命中，禁止回退显示旧图集造成双手、双手机或车辆状态副本。完成交互先让观察卡完整停留 2.06 秒，再显示完成卡并播放成功音。
 
-先完成 `c01_s02_commute_window` 单幕视觉方向、构图、独立资产、合成校正与内部交互验收；该幕通过后再扩展整章，外部试玩暂不启动。后续试玩重点验证：
+`c01_s02_commute_window` 单幕视觉方向、构图、独立资产、合成校正与内部交互验收已经完成。当前按 [30 幕逐幕资源规划](./scene-resource-plan.md) 推进 Stage 4；仍需逐幕通过风险 Gate 和资产确认，外部试玩暂不启动。后续试玩重点验证：
 
 1. 第一章车窗观察、车辆阵营和场景热点是否容易理解。
 2. 第二章跑圈与第四圈慢行是否通过跑道画面自然成立。
