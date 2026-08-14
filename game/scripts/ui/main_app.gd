@@ -378,7 +378,7 @@ func _build_game_screen() -> void:
 	_clear_screen()
 	var phase: String = _current_scene["phase"]
 	var background_key := "reality" if phase == "echo" or _current_scene_id == "c01_s01_room_morning" else String(_current_scene["chapter_id"])
-	var tint := Color("#07131a55")
+	var tint := SceneVisualComposerScript.ENTRY_TINT
 	if phase == "opening":
 		tint = Color("#0d17204a")
 	elif phase == "inner_world":
@@ -529,7 +529,6 @@ func _on_interaction_completed(metrics: Dictionary = {}) -> void:
 	if _scene_complete:
 		return
 	_scene_complete = true
-	_on_feedback_changed(String(_current_scene["completion_feedback"]), "warm")
 	AudioDirector.play_sfx("success")
 	_log_playtest(metrics)
 	if String(_current_scene["next_scene_id"]).is_empty():
@@ -541,18 +540,7 @@ func _on_interaction_completed(metrics: Dictionary = {}) -> void:
 func _on_interaction_state_changed(state: Dictionary) -> void:
 	if _current_scene_id != "c01_s02_commute_window" or _scene_visuals == null:
 		return
-	var sequence_index := int(state.get("sequence_index", 0))
-	var adult_state := "look_up" if sequence_index >= 2 else "down"
-	_scene_visuals.set_layer_state("adult_commuter_down", adult_state)
-	var child_state := "hidden"
-	if sequence_index == 2:
-		child_state = "faint"
-	elif sequence_index >= 3:
-		child_state = "visible"
-	_scene_visuals.set_layer_state("child_reflection", child_state)
-	_scene_visuals.set_layer_state("window_reflection_warm", "visible" if sequence_index >= 3 else "hidden")
-	_scene_visuals.set_target_state("headlight", "blink" if sequence_index >= 3 else "neutral")
-	_scene_visuals.set_target_state("plate", "mouth_hint" if sequence_index >= 3 else "neutral")
+	_scene_visuals.apply_interaction_state(state)
 
 
 func _show_observation_card(text: String, tone := "neutral") -> void:

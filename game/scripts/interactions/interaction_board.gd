@@ -294,6 +294,7 @@ func _build_observation() -> void:
 		optional.pressed.connect(_on_optional_tap.bind(optional_id))
 		_place_hotspot(field, optional, spot_index, target_ids.size() + 2)
 		spot_index += 1
+		_buttons[optional_id] = optional
 
 	for action_id in _strings(contract.get("required_actions", [])):
 		var action_button = HotspotScript.new()
@@ -318,6 +319,7 @@ func _build_observation() -> void:
 				float(contract.get("hold_seconds", 1.0)),
 				""
 			))
+	_refresh_interactive_state()
 
 
 func _build_assignment() -> void:
@@ -620,8 +622,7 @@ func _on_tap(target_id: String) -> void:
 
 
 func _on_optional_tap(target_id: String) -> void:
-	_set_feedback("%s也有了动静。" % _label_for(target_id), "calm")
-	sfx_requested.emit("observe")
+	submit_action("tap", target_id)
 
 
 func _on_special_action(action_id: String) -> void:
@@ -790,6 +791,14 @@ func _refresh_interactive_state() -> void:
 			continue
 		if target_id == _hold_target:
 			continue
+		if _model.interaction_type() == "repeat_observe":
+			var contract: Dictionary = _scene.get("interaction", {})
+			if _strings(contract.get("optional_target_ids", [])).has(target_id):
+				var unlock_steps: Dictionary = contract.get("optional_unlock_steps", {})
+				var unlocked := int(state.get("sequence_index", 0)) >= int(unlock_steps.get(target_id, 0))
+				button.visible = unlocked
+				button.disabled = not unlocked or done
+				continue
 		var marked := visited.has(target_id) or performed.has(target_id)
 		if marked and _model.interaction_type() not in ["repeat_observe", "repeat_toggle"]:
 			if button.has_method("set_found"):

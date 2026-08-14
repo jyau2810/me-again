@@ -357,4 +357,17 @@ v001 四张评审图状态为 `rejected_review`：它们使用 720 × 1280 运�
 9. 约五岁儿童倒影 v001 已确认并晋级 production；0% / 11% / 22% 三档、玻璃硬遮罩和人工校正已接入，旧玻璃边界外真实帧差异为 0 像素。
 10. 冷暖效果 v001 与错误基底三状态预览已拒绝；固定窗外 v002 三态已确认，不能再使用运行时重组帧替代整场母版。
 11. 第三态局部暖意 v002 已确认并晋级 production；14% 屏幕混合、玻璃硬裁切和人工校正均已接入，production 实帧玻璃外差异为 0。
-12. 当前进入三次观察完整运行时合成与单幕内部验收；完成前 Stage 3 保持进行中。
+12. 已由正式交互板与场景合成器输出三次观察完整运行时合成；人物状态、儿童倒影、车辆提示、局部暖意、入界遮色和玻璃裁切均通过技术验收。当前等待横向实帧视觉确认与主场景叙事节奏复核，完成前 Stage 3 保持进行中。
+
+## 8. 真实运行时三态输出
+
+2026-08-14 新增 `../game/scripts/tools/capture_c01_s02_runtime_observations.gd`。工具在 Godot 正常 macOS / GL Compatibility 渲染器中实例化正式 `InteractionBoard` 与 `SceneVisualComposer`，真实提交三次 `window` 交互，不使用评审母版做静态拼接。主场景与工具共用 `SceneVisualComposer.apply_interaction_state()`，并统一使用入界遮色 `#0d17204a`。
+
+| 状态 | 输出 | SHA-256 |
+| --- | --- | --- |
+| 第一次观察 | `previews/preview_c01_s02_runtime_observation_state_01_v001.png` | `fbd76ed819ad024809c9dca3bdfacdee523a99d562bb9ad12bb9869db9bffb7d` |
+| 第二次观察 | `previews/preview_c01_s02_runtime_observation_state_02_v001.png` | `7ff1e3edde1f4e088f8825bc92e5c7b69c798839ce9ea3a5ee3894cdec2e0e8f` |
+| 第三次观察 | `previews/preview_c01_s02_runtime_observation_state_03_v001.png` | `51de87ac1d3db039c688dbd6c18e9abe64eee5116a79ef67a59306ae213bd1cc` |
+| 横向对照 | `previews/preview_c01_s02_runtime_observation_states_v001.png` | `0151e00ee9e6c4e0ddbd98150b5fb440df912c919d4457e23442e5221edb69b0` |
+
+状态 1→2 改变 121,159 像素，状态 2→3 改变 45,280 像素。单层开关检查中，儿童倒影改变 38,342 像素，局部暖意改变 4,737 像素；按 GPU 边界栅格与四点玻璃多边形求交后，两层玻璃外差异均为 0。对应交互自检为 287 条断言、17 类契约。

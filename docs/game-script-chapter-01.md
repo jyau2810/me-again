@@ -106,6 +106,8 @@
 | `tap_headlight` | 点击前车灯 | `windowObservationCount >= 2` | 文本：`两个亮点。像眼睛。` | 记录已调查 |
 | `tap_plate` | 点击车牌 | `windowObservationCount >= 2` | 文本：`像一张抿起来的嘴。` | 记录已调查 |
 
+运行时由 `repeat_observe` 契约中的 `step_feedback` 保存三次车窗文案，`optional_feedback` 保存手机、车灯和车牌文案，`optional_unlock_steps` 控制后两者在第二次观察后开放；这些内容不在通用交互模型中按场景 ID 硬编码。
+
 **入界表现**
 
 第三次观察后，车窗倒影里的成年主角短暂变成小孩轮廓。不是跳转动画，而是玻璃反光里先变，再带动整个场景变暖。

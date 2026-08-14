@@ -7,6 +7,7 @@ extends Control
 const LayoutStore = preload("res://scripts/interactions/interaction_scene_layout_store.gd")
 const LAYER_SHADER = preload("res://shaders/visual_layer_treatment.gdshader")
 const SCREEN_LAYER_SHADER = preload("res://shaders/local_screen_reflection.gdshader")
+const ENTRY_TINT := Color("#0d17204a")
 
 var _scene_id := ""
 var _layer_views: Dictionary = {}
@@ -96,6 +97,23 @@ func set_target_state(target_id: String, state_id: String) -> bool:
 
 func target_asset_path(target_id: String) -> String:
 	return String(_target_asset_paths.get(target_id, ""))
+
+
+func apply_interaction_state(state: Dictionary) -> bool:
+	if _scene_id != "c01_s02_commute_window":
+		return false
+	var sequence_index := int(state.get("sequence_index", 0))
+	set_layer_state("adult_commuter_down", "look_up" if sequence_index >= 2 else "down")
+	var child_state := "hidden"
+	if sequence_index == 2:
+		child_state = "faint"
+	elif sequence_index >= 3:
+		child_state = "visible"
+	set_layer_state("child_reflection", child_state)
+	set_layer_state("window_reflection_warm", "visible" if sequence_index >= 3 else "hidden")
+	set_target_state("headlight", "blink" if sequence_index >= 3 else "neutral")
+	set_target_state("plate", "mouth_hint" if sequence_index >= 3 else "neutral")
+	return true
 
 
 func _add_layer(layer_id: String, layer: Dictionary) -> void:

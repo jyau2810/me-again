@@ -778,3 +778,14 @@ Constraints: coherent road orientation, no racing, no crashes, no readable plate
 - 独立物件必须落在可信承载面：杯子和钥匙在桌面，衣服和书在架子，门锁贴门，灯与柜子贴建筑结构。
 - 手机采用第一人称手持图，只出现在画面下方偏右，并为底部故事纸保留安全区。
 - 命中范围可大于视觉物件，但不得跨入无关物体；悬停、点击、长按和拖放反馈控制在 150–300 毫秒。
+
+## `c01_s02` 真实运行时三态截帧
+
+2026-08-14 没有生成或修改任何美术源图；只使用已确认 production 背景、八张视觉层和带独立资产的交互目标，在 Godot 4.7.1 macOS / GL Compatibility 正常渲染器中输出运行时合成。工具为 `../game/scripts/tools/capture_c01_s02_runtime_observations.gd`，由正式 `InteractionBoard` 驱动三次观察并调用正式 `SceneVisualComposer` 状态映射。
+
+- `style-studies/c01_s02/previews/preview_c01_s02_runtime_observation_state_01_v001.png`：成年人低头；儿童和暖意隐藏；车辆中性。
+- `style-studies/c01_s02/previews/preview_c01_s02_runtime_observation_state_02_v001.png`：成年人抬头；儿童 11%；暖意隐藏；车辆中性。
+- `style-studies/c01_s02/previews/preview_c01_s02_runtime_observation_state_03_v001.png`：成年人抬头；儿童 22%；车灯/车牌提示；局部暖意 14%。
+- `style-studies/c01_s02/previews/preview_c01_s02_runtime_observation_states_v001.png`：三态 360 × 640 横向对照。
+
+四张输出分别使用 SHA-256 `fbd76ed819ad024809c9dca3bdfacdee523a99d562bb9ad12bb9869db9bffb7d`、`7ff1e3edde1f4e088f8825bc92e5c7b69c798839ce9ea3a5ee3894cdec2e0e8f`、`51de87ac1d3db039c688dbd6c18e9abe64eee5116a79ef67a59306ae213bd1cc`、`0151e00ee9e6c4e0ddbd98150b5fb440df912c919d4457e23442e5221edb69b0`。儿童倒影与局部暖意的正常渲染实帧玻璃外差异均为 0；该组用于运行时验收，不替代 v005 视觉母版与已确认 v002 静态评审基准。

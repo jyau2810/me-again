@@ -221,7 +221,21 @@ const SCENES := {
 			"gesture": "tap",
 			"target_ids": ["window"],
 			"repeat_count": 3,
+			"step_feedback": [
+				"车窗。",
+				"车窗上有一点你的影子。",
+				"前面的车灯，好像在看这边。",
+			],
 			"optional_target_ids": ["phone", "headlight", "plate"],
+			"optional_feedback": {
+				"phone": "工作群。天气。外卖。",
+				"headlight": "两个亮点。像眼睛。",
+				"plate": "像一张抿起来的嘴。",
+			},
+			"optional_unlock_steps": {
+				"headlight": 2,
+				"plate": 2,
+			},
 		},
 		"objective": "车窗里的灯原本只是灯。玻璃反光一晃，它们便有了眼睛。",
 		"hint": "每当手机屏幕暗下去，玻璃上的身影就矮一点。",

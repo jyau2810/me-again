@@ -27,7 +27,9 @@ func _run() -> void:
 	_test_scene_layout_store()
 	_test_all_catalog_contracts_complete()
 	_test_gentle_retry_rules()
+	_test_repeat_observe_contract()
 	await _test_scene_visual_composer()
+	await _test_repeat_observe_board_unlocks()
 	await _test_board_renders_every_scene()
 	await _test_native_drag_and_drop()
 	await _test_trace_pointer_input()
@@ -185,6 +187,15 @@ func _test_scene_visual_composer() -> void:
 	_expect(warm_view.material is ShaderMaterial, "local warm reflection receives its screen blend and glass mask")
 	_expect(composer.set_layer_state("window_reflection_warm", "visible"), "runtime switches warmth on only for the third observation")
 	_expect(is_equal_approx(warm_view.modulate.a, 0.14), "third-observation warmth keeps the approved visual strength")
+	_expect(composer.apply_interaction_state({"sequence_index": 1}), "runtime accepts the first commute observation state")
+	_expect(composer.layer_asset_path("adult_commuter_down").ends_with("char_adult_commuter_seated_down_v001.png"), "first observation keeps the adult looking down")
+	_expect(is_equal_approx(child_view.modulate.a, 0.0) and is_equal_approx(warm_view.modulate.a, 0.0), "first observation hides both reflection layers")
+	_expect(composer.apply_interaction_state({"sequence_index": 2}), "runtime accepts the second commute observation state")
+	_expect(composer.layer_asset_path("adult_commuter_down").ends_with("char_adult_commuter_seated_look_up_v001.png"), "second observation raises the adult's gaze")
+	_expect(is_equal_approx(child_view.modulate.a, 0.11) and is_equal_approx(warm_view.modulate.a, 0.0), "second observation shows only the faint child reflection")
+	_expect(composer.apply_interaction_state({"sequence_index": 3}), "runtime accepts the third commute observation state")
+	_expect(is_equal_approx(child_view.modulate.a, 0.22) and is_equal_approx(warm_view.modulate.a, 0.14), "third observation reaches the confirmed child and warmth strengths")
+	_expect(composer.target_asset_path("headlight").ends_with("prop_vehicle_headlights_blink_v001.png") and composer.target_asset_path("plate").ends_with("prop_vehicle_plate_mouth_hint_v001.png"), "third observation activates both restrained vehicle hints")
 	composer.queue_free()
 
 
@@ -314,6 +325,46 @@ func _test_gentle_retry_rules() -> void:
 	_expect(multi_model.snapshot()["sequence_index"] == 0, "out-of-order two-finger input does not skip a step")
 	multi_model.dispatch("multi", "separate", {"touch_points": 2})
 	_expect(multi_model.snapshot()["sequence_index"] == 1, "correct multi-touch action advances one step")
+
+
+func _test_repeat_observe_contract() -> void:
+	var scene := Catalog.get_scene("c01_s02_commute_window")
+	var model = ModelScript.new()
+	model.configure(scene)
+	var phone: Dictionary = model.dispatch("tap", "phone")
+	_expect(phone["accepted"] and phone["feedback"] == "工作群。天气。外卖。", "phone is available before observing the window")
+	var early_headlight: Dictionary = model.dispatch("tap", "headlight")
+	_expect(not early_headlight["accepted"], "headlight stays locked before the second observation")
+	var first: Dictionary = model.dispatch("tap", "window")
+	_expect(first["feedback"] == "车窗。", "first window observation uses its authored feedback")
+	var second: Dictionary = model.dispatch("tap", "window")
+	_expect(second["feedback"] == "车窗上有一点你的影子。", "second window observation reveals the reflection in text")
+	var headlight: Dictionary = model.dispatch("tap", "headlight")
+	_expect(headlight["accepted"] and headlight["feedback"] == "两个亮点。像眼睛。", "headlight unlocks after the second observation")
+	var plate: Dictionary = model.dispatch("tap", "plate")
+	_expect(plate["accepted"] and plate["feedback"] == "像一张抿起来的嘴。", "plate uses its authored optional feedback")
+	var third: Dictionary = model.dispatch("tap", "window")
+	_expect(third["just_completed"] and third["feedback"] == "前面的车灯，好像在看这边。", "third observation completes with the authored entry feedback")
+
+
+func _test_repeat_observe_board_unlocks() -> void:
+	var board = BoardScript.new()
+	board.size = Vector2(720.0, 1280.0)
+	root.add_child(board)
+	await process_frame
+	board.configure(Catalog.get_scene("c01_s02_commute_window"), [], false)
+	await process_frame
+	var buttons: Dictionary = board.get("_buttons")
+	_expect(buttons.has("phone") and buttons["phone"].visible, "phone hotspot is visible from scene start")
+	_expect(buttons.has("headlight") and not buttons["headlight"].visible, "headlight hotspot starts hidden")
+	_expect(buttons.has("plate") and not buttons["plate"].visible, "plate hotspot starts hidden")
+	board.submit_action("tap", "window")
+	_expect(not buttons["headlight"].visible, "headlight remains hidden after one observation")
+	board.submit_action("tap", "window")
+	_expect(buttons["headlight"].visible and not buttons["headlight"].disabled, "headlight becomes interactive after two observations")
+	_expect(buttons["plate"].visible and not buttons["plate"].disabled, "plate becomes interactive after two observations")
+	board.queue_free()
+	await process_frame
 
 
 func _test_board_renders_every_scene() -> void:

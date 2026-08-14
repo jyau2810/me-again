@@ -194,15 +194,35 @@ func _dispatch_observation(action: String, target_id: String) -> Dictionary:
 
 func _dispatch_repeat_observe(action: String, target_id: String) -> Dictionary:
 	var targets := _strings(_contract.get("target_ids", []))
-	if action != "tap" or not targets.has(target_id):
+	if action != "tap":
+		return _gentle("玻璃里的影子还在。")
+	var optional_targets := _strings(_contract.get("optional_target_ids", []))
+	if optional_targets.has(target_id):
+		var unlock_steps: Dictionary = _contract.get("optional_unlock_steps", {})
+		if _sequence_index < int(unlock_steps.get(target_id, 0)):
+			return _gentle("玻璃上的光还没有聚拢。")
+		var optional_feedback: Dictionary = _contract.get("optional_feedback", {})
+		return _response(
+			true,
+			String(optional_feedback.get(target_id, "它也有了动静。")),
+			"calm",
+			"observe"
+		)
+	if not targets.has(target_id):
 		return _gentle("玻璃里的影子还在。")
 	var needed := int(_contract.get("repeat_count", 1))
 	_sequence_index += 1
+	var step_feedback := _strings(_contract.get("step_feedback", []))
+	var feedback := (
+		step_feedback[_sequence_index - 1]
+		if _sequence_index <= step_feedback.size()
+		else "手机屏幕又暗了一次，玻璃里的影子更清楚了。"
+	)
 	if _sequence_index >= needed:
-		return _complete()
+		return _complete(feedback)
 	return _response(
 		true,
-		"手机屏幕又暗了一次，玻璃里的影子更清楚了。",
+		feedback,
 		"warm",
 		"observe"
 	)
@@ -467,11 +487,15 @@ func _dispatch_ordered_gestures(
 	)
 
 
-func _complete() -> Dictionary:
+func _complete(feedback_override := "") -> Dictionary:
 	_completed = true
 	return _response(
 		true,
-		String(_scene.get("completion_feedback", "四周安静下来。")),
+		(
+			String(feedback_override)
+			if not String(feedback_override).is_empty()
+			else String(_scene.get("completion_feedback", "四周安静下来。"))
+		),
 		"complete",
 		"complete",
 		true
